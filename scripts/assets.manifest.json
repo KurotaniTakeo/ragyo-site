@@ -1,0 +1,31 @@
+{
+  "$comment": "图像资产清单。scripts/gen-images.mjs 读取本文件生成 public/img/generated/* 与 src/data/assets.generated.ts。立绘原稿改名时只需修改此处的 source 字段。",
+  "outputDir": "public/img/generated",
+  "entries": [
+    {
+      "key": "character.outfit-b",
+      "source": "illustration/character/4.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "服装 B・正面站姿・红色领带清晰。"
+    },
+    {
+      "key": "character.outfit-b-bust",
+      "source": "illustration/character/4.png",
+      "crop": { "x": 0.17, "y": 0.03, "w": 0.62, "h": 0.5 },
+      "widths": [640, 1024, 1600, 2400],
+      "note": "服装 B・半身像（头部至腰部）。首页主视觉用它放大展示，crop 比例可调。"
+    },
+    {
+      "key": "character.outfit-a",
+      "source": "illustration/character/1.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "服装 A・正面站姿・夹克扣起。"
+    },
+    {
+      "key": "character.sheet",
+      "source": "illustration/character/7.png",
+      "widths": [640, 1024, 1600, 1924],
+      "note": "设定图・正面与背面双视图・含耳麦与尾巴。"
+    }
+  ]
+}

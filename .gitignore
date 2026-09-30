@@ -1,0 +1,13 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+.env
+.env.*
+!.env.example
+
+# 生成产物（可用 pnpm gen:images / gen:surprise 重新生成）
+public/img/generated
+public/surprise/generated

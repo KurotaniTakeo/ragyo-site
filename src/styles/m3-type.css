@@ -1,0 +1,235 @@
+/* ------------------------------------------------------------------
+   Material You 排版层级（type scale）
+   拉丁字距沿用 M3 规范值；中日文在下方单独归零字距并放宽行高。
+------------------------------------------------------------------ */
+
+:root {
+  --md-sys-typescale-display-large-size: 3.5625rem; /* 57 */
+  --md-sys-typescale-display-large-line: 4rem; /* 64 */
+  --md-sys-typescale-display-large-weight: 400;
+  --md-sys-typescale-display-large-tracking: -0.015em;
+
+  --md-sys-typescale-display-medium-size: 2.8125rem; /* 45 */
+  --md-sys-typescale-display-medium-line: 3.25rem; /* 52 */
+  --md-sys-typescale-display-medium-weight: 400;
+
+  --md-sys-typescale-display-small-size: 2.25rem; /* 36 */
+  --md-sys-typescale-display-small-line: 2.75rem; /* 44 */
+  --md-sys-typescale-display-small-weight: 400;
+
+  --md-sys-typescale-headline-large-size: 2rem; /* 32 */
+  --md-sys-typescale-headline-large-line: 2.5rem; /* 40 */
+  --md-sys-typescale-headline-large-weight: 400;
+
+  --md-sys-typescale-headline-medium-size: 1.75rem; /* 28 */
+  --md-sys-typescale-headline-medium-line: 2.25rem; /* 36 */
+  --md-sys-typescale-headline-medium-weight: 400;
+
+  --md-sys-typescale-headline-small-size: 1.5rem; /* 24 */
+  --md-sys-typescale-headline-small-line: 2rem; /* 32 */
+  --md-sys-typescale-headline-small-weight: 400;
+
+  --md-sys-typescale-title-large-size: 1.375rem; /* 22 */
+  --md-sys-typescale-title-large-line: 1.75rem; /* 28 */
+  --md-sys-typescale-title-large-weight: 500;
+
+  --md-sys-typescale-title-medium-size: 1rem; /* 16 */
+  --md-sys-typescale-title-medium-line: 1.5rem; /* 24 */
+  --md-sys-typescale-title-medium-weight: 500;
+  --md-sys-typescale-title-medium-tracking: 0.009em;
+
+  --md-sys-typescale-title-small-size: 0.875rem; /* 14 */
+  --md-sys-typescale-title-small-line: 1.25rem; /* 20 */
+  --md-sys-typescale-title-small-weight: 500;
+
+  --md-sys-typescale-body-large-size: 1rem; /* 16 */
+  --md-sys-typescale-body-large-line: 1.75rem; /* 28：中日文放宽 */
+  --md-sys-typescale-body-large-weight: 400;
+
+  --md-sys-typescale-body-medium-size: 0.875rem; /* 14 */
+  --md-sys-typescale-body-medium-line: 1.5rem; /* 24 */
+  --md-sys-typescale-body-medium-weight: 400;
+
+  --md-sys-typescale-body-small-size: 0.75rem; /* 12 */
+  --md-sys-typescale-body-small-line: 1.125rem; /* 18 */
+  --md-sys-typescale-body-small-weight: 400;
+
+  --md-sys-typescale-label-large-size: 0.875rem; /* 14 */
+  --md-sys-typescale-label-large-line: 1.25rem; /* 20 */
+  --md-sys-typescale-label-large-weight: 500;
+  --md-sys-typescale-label-large-tracking: 0.007em;
+
+  --md-sys-typescale-label-medium-size: 0.75rem; /* 12 */
+  --md-sys-typescale-label-medium-line: 1rem;
+  --md-sys-typescale-label-medium-weight: 500;
+
+  --md-sys-typescale-label-small-size: 0.6875rem; /* 11 */
+  --md-sys-typescale-label-small-line: 1rem;
+  --md-sys-typescale-label-small-weight: 500;
+}
+
+.md-display-large,
+.md-display-medium,
+.md-display-small,
+.md-headline-large,
+.md-headline-medium,
+.md-headline-small,
+.md-title-large,
+.md-title-medium,
+.md-title-small,
+.md-body-large,
+.md-body-medium,
+.md-body-small,
+.md-label-large,
+.md-label-medium,
+.md-label-small {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.md-display-large {
+  font-size: var(--md-sys-typescale-display-large-size);
+  line-height: var(--md-sys-typescale-display-large-line);
+  font-weight: var(--md-sys-typescale-display-large-weight);
+  letter-spacing: var(--md-sys-typescale-display-large-tracking);
+}
+
+.md-display-medium {
+  font-size: var(--md-sys-typescale-display-medium-size);
+  line-height: var(--md-sys-typescale-display-medium-line);
+  font-weight: var(--md-sys-typescale-display-medium-weight);
+  letter-spacing: var(--md-sys-typescale-display-large-tracking);
+}
+
+.md-display-small {
+  font-size: var(--md-sys-typescale-display-small-size);
+  line-height: var(--md-sys-typescale-display-small-line);
+  font-weight: var(--md-sys-typescale-display-small-weight);
+  letter-spacing: var(--md-sys-typescale-display-large-tracking);
+}
+
+.md-headline-large {
+  font-size: var(--md-sys-typescale-headline-large-size);
+  line-height: var(--md-sys-typescale-headline-large-line);
+  font-weight: var(--md-sys-typescale-headline-large-weight);
+  letter-spacing: -0.008em;
+}
+
+.md-headline-medium {
+  font-size: var(--md-sys-typescale-headline-medium-size);
+  line-height: var(--md-sys-typescale-headline-medium-line);
+  font-weight: var(--md-sys-typescale-headline-medium-weight);
+}
+
+.md-headline-small {
+  font-size: var(--md-sys-typescale-headline-small-size);
+  line-height: var(--md-sys-typescale-headline-small-line);
+  font-weight: var(--md-sys-typescale-headline-small-weight);
+}
+
+.md-title-large {
+  font-size: var(--md-sys-typescale-title-large-size);
+  line-height: var(--md-sys-typescale-title-large-line);
+  font-weight: var(--md-sys-typescale-title-large-weight);
+}
+
+.md-title-medium {
+  font-size: var(--md-sys-typescale-title-medium-size);
+  line-height: var(--md-sys-typescale-title-medium-line);
+  font-weight: var(--md-sys-typescale-title-medium-weight);
+  letter-spacing: var(--md-sys-typescale-title-medium-tracking);
+}
+
+.md-title-small {
+  font-size: var(--md-sys-typescale-title-small-size);
+  line-height: var(--md-sys-typescale-title-small-line);
+  font-weight: var(--md-sys-typescale-title-small-weight);
+  letter-spacing: 0.006em;
+}
+
+.md-body-large {
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line);
+  font-weight: var(--md-sys-typescale-body-large-weight);
+}
+
+.md-body-medium {
+  font-size: var(--md-sys-typescale-body-medium-size);
+  line-height: var(--md-sys-typescale-body-medium-line);
+  font-weight: var(--md-sys-typescale-body-medium-weight);
+}
+
+.md-body-small {
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line);
+  font-weight: var(--md-sys-typescale-body-small-weight);
+}
+
+.md-label-large {
+  font-size: var(--md-sys-typescale-label-large-size);
+  line-height: var(--md-sys-typescale-label-large-line);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  letter-spacing: var(--md-sys-typescale-label-large-tracking);
+}
+
+.md-label-medium {
+  font-size: var(--md-sys-typescale-label-medium-size);
+  line-height: var(--md-sys-typescale-label-medium-line);
+  font-weight: var(--md-sys-typescale-label-medium-weight);
+}
+
+.md-label-small {
+  font-size: var(--md-sys-typescale-label-small-size);
+  line-height: var(--md-sys-typescale-label-small-line);
+  font-weight: var(--md-sys-typescale-label-small-weight);
+}
+
+/* ------------------------------------------------------------------
+   中日文修正：M3 的字距是为拉丁字母设计的，汉字下会显得松散。
+   按 html[lang] 归零字距，并把小字号的下限抬高，保证可读性。
+------------------------------------------------------------------ */
+
+html[lang='ja'] .md-title-medium,
+html:lang(zh) .md-title-medium,
+html[lang='ja'] .md-label-large,
+html:lang(zh) .md-label-large,
+html[lang='ja'] .md-label-medium,
+html:lang(zh) .md-label-medium,
+html[lang='ja'] .md-label-small,
+html:lang(zh) .md-label-small,
+html[lang='ja'] .md-title-small,
+html:lang(zh) .md-title-small {
+  letter-spacing: 0;
+}
+
+html[lang='ja'] .md-display-large,
+html:lang(zh) .md-display-large,
+html[lang='ja'] .md-display-medium,
+html:lang(zh) .md-display-medium,
+html[lang='ja'] .md-display-small,
+html:lang(zh) .md-display-small {
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+html[lang='ja'] .md-body-small,
+html:lang(zh) .md-body-small {
+  font-size: 0.8125rem; /* 13：12px 汉字过小 */
+}
+
+/* ------------------------------------------------------------------
+   矮屏压缩：按视口高度调小展示型字号，避免内容被挤出 100dvh
+------------------------------------------------------------------ */
+
+@media (max-height: 860px) {
+  :root {
+    --md-sys-typescale-display-large-size: 3rem;
+    --md-sys-typescale-display-large-line: 3.375rem;
+    --md-sys-typescale-headline-large-size: 1.75rem;
+    --md-sys-typescale-headline-large-line: 2.125rem;
+    --md-sys-typescale-headline-medium-size: 1.5rem;
+    --md-sys-typescale-headline-medium-line: 1.9rem;
+    --md-sys-typescale-title-large-size: 1.25rem;
+    --md-sys-typescale-title-large-line: 1.6rem;
+  }
+}

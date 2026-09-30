@@ -1,0 +1,269 @@
+{
+  "meta": {
+    "title": "羅行 / Ragyo — UTAU · OpenUTAU 音源",
+    "description": "羅行（Ragyo）是一款 VCV 连续音 UTAU / OpenUTAU 音源，收录 3 组音高与 Soft 音色，音域覆盖 C1–B7。试听、使用条款与下载方式详见本站。"
+  },
+  "common": {
+    "langName": "简体中文",
+    "langSwitch": "切换语言",
+    "skipToContent": "跳到正文",
+    "pending": "准备中",
+    "pendingTitle": "即将公开",
+    "copy": "复制",
+    "copied": "已复制",
+    "copyFailed": "复制失败",
+    "close": "关闭",
+    "loading": "加载中",
+    "openInNewTab": "在新标签页打开",
+    "sectionNav": "页面导航",
+    "scrollHint": "向下滚动"
+  },
+  "nav": {
+    "hero": "首页",
+    "about": "声库介绍",
+    "samples": "试听",
+    "character": "角色",
+    "terms": "使用条款",
+    "download": "下载",
+    "changelog": "更新日志",
+    "credits": "制作名单",
+    "surprise": "彩蛋"
+  },
+  "hero": {
+    "kicker": "UTAU / OpenUTAU 音源",
+    "tagline": "宛如墨色的蓝。伫立在麦克风前的狼之声。",
+    "facts": "VCV 连续音 · 3 组音高 + Soft · C1–B7",
+    "ctaPrimary": "下载",
+    "ctaSecondary": "试听",
+    "version": "版本 {version}"
+  },
+  "about": {
+    "title": "声库介绍",
+    "lead": "「羅行」是一款采用 VCV 连续音录制的 UTAU 音源，3 组音高各含普通音色与 Soft 音色，音域覆盖 C1 至 B7。",
+    "labels": {
+      "type": "音源类型",
+      "pitches": "录入音高",
+      "tones": "音色数",
+      "range": "支持音域",
+      "engines": "支持引擎",
+      "encoding": "文本编码"
+    },
+    "values": {
+      "type": "VCV（连续音）",
+      "pitches": "3 组音高",
+      "tones": "6 个子音库",
+      "engines": "UTAU / OpenUTAU",
+      "encoding": "Shift_JIS"
+    },
+    "subbanksTitle": "录入音高与音色",
+    "subbanksLead": "与 character.yaml 中的 subbanks 定义一致。同一音高下同时提供普通音色与 Soft 音色，可按情感表达需要选用。",
+    "toneDefault": "普通",
+    "toneSoft": "Soft",
+    "enginesTitle": "关于支持的引擎",
+    "enginesNote": "OpenUTAU 会直接读取 character.yaml 中的 subbanks 定义，因此可在软件内切换音高与 Soft 音色。",
+    "sourceNote": "※ 本页音源信息依据发行包中的 character.yaml 与 character.txt 整理。"
+  },
+  "samples": {
+    "title": "试听",
+    "lead": "已发布的 Bilibili 稿件，以及站内原音试听。",
+    "bilibiliTitle": "Bilibili 已发布稿件",
+    "onlineTitle": "在线试听",
+    "views": "{count} 次播放",
+    "officialBadge": "官方配布",
+    "demoLabel": "演示曲",
+    "rawLabel": "原音样本",
+    "emptyTitle": "试听音源即将公开",
+    "emptyBody": "试听音源正在制作中，敬请期待。"
+  },
+  "character": {
+    "title": "角色",
+    "lead": "羅行，一只毛色如墨、双目赤红的狼，耳侧配有黑色耳麦与麦克风吊杆。",
+    "profileTitle": "角色设定",
+    "profile": {
+      "age": "年龄",
+      "height": "身高",
+      "weight": "体重",
+      "likes": "喜欢的东西"
+    },
+    "likes": ["海", "米粉", "橙子"],
+    "designTitle": "设计备忘",
+    "designNotes": [
+      "左眼与右眼的左下方各有一撮（＞UWU＜）形状的毛，脑后还有一条中等长度的小辫子。这是作画时的重要特征。",
+      "发布的两套服装均可作为羅行的正式服装，欢迎在视频制作中自由使用。",
+      "毛色为「如墨一般的蓝色」，您可以据此印象调整毛色。",
+      "二次创作中，您可以自由改动羅行的衣物。"
+    ],
+    "galleryTitle": "立绘",
+    "galleryNote": "非营利性二次创作可自由使用羅行立绘，详细条件请参阅使用条款。",
+    "alt": {
+      "outfitA": "羅行立绘（服装 A · 正面）",
+      "outfitB": "羅行立绘（服装 B · 正面）",
+      "sheet": "羅行设定图（正面与背面）"
+    }
+  },
+  "terms": {
+    "title": "使用条款",
+    "lead": "使用本音源前，请务必确认以下全文。",
+    "sourceNote": "此处收录发行包中附带的 readme 全文。",
+    "contactTitle": "联系方式",
+    "copyrightTitle": "著作权",
+    "blocks": [
+      {
+        "heading": "关于「羅行」声库",
+        "items": [
+          "本音源由羅威（形象、声音），LAN（立绘）和 Dailing（声库参数）共同创作。"
+        ]
+      },
+      {
+        "heading": "使用许可",
+        "numbered": true,
+        "items": [
+          "只要遵守本规约的全部条款，即可许可使用本声库。",
+          "若无法全部遵守，则不允许使用本声库。",
+          "只要不对他人造成困扰，在非商业范围（不以营利为目的的个人活动）内，任何人都可以自由使用。",
+          "也可在部分商用场合使用，例如发售的音乐作品、同人作品、相关制品。",
+          "若超出上述情况，请通过文末联系方式咨询。"
+        ]
+      },
+      {
+        "heading": "禁止事项",
+        "numbered": true,
+        "items": [
+          "将该声库用于宗教、政治等思想主张相关内容。",
+          "进行有损原作者名誉、侵害第三方权利的衍生设定修改。",
+          "制作、发布煽动违法犯罪行为的衍生设定。",
+          "侵犯该声库著作权的行为，如贩售该声库。",
+          "将本声库拆解、提取原音素材，修改全部或一部分后再发布。"
+        ]
+      },
+      {
+        "heading": "允许行为",
+        "numbered": true,
+        "items": [
+          "在个人使用范围内，可对本声库进行适度改编（例如修改 oto.ini 文件，或让声库更适配 OpenUTAU 等软件），并发布使用改编后声库创作的作品。",
+          "允许将本声库在私人之间发送。"
+        ]
+      },
+      {
+        "heading": "关于再发布",
+        "numbered": true,
+        "items": [
+          "禁止将衍生声库去掉或修改角色信息、原著作权人信息后进行再分发。",
+          "允许再分发 oto.ini、frq 频率文件。"
+        ]
+      },
+      {
+        "heading": "关于角色「羅行」形象与声音相关作品",
+        "items": []
+      },
+      {
+        "heading": "相关事项",
+        "numbered": true,
+        "items": [
+          "角色原作（形象、声音）著作权归属于「羅威」。立绘著作权属于「LAN」。",
+          "非营利性二次创作可自由使用羅行立绘。",
+          "以营利为目的的商业使用：请务必事先告知。"
+        ]
+      },
+      {
+        "heading": "禁止事项",
+        "numbered": true,
+        "items": [
+          "禁止在诋毁角色形象、侮辱他人或带有歧视性质的二次创作中使用。",
+          "禁止在涉及政治、宗教（仅在传播宗教的意义上；如不涉及传教或侮辱宗教则可以使用）以及违反使用者所在国家法律的情况下使用。",
+          "禁止用于邪教相关或宣扬战争的内容。",
+          "当著作权人「羅威」提出异议时，需要遵从著作权人的意见。有疑问的地方建议提前咨询确认。",
+          "若上述行为原则上违反本条例，但著作权人特别许可，则不受本条例约束。"
+        ]
+      },
+      {
+        "heading": "AI 相关",
+        "numbered": true,
+        "items": [
+          "禁止未经著作权人许可，将「羅行」的声音用于人工智能大模型训练，或使用该方法制作声音作品。（如有需要，请使用 ACE Studio 的「羅行」AI 声库。）"
+        ]
+      }
+    ],
+    "contact": [
+      "羅威　X@Luowei_Roui　Bilibili@羅威",
+      "LAN　X@LAN_SHU_1　Bilibili@LAN_SHU_1",
+      "Dailing　Bilibili@哒达哒达令"
+    ],
+    "copyright": [
+      "羅行声音及形象：羅威 ©2025 All Rights Reserved.",
+      "羅行官方立绘：LAN ©2025 All Rights Reserved.",
+      "羅行音源制作：Dailing ©2026 All Rights Reserved."
+    ]
+  },
+  "download": {
+    "title": "下载",
+    "lead": "「羅行」的音源与立绘可通过以下网盘渠道下载。",
+    "groups": {
+      "voicebank": "音源",
+      "illustration": "立绘"
+    },
+    "platforms": {
+      "gdrive": "Google Drive",
+      "baidu": "百度网盘",
+      "quark": "夸克网盘"
+    },
+    "open": "打开",
+    "extractCode": "提取码",
+    "metaVersion": "版本",
+    "metaPackagedAt": "打包日期",
+    "metaSize": "文件大小",
+    "overseasHint": "百度网盘与夸克网盘主要面向中国大陆用户，海外用户请使用 Google Drive。",
+    "pendingTitle": "下载链接准备中",
+    "pendingBody": "下载链接正在准备中，敬请期待。",
+    "feedback": "若链接无法打开，请联系作者。",
+    "installTitle": "在 OpenUTAU 中安装",
+    "installSteps": [
+      "通过「工具 → 安装歌手」安装音源，支持 rar、zip、uar 压缩包，也可以直接把压缩包拖入 OpenUTAU 窗口。",
+      "安装界面可预览压缩包内的 wav 文件名与 oto.ini；若文字乱码，请在右上角选择正确的文本编码。",
+      "注意：非日文系统下请勿直接解压，务必用「安装歌手」导入。安装完成后歌手列表会出现「羅行」，3 组音高与 Soft 音色可直接选用。"
+    ],
+    "installTitleUtau": "在 UTAU 中安装",
+    "installStepsUtau": [
+      "将解压出的文件夹放入 UTAU 的 voice 目录。",
+      "请保持文件夹名为半角英文数字，不要改动。"
+    ]
+  },
+  "changelog": {
+    "title": "更新日志",
+    "lead": "音源更新内容汇总。",
+    "datePending": "公开日期未定",
+    "entries": [
+      {
+        "version": "1.0",
+        "date": null,
+        "notes": [
+          "首次发布。收录 VCV 连续音、3 组音高（B2 / G3 / F4）与 Soft 音色。",
+          "通过 character.yaml 支持 OpenUTAU 的 subbanks。"
+        ]
+      }
+    ]
+  },
+  "credits": {
+    "title": "制作名单",
+    "lead": "「羅行」由以下成员共同制作。",
+    "roles": {
+      "luowei": "角色设定 · 声音",
+      "lan": "立绘",
+      "dailing": "声库参数"
+    },
+    "copyrightNote": "各项著作权归各自权利人所有。",
+    "linkHub": "查看官方链接合集"
+  },
+  "surprise": {
+    "title": "彩蛋",
+    "lead": "从发行包的「Surprise」中随机展示一个。",
+    "button": "随机来一个",
+    "another": "再来一个",
+    "dialogLabel": "彩蛋动画",
+    "loading": "加载中…",
+    "error": "加载失败，请再试一次。"
+  },
+  "footer": {
+    "rights": "羅行声音及形象：羅威 2025 · 官方立绘：LAN 2025 · 音源制作：Dailing 2026"
+  }
+}

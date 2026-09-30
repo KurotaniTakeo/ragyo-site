@@ -1,0 +1,135 @@
+/* 此文件由 scripts/gen-palette.mjs 自动生成，请勿手动编辑。 */
+/* 种子色 primary #4D5779 / secondary #8E6D4F / tertiary #CF3A3D */
+
+:root {
+  color-scheme: dark;
+
+  --md-sys-color-primary: #bbc5ed;
+  --md-sys-color-on-primary: #252f4f;
+  --md-sys-color-primary-container: #3c4666;
+  --md-sys-color-on-primary-container: #dbe1ff;
+  --md-sys-color-secondary: #e7bf9c;
+  --md-sys-color-on-secondary: #442b12;
+  --md-sys-color-secondary-container: #5d4126;
+  --md-sys-color-on-secondary-container: #ffdcbf;
+  --md-sys-color-tertiary: #ffb3af;
+  --md-sys-color-on-tertiary: #68000d;
+  --md-sys-color-tertiary-container: #910518;
+  --md-sys-color-on-tertiary-container: #ffdad7;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+  --md-sys-color-background: #131316;
+  --md-sys-color-on-background: #e4e2e6;
+  --md-sys-color-surface: #131316;
+  --md-sys-color-on-surface: #e4e2e6;
+  --md-sys-color-surface-variant: #45464f;
+  --md-sys-color-on-surface-variant: #c5c6d0;
+  --md-sys-color-surface-dim: #131316;
+  --md-sys-color-surface-bright: #39393c;
+  --md-sys-color-surface-container-lowest: #0d0e11;
+  --md-sys-color-surface-container-low: #1b1b1f;
+  --md-sys-color-surface-container: #1f1f23;
+  --md-sys-color-surface-container-high: #292a2d;
+  --md-sys-color-surface-container-highest: #343438;
+  --md-sys-color-outline: #8f909a;
+  --md-sys-color-outline-variant: #45464f;
+  --md-sys-color-inverse-surface: #e4e2e6;
+  --md-sys-color-inverse-on-surface: #303034;
+  --md-sys-color-inverse-primary: #535d80;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-surface-tint: #bbc5ed;
+}
+
+/* ------------------------------------------------------------------
+   参考色调阶梯（reference palette）
+   与 --md-sys-color-* 的区别：这里保留完整的 0–100 色阶，
+   供调试页与后续微调取用，业务组件不应直接引用。
+------------------------------------------------------------------ */
+:root {
+  --md-ref-palette-primary-0: #000000;
+  --md-ref-palette-primary-10: #0f1a39;
+  --md-ref-palette-primary-20: #252f4f;
+  --md-ref-palette-primary-30: #3c4666;
+  --md-ref-palette-primary-40: #535d80;
+  --md-ref-palette-primary-50: #6c769a;
+  --md-ref-palette-primary-60: #858fb5;
+  --md-ref-palette-primary-70: #a0aad0;
+  --md-ref-palette-primary-80: #bbc5ed;
+  --md-ref-palette-primary-90: #dbe1ff;
+  --md-ref-palette-primary-95: #eff0ff;
+  --md-ref-palette-primary-99: #fefbff;
+  --md-ref-palette-primary-100: #ffffff;
+
+  --md-ref-palette-secondary-0: #000000;
+  --md-ref-palette-secondary-10: #2c1702;
+  --md-ref-palette-secondary-20: #442b12;
+  --md-ref-palette-secondary-30: #5d4126;
+  --md-ref-palette-secondary-40: #77583c;
+  --md-ref-palette-secondary-50: #927152;
+  --md-ref-palette-secondary-60: #ae8a6a;
+  --md-ref-palette-secondary-70: #caa483;
+  --md-ref-palette-secondary-80: #e7bf9c;
+  --md-ref-palette-secondary-90: #ffdcbf;
+  --md-ref-palette-secondary-95: #ffeee1;
+  --md-ref-palette-secondary-99: #fffbff;
+  --md-ref-palette-secondary-100: #ffffff;
+
+  --md-ref-palette-tertiary-0: #000000;
+  --md-ref-palette-tertiary-10: #410005;
+  --md-ref-palette-tertiary-20: #68000d;
+  --md-ref-palette-tertiary-30: #910518;
+  --md-ref-palette-tertiary-40: #b4262c;
+  --md-ref-palette-tertiary-50: #d74042;
+  --md-ref-palette-tertiary-60: #fa5959;
+  --md-ref-palette-tertiary-70: #ff8984;
+  --md-ref-palette-tertiary-80: #ffb3af;
+  --md-ref-palette-tertiary-90: #ffdad7;
+  --md-ref-palette-tertiary-95: #ffedeb;
+  --md-ref-palette-tertiary-99: #fffbff;
+  --md-ref-palette-tertiary-100: #ffffff;
+
+  --md-ref-palette-neutral-0: #000000;
+  --md-ref-palette-neutral-10: #1b1b1f;
+  --md-ref-palette-neutral-20: #303034;
+  --md-ref-palette-neutral-30: #46464a;
+  --md-ref-palette-neutral-40: #5e5e62;
+  --md-ref-palette-neutral-50: #77767a;
+  --md-ref-palette-neutral-60: #919094;
+  --md-ref-palette-neutral-70: #acaaaf;
+  --md-ref-palette-neutral-80: #c7c6ca;
+  --md-ref-palette-neutral-90: #e4e2e6;
+  --md-ref-palette-neutral-95: #f2f0f4;
+  --md-ref-palette-neutral-99: #fefbff;
+  --md-ref-palette-neutral-100: #ffffff;
+
+  --md-ref-palette-neutral-variant-0: #000000;
+  --md-ref-palette-neutral-variant-10: #191b23;
+  --md-ref-palette-neutral-variant-20: #2e3038;
+  --md-ref-palette-neutral-variant-30: #45464f;
+  --md-ref-palette-neutral-variant-40: #5d5e67;
+  --md-ref-palette-neutral-variant-50: #757680;
+  --md-ref-palette-neutral-variant-60: #8f909a;
+  --md-ref-palette-neutral-variant-70: #aaaab4;
+  --md-ref-palette-neutral-variant-80: #c5c6d0;
+  --md-ref-palette-neutral-variant-90: #e2e1ec;
+  --md-ref-palette-neutral-variant-95: #f0f0fa;
+  --md-ref-palette-neutral-variant-99: #fefbff;
+  --md-ref-palette-neutral-variant-100: #ffffff;
+
+  --md-ref-palette-error-0: #000000;
+  --md-ref-palette-error-10: #410002;
+  --md-ref-palette-error-20: #690005;
+  --md-ref-palette-error-30: #93000a;
+  --md-ref-palette-error-40: #ba1a1a;
+  --md-ref-palette-error-50: #de3730;
+  --md-ref-palette-error-60: #ff5449;
+  --md-ref-palette-error-70: #ff897d;
+  --md-ref-palette-error-80: #ffb4ab;
+  --md-ref-palette-error-90: #ffdad6;
+  --md-ref-palette-error-95: #ffedea;
+  --md-ref-palette-error-99: #fffbff;
+  --md-ref-palette-error-100: #ffffff;
+}

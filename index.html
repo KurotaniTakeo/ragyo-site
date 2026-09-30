@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#14121D" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Ragyo / RagyoVCV</title>
+    <script>
+      /*
+       * 语言探测：只在站点根路径执行，把用户送到与其浏览器语言一致的分区，
+       * 都不是则回落到英语。内联在 head 里同步执行，避免先闪一下英语再跳转。
+       * 手动切换过的语言记在 localStorage，下次访问优先使用。
+       */
+      (function () {
+        var path = location.pathname
+        if (path !== '/' && path !== '/index.html') return
+
+        var supported = ['ja', 'zh', 'en']
+        var stored = null
+        try {
+          stored = localStorage.getItem('ragyo.locale')
+        } catch (e) {
+          stored = null
+        }
+        if (supported.indexOf(stored) === -1) stored = null
+
+        var target = stored
+        if (!target) {
+          var langs = navigator.languages || [navigator.language || '']
+          for (var i = 0; i < langs.length; i += 1) {
+            var tag = String(langs[i]).toLowerCase()
+            if (tag.indexOf('zh') === 0) {
+              target = 'zh'
+              break
+            }
+            if (tag.indexOf('ja') === 0) {
+              target = 'ja'
+              break
+            }
+          }
+        }
+        if (!target) target = 'en'
+
+        location.replace('/' + target + '/' + location.search + location.hash)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+name=RagyoVCV
+image=icon.bmp
+
+age: 18
+height: 174cm
+weight: 64kg

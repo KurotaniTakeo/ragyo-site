@@ -1,0 +1,145 @@
+/* ------------------------------------------------------------------
+   Material You 基础 token：形状 / 动效 / 状态层 / 高程
+   颜色 token 见 m3-tokens.css（由 scripts/gen-palette.mjs 生成）
+------------------------------------------------------------------ */
+
+:root {
+  /* 形状：只保留圆角，不采用 Material You Expressive 的几何变形 */
+  --md-sys-shape-corner-none: 0;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 999px;
+
+  /* 状态层不透明度 */
+  --md-sys-state-hover-opacity: 0.08;
+  --md-sys-state-focus-opacity: 0.1;
+  --md-sys-state-pressed-opacity: 0.1;
+  --md-sys-state-dragged-opacity: 0.16;
+  --md-sys-state-disabled-opacity: 0.38;
+  --md-sys-state-disabled-container-opacity: 0.12;
+
+  /* 缓动曲线 */
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* 时长 */
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+  --md-sys-motion-duration-long4: 600ms;
+
+  /* 全屏翻页专用：略长于 medium4，保证跨屏时视觉可跟踪 */
+  --app-scroll-duration: 520ms;
+  --app-scroll-easing: var(--md-sys-motion-easing-emphasized-decelerate);
+
+  /* 布局栅格 */
+  --app-rail-width: 88px;
+  --app-bar-height: 64px;
+  --app-content-max: 1180px;
+  --app-gutter: clamp(20px, 5vw, 96px);
+  /* 顶栏之外再留出的呼吸空间：随视口高度自适应，矮屏最小 16px，
+     既让内容与固定顶栏拉开距离，又不会把 100dvh 分屏挤出可视区 */
+  --app-section-top-gap: clamp(16px, 2.5vh, 28px);
+}
+
+/* 矮屏（如 1366×768 / 1440×900 的窗口）压缩垂直节奏，尽量让整屏内容无需滚动 */
+@media (max-height: 860px) {
+  :root {
+    --app-section-top-gap: clamp(12px, 1.8vh, 20px);
+  }
+}
+
+/* ------------------------------------------------------------------
+   状态层：在元素上叠一层当前前景色，实现 hover / focus / pressed
+   用法：<button class="md-state-layer">
+------------------------------------------------------------------ */
+
+.md-state-layer {
+  position: relative;
+  isolation: isolate;
+}
+
+.md-state-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+@media (hover: hover) {
+  .md-state-layer:hover::after {
+    opacity: var(--md-sys-state-hover-opacity);
+  }
+}
+
+.md-state-layer:focus-visible::after {
+  opacity: var(--md-sys-state-focus-opacity);
+}
+
+.md-state-layer:active::after {
+  opacity: var(--md-sys-state-pressed-opacity);
+}
+
+/* ------------------------------------------------------------------
+   涟漪：由 v-ripple 指令驱动，注入 .md-ripple / .md-ripple-ink 节点
+------------------------------------------------------------------ */
+
+.md-ripple-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.md-ripple {
+  position: absolute;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: currentColor;
+  opacity: 0.16;
+  transform: scale(0);
+  pointer-events: none;
+  animation: md-ripple-expand var(--md-sys-motion-duration-long2)
+    var(--md-sys-motion-easing-standard-decelerate) forwards;
+}
+
+@keyframes md-ripple-expand {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------------------------------------------
+   焦点环
+------------------------------------------------------------------ */
+
+.md-focus-ring:focus-visible,
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

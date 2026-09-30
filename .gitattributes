@@ -1,0 +1,16 @@
+# 默认按内容自动识别文本并统一为 LF（src/scripts/配置当前均已为 LF）
+* text=auto eol=lf
+
+# 发行原件（CRLF 与 Shift-JIS 混排）：禁止 git 做行尾 / 编码规范化，保持字节原样
+assets/** -text
+
+# 二进制素材
+*.png  binary
+*.gif  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.mp4  binary
+*.bmp  binary
+*.ico  binary

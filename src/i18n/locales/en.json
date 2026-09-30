@@ -1,0 +1,269 @@
+{
+  "meta": {
+    "title": "Ragyo — UTAU / OpenUTAU Voice Library",
+    "description": "Ragyo is a VCV UTAU / OpenUTAU voice library covering C1–B7 across three pitches plus a Soft tone. Samples, terms of use and downloads."
+  },
+  "common": {
+    "langName": "English",
+    "langSwitch": "Switch language",
+    "skipToContent": "Skip to content",
+    "pending": "Pending",
+    "pendingTitle": "Coming soon",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Copy failed",
+    "close": "Close",
+    "loading": "Loading",
+    "openInNewTab": "Open in a new tab",
+    "sectionNav": "Section navigation",
+    "scrollHint": "Scroll"
+  },
+  "nav": {
+    "hero": "Top",
+    "about": "Library",
+    "samples": "Samples",
+    "character": "Character",
+    "terms": "Terms",
+    "download": "Download",
+    "changelog": "Changelog",
+    "credits": "Credits",
+    "surprise": "Extras"
+  },
+  "hero": {
+    "kicker": "UTAU / OpenUTAU Voice Library",
+    "tagline": "Ink-blue fur, red eyes — a wolf's voice at the microphone.",
+    "facts": "VCV ／ 3 pitches + Soft ／ C1–B7",
+    "ctaPrimary": "Download",
+    "ctaSecondary": "Listen",
+    "version": "Version {version}"
+  },
+  "about": {
+    "title": "The Library",
+    "lead": "Ragyo is a VCV voice library for UTAU. Each of the three pitches is recorded in both a normal and a Soft tone, covering C1 through B7.",
+    "labels": {
+      "type": "Voice type",
+      "pitches": "Pitches",
+      "tones": "Tones",
+      "range": "Tone range",
+      "engines": "Works with",
+      "encoding": "Text encoding"
+    },
+    "values": {
+      "type": "VCV",
+      "pitches": "3 pitches",
+      "tones": "6 subbanks",
+      "engines": "UTAU / OpenUTAU",
+      "encoding": "Shift_JIS"
+    },
+    "subbanksTitle": "Pitches and tones",
+    "subbanksLead": "These correspond to the subbanks defined in character.yaml. Each pitch is recorded in both a normal and a Soft tone so you can pick per phrase.",
+    "toneDefault": "Normal",
+    "toneSoft": "Soft",
+    "enginesTitle": "About engine support",
+    "enginesNote": "OpenUTAU reads the subbanks declared in character.yaml directly, so pitches and the Soft tone can be switched from inside the software.",
+    "sourceNote": "※ Library details on this page are taken from the character.yaml and character.txt files bundled with the release."
+  },
+  "samples": {
+    "title": "Samples",
+    "lead": "Published Bilibili works and in-site audio samples.",
+    "bilibiliTitle": "Published on Bilibili",
+    "onlineTitle": "Listen online",
+    "views": "{count} views",
+    "officialBadge": "Official release",
+    "demoLabel": "Demo song",
+    "rawLabel": "Raw sample",
+    "emptyTitle": "Samples are being prepared",
+    "emptyBody": "Audio samples are on the way. Please check back once the release is public."
+  },
+  "character": {
+    "title": "Character",
+    "lead": "Ragyo — a wolf with ink-blue fur and red eyes, wearing a black headset and a microphone boom.",
+    "profileTitle": "Profile",
+    "profile": {
+      "age": "Age",
+      "height": "Height",
+      "weight": "Weight",
+      "likes": "Favorite things"
+    },
+    "likes": ["the sea", "rice noodles", "oranges"],
+    "designTitle": "Design notes",
+    "designNotes": [
+      "Beneath the left side of both eyes there is fur shaped like (＞UWU＜), and a medium-length small braid sits at the back of the head. This is a key design point.",
+      "Both outfits included in the release are official costumes for Ragyo. Feel free to use them in your videos.",
+      "Ragyo's fur colour is \u201cink-like blue\u201d. You may adjust the tone based on this impression.",
+      "In derivative works you are free to change Ragyo's outfit as you like."
+    ],
+    "galleryTitle": "Illustrations",
+    "galleryNote": "Ragyo's illustrations may be freely used for non-profit derivative works. See the terms of use for the full conditions.",
+    "alt": {
+      "outfitA": "Ragyo illustration (outfit A, front)",
+      "outfitB": "Ragyo illustration (outfit B, front)",
+      "sheet": "Ragyo reference sheet (front and back)"
+    }
+  },
+  "terms": {
+    "title": "Terms of Use",
+    "lead": "Please read the full text below before using this voice library.",
+    "sourceNote": "This is the complete readme bundled with the release.",
+    "contactTitle": "Contact",
+    "copyrightTitle": "Copyright",
+    "blocks": [
+      {
+        "heading": "Regarding the \u201cRagyo\u201d Voice Library",
+        "items": [
+          "This voice library is jointly created by Luowei (character concept and voice), LAN (illustration) and Dailing (voice library parameters)."
+        ]
+      },
+      {
+        "heading": "Permission of Use",
+        "numbered": true,
+        "items": [
+          "You are granted permission to use this voice library provided that you comply with all clauses in this agreement.",
+          "Use of this voice library is prohibited if you cannot fully abide by these terms.",
+          "Anyone may freely use this voice library for non-commercial purposes (personal activities not intended for profit), as long as it does not cause trouble to others.",
+          "Partial commercial use is permitted, such as released musical works, doujin works and related merchandise.",
+          "For situations beyond the scope stated above, please contact us via the contact information at the end of this document."
+        ]
+      },
+      {
+        "heading": "Prohibited Acts",
+        "numbered": true,
+        "items": [
+          "Using this voice library for content related to religious, political or other ideological advocacy.",
+          "Modifying derivative settings that damage the original creator's reputation or infringe upon the rights of third parties.",
+          "Creating derivative content that incites illegal or criminal conduct.",
+          "Acts that infringe the copyright of this voice library, such as selling the voice library.",
+          "Disassembling this voice library, extracting raw audio samples, modifying all or part of them and redistributing the modified materials."
+        ]
+      },
+      {
+        "heading": "Permitted Acts",
+        "numbered": true,
+        "items": [
+          "Within the scope of personal use, moderate modification of this voice library (such as editing the oto.ini file or adjustments to make the library more compatible with OpenUTAU and other software), and publishing works created with the modified voice library.",
+          "Sending this voice library to individuals privately is permitted."
+        ]
+      },
+      {
+        "heading": "Regarding Redistribution",
+        "numbered": true,
+        "items": [
+          "Redistribution of derivative voice libraries with character information or original copyright holder information removed or altered is prohibited.",
+          "Redistribution of oto.ini and frq frequency files is permitted."
+        ]
+      },
+      {
+        "heading": "About works related to the character Ragyo's appearance and voice",
+        "items": []
+      },
+      {
+        "heading": "Notes",
+        "numbered": true,
+        "items": [
+          "Copyright of the original character (appearance and voice) belongs to Luowei. Copyright of the character illustration belongs to LAN.",
+          "Ragyo's illustration may be freely used for non-profit derivative creations.",
+          "For commercial use for profit: prior notification is required."
+        ]
+      },
+      {
+        "heading": "Prohibited Acts",
+        "numbered": true,
+        "items": [
+          "Use in derivative works that slander the character, insult others, or contain discriminatory content is prohibited.",
+          "Use in content involving politics or religion (religion-related content is permitted only if it does not proselytize or insult religion), or content violating the laws of the user's country, is prohibited.",
+          "Use in cult-related or war-propaganda content is prohibited.",
+          "If copyright holder Luowei raises objections, you must follow their instructions. We recommend consulting us in advance if you have any questions.",
+          "If an act violates these terms in principle but receives special permission from the copyright holder, it shall not be bound by this agreement."
+        ]
+      },
+      {
+        "heading": "AI Related",
+        "numbered": true,
+        "items": [
+          "Without permission from the copyright holder, it is prohibited to use Ragyo's voice for training large-scale AI datasets, or to create voice works using such trained models. (If you require this, please use the Ragyo AI voice library for ACE Studio.)"
+        ]
+      }
+    ],
+    "contact": [
+      "Luowei　X@Luowei_Roui　Bilibili@羅威",
+      "LAN　X@LAN_SHU_1　Bilibili@LAN_SHU_1",
+      "Dailing　Bilibili@哒达哒达令"
+    ],
+    "copyright": [
+      "Ragyo voice and character concept: Luowei ©2025 All Rights Reserved.",
+      "Official Ragyo illustration: LAN ©2025 All Rights Reserved.",
+      "Ragyo voice library production: Dailing ©2026 All Rights Reserved."
+    ]
+  },
+  "download": {
+    "title": "Download",
+    "lead": "Ragyo's voicebank and illustrations are distributed through the cloud storage services below.",
+    "groups": {
+      "voicebank": "Voicebank",
+      "illustration": "Illustration"
+    },
+    "platforms": {
+      "gdrive": "Google Drive",
+      "baidu": "Baidu Netdisk",
+      "quark": "Quark Drive"
+    },
+    "open": "Open",
+    "extractCode": "Access code",
+    "metaVersion": "Version",
+    "metaPackagedAt": "Packaged",
+    "metaSize": "File size",
+    "overseasHint": "Baidu Netdisk and Quark Drive primarily serve mainland China. Outside China, please use Google Drive.",
+    "pendingTitle": "Download links coming soon",
+    "pendingBody": "The download links are being prepared. Please check back once the release is public.",
+    "feedback": "If a link does not open, please contact the author.",
+    "installTitle": "Installing in OpenUTAU",
+    "installSteps": [
+      "Use Tools → Install Singer to install the voicebank. rar, zip and uar archives are supported, and you can also drag an archive into the OpenUTAU window.",
+      "The installer previews the wav filenames and oto.ini inside the archive. If the text is garbled, choose the correct text encoding in the top-right corner.",
+      "Note: on non-Japanese systems, do not extract the archive manually — always install it via Install Singer. Once installed, \"Ragyo\" appears in the singer list with all three pitches and the Soft tone ready to use."
+    ],
+    "installTitleUtau": "Installing in UTAU",
+    "installStepsUtau": [
+      "Place the extracted folder into UTAU's voice directory.",
+      "Keep the folder name in single-byte alphanumeric characters; do not rename it."
+    ]
+  },
+  "changelog": {
+    "title": "Changelog",
+    "lead": "A summary of updates to the voice library.",
+    "datePending": "Release date TBA",
+    "entries": [
+      {
+        "version": "1.0",
+        "date": null,
+        "notes": [
+          "Initial release. VCV with three pitches (B2 / G3 / F4) plus a Soft tone.",
+          "OpenUTAU subbanks are declared through character.yaml."
+        ]
+      }
+    ]
+  },
+  "credits": {
+    "title": "Credits",
+    "lead": "Ragyo was created by the following people.",
+    "roles": {
+      "luowei": "Character concept & voice",
+      "lan": "Illustration",
+      "dailing": "Voice library parameters"
+    },
+    "copyrightNote": "Copyright for each work belongs to its respective holder.",
+    "linkHub": "View the official link hub"
+  },
+  "surprise": {
+    "title": "Extras",
+    "lead": "Shows one random clip from the \u201cSurprise\u201d folder bundled with the release.",
+    "button": "Show me a random one",
+    "another": "One more",
+    "dialogLabel": "Bonus animation",
+    "loading": "Loading…",
+    "error": "Could not load. Please try again."
+  },
+  "footer": {
+    "rights": "Ragyo voice & character concept: Luowei 2025 ／ Official illustration: LAN 2025 ／ Library production: Dailing 2026"
+  }
+}

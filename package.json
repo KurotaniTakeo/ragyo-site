@@ -1,0 +1,35 @@
+{
+  "name": "ragyo-dist-page",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite-ssg build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "gen:palette": "node scripts/gen-palette.mjs",
+    "gen:images": "node scripts/gen-images.mjs",
+    "gen:surprise": "node scripts/gen-surprise.mjs"
+  },
+  "dependencies": {
+    "@unhead/vue": "^2.1.2",
+    "vue": "^3.5.43",
+    "vue-i18n": "^11.4.12",
+    "vue-router": "^5.3.1"
+  },
+  "devDependencies": {
+    "@fontsource-variable/noto-sans-jp": "^5.3.0",
+    "@fontsource-variable/noto-sans-sc": "^5.3.0",
+    "@material/material-color-utilities": "^0.4.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0",
+    "vite": "^8.3.1",
+    "vite-ssg": "^28.3.0",
+    "vue-tsc": "^3.3.11"
+  }
+}
