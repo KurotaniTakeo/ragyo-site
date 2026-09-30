@@ -174,16 +174,18 @@ const { t, locale } = useI18n()
   min-height: 0;
 }
 
-/* 立绘身后的墨蓝色光晕：用主色做一层极低透明度的径向渐变，
-   让人像与背景之间产生材质关系，同时保持「纯色简约」 */
+/* 立绘身后的光晕：用主色做一层径向渐变，把人像从同色系背景里托出来。
+   立绘身上有 #545873 一类与背景 #505678 近乎同色的暗部，只靠底色无法拉开轮廓，
+   需要这层明暗落差；同时它仍是柔和暖光，保持「纯色简约」。 */
 .hero-figure-glow {
   position: absolute;
   /* 只向上略扩；四周用 closest-side 收在元素内 —— 渐变在边缘恰好为 0，不会裁出硬边 */
   inset: -4% 0 0;
   background: radial-gradient(
     closest-side at 50% 46%,
-    color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent),
-    transparent
+    color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent),
+    color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent) 58%,
+    transparent 82%
   );
   pointer-events: none;
 }
