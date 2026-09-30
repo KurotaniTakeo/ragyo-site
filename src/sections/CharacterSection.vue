@@ -146,8 +146,8 @@ const likes = () => tm('character.likes') as string[]
 .like-tag {
   padding: 3px 10px;
   border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
 }
 
 .notes-card {

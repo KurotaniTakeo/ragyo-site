@@ -108,8 +108,10 @@ const DARK = {
   surfaceContainerHigh: tone('brand', 28),
   surfaceContainerHighest: tone('brand', 32),
 
+  // 描边/分割线在更亮的紫底上需要更高明度才看得出来：
+  // tone 56 在新底色上约 2:1，与旧近黑主题持平（tone 40 只有 1.3:1）。
   outline: tone('brand', 70),
-  outlineVariant: tone('brand', 40),
+  outlineVariant: tone('brand', 56),
 
   inverseSurface: tone('neutral', 90),
   inverseOnSurface: tone('neutral', 20),

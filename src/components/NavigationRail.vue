@@ -132,11 +132,11 @@ const { t } = useI18n()
 }
 
 .nav-item.is-active .nav-icon-wrap {
-  background-color: var(--md-sys-color-secondary-container);
+  background-color: var(--md-sys-color-surface-container);
 }
 
 .nav-item.is-active {
-  color: var(--md-sys-color-on-secondary-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 @media (hover: hover) {
