@@ -11,6 +11,9 @@
  * M3 默认只会从单一种子色推导全部五个 palette（并做 harmonize，
  * 会把副色、第三色拉向主色色相）。本项目希望保留立绘的原始色相，
  * 因此改为「每个 palette 各自用自己的种子色」，只让 neutral 系列跟随主色色相。
+ *
+ * 背景色另由委托方指定：取其在两个官方聚合页（vlink / linktree）上
+ * 选定的深紫 #505678 作为整站画布，surface 家族改由该色推导。
  */
 import { register } from 'node:module'
 import { writeFileSync, mkdirSync } from 'node:fs'
@@ -32,8 +35,16 @@ const SEEDS = {
   tertiary: '#CF3A3D',
 }
 
+/**
+ * 站点背景：委托方在两个官方聚合页上选定的深紫。
+ * 与 primary 种子同色相，但明度落在 tone 37 附近，作为整站画布；
+ * 容器色阶由它向下取（比底色更暗），复刻聚合页「紫底 + 暗紫卡片」的观感。
+ */
+const BACKGROUND = '#505678'
+
 const primaryHct = Hct.fromInt(argbFromHex(SEEDS.primary))
 const NEUTRAL_HUE = primaryHct.hue
+const backgroundHct = Hct.fromInt(argbFromHex(BACKGROUND))
 
 /* --------------------------------------------------------------- palette */
 
@@ -41,7 +52,9 @@ const palette = {
   primary: TonalPalette.fromInt(argbFromHex(SEEDS.primary)),
   secondary: TonalPalette.fromInt(argbFromHex(SEEDS.secondary)),
   tertiary: TonalPalette.fromInt(argbFromHex(SEEDS.tertiary)),
-  // neutral 系列沿用主色色相、极低彩度 —— 暗色表面的那一层「墨蓝灰」由此而来
+  // 背景族：沿用背景色的色相与彩度，供 surface 家族取色
+  brand: TonalPalette.fromHueAndChroma(backgroundHct.hue, backgroundHct.chroma),
+  // neutral 系列（现仅 inverse 家族在用）沿用主色色相、极低彩度
   neutral: TonalPalette.fromHueAndChroma(NEUTRAL_HUE, 4),
   neutralVariant: TonalPalette.fromHueAndChroma(NEUTRAL_HUE, 8),
   // M3 规范中 error 的固定色相（25）
@@ -51,20 +64,24 @@ const palette = {
 const tone = (name, t) => hexFromArgb(palette[name].tone(t))
 
 /* --------------------------------------------------- 暗色 scheme 角色映射 */
-// 依据 M3 规范：暗色 scheme 的 accent 取 tone 80，容器取 tone 30，容器前景取 tone 90
+// 背景明度从 tone 6 抬到 tone 37（#505678），因此不再套用 M3 暗色的默认阶梯：
+//   - surface 直接锚定 BACKGROUND，容器由 brand 调色板向下取（比底色更暗），
+//     文字一律用白 —— 与两个聚合页的观感一致；
+//   - accent/容器前景的取色规则不变（tone 30 / 90）；
+//   - accent 提到 tone 86（≈5:1）：默认的 tone 80 在更亮的紫底上够不到 WCAG AA。
 
 const DARK = {
-  primary: tone('primary', 80),
+  primary: tone('primary', 86),
   onPrimary: tone('primary', 20),
   primaryContainer: tone('primary', 30),
   onPrimaryContainer: tone('primary', 90),
 
-  secondary: tone('secondary', 80),
+  secondary: tone('secondary', 86),
   onSecondary: tone('secondary', 20),
   secondaryContainer: tone('secondary', 30),
   onSecondaryContainer: tone('secondary', 90),
 
-  tertiary: tone('tertiary', 80),
+  tertiary: tone('tertiary', 86),
   onTertiary: tone('tertiary', 20),
   tertiaryContainer: tone('tertiary', 30),
   onTertiaryContainer: tone('tertiary', 90),
@@ -74,25 +91,25 @@ const DARK = {
   errorContainer: tone('error', 30),
   onErrorContainer: tone('error', 90),
 
-  background: tone('neutral', 6),
-  onBackground: tone('neutral', 90),
+  background: BACKGROUND,
+  onBackground: '#ffffff',
 
-  surface: tone('neutral', 6),
-  onSurface: tone('neutral', 90),
-  surfaceVariant: tone('neutralVariant', 30),
-  onSurfaceVariant: tone('neutralVariant', 80),
+  surface: BACKGROUND,
+  onSurface: '#ffffff',
+  surfaceVariant: tone('brand', 30),
+  onSurfaceVariant: tone('brand', 85),
 
-  surfaceDim: tone('neutral', 6),
-  surfaceBright: tone('neutral', 24),
+  surfaceDim: tone('brand', 26),
+  surfaceBright: tone('brand', 52),
 
-  surfaceContainerLowest: tone('neutral', 4),
-  surfaceContainerLow: tone('neutral', 10),
-  surfaceContainer: tone('neutral', 12),
-  surfaceContainerHigh: tone('neutral', 17),
-  surfaceContainerHighest: tone('neutral', 22),
+  surfaceContainerLowest: tone('brand', 14),
+  surfaceContainerLow: tone('brand', 20),
+  surfaceContainer: tone('brand', 24),
+  surfaceContainerHigh: tone('brand', 28),
+  surfaceContainerHighest: tone('brand', 32),
 
-  outline: tone('neutralVariant', 60),
-  outlineVariant: tone('neutralVariant', 30),
+  outline: tone('brand', 70),
+  outlineVariant: tone('brand', 40),
 
   inverseSurface: tone('neutral', 90),
   inverseOnSurface: tone('neutral', 20),
@@ -101,7 +118,7 @@ const DARK = {
   shadow: tone('neutral', 0),
   scrim: tone('neutral', 0),
 
-  surfaceTint: tone('primary', 80),
+  surfaceTint: tone('primary', 86),
 }
 
 /* ------------------------------------------------------------ 对比度审计 */
@@ -157,7 +174,7 @@ const colors = Object.entries(DARK)
   .join('\n')
 
 const css = `/* 此文件由 scripts/gen-palette.mjs 自动生成，请勿手动编辑。 */
-/* 种子色 primary ${SEEDS.primary} / secondary ${SEEDS.secondary} / tertiary ${SEEDS.tertiary} */
+/* 背景 ${BACKGROUND} / 种子色 primary ${SEEDS.primary} / secondary ${SEEDS.secondary} / tertiary ${SEEDS.tertiary} */
 
 :root {
   color-scheme: dark;
@@ -176,6 +193,8 @@ ${ramp('primary')}
 ${ramp('secondary')}
 
 ${ramp('tertiary')}
+
+${ramp('brand')}
 
 ${ramp('neutral')}
 

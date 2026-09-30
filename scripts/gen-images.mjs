@@ -24,7 +24,7 @@ const outDir = join(ROOT, manifest.outputDir)
 
 /** 站点 surface 色（与 m3-tokens.css 的 --md-sys-color-surface 一致），
     用于把透明立绘合成到背景上，避免透明区域露出模糊剪影。 */
-const SURFACE = '#131316'
+const SURFACE = '#505678'
 
 /**
  * public/ 下的站点绝对路径前缀。

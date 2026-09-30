@@ -1,18 +1,18 @@
 /* 此文件由 scripts/gen-palette.mjs 自动生成，请勿手动编辑。 */
-/* 种子色 primary #4D5779 / secondary #8E6D4F / tertiary #CF3A3D */
+/* 背景 #505678 / 种子色 primary #4D5779 / secondary #8E6D4F / tertiary #CF3A3D */
 
 :root {
   color-scheme: dark;
 
-  --md-sys-color-primary: #bbc5ed;
+  --md-sys-color-primary: #ccd6fe;
   --md-sys-color-on-primary: #252f4f;
   --md-sys-color-primary-container: #3c4666;
   --md-sys-color-on-primary-container: #dbe1ff;
-  --md-sys-color-secondary: #e7bf9c;
+  --md-sys-color-secondary: #f9cfac;
   --md-sys-color-on-secondary: #442b12;
   --md-sys-color-secondary-container: #5d4126;
   --md-sys-color-on-secondary-container: #ffdcbf;
-  --md-sys-color-tertiary: #ffb3af;
+  --md-sys-color-tertiary: #ffcbc7;
   --md-sys-color-on-tertiary: #68000d;
   --md-sys-color-tertiary-container: #910518;
   --md-sys-color-on-tertiary-container: #ffdad7;
@@ -20,27 +20,27 @@
   --md-sys-color-on-error: #690005;
   --md-sys-color-error-container: #93000a;
   --md-sys-color-on-error-container: #ffdad6;
-  --md-sys-color-background: #131316;
-  --md-sys-color-on-background: #e4e2e6;
-  --md-sys-color-surface: #131316;
-  --md-sys-color-on-surface: #e4e2e6;
-  --md-sys-color-surface-variant: #45464f;
-  --md-sys-color-on-surface-variant: #c5c6d0;
-  --md-sys-color-surface-dim: #131316;
-  --md-sys-color-surface-bright: #39393c;
-  --md-sys-color-surface-container-lowest: #0d0e11;
-  --md-sys-color-surface-container-low: #1b1b1f;
-  --md-sys-color-surface-container: #1f1f23;
-  --md-sys-color-surface-container-high: #292a2d;
-  --md-sys-color-surface-container-highest: #343438;
-  --md-sys-color-outline: #8f909a;
-  --md-sys-color-outline-variant: #45464f;
+  --md-sys-color-background: #505678;
+  --md-sys-color-on-background: #ffffff;
+  --md-sys-color-surface: #505678;
+  --md-sys-color-on-surface: #ffffff;
+  --md-sys-color-surface-variant: #3f4566;
+  --md-sys-color-on-surface-variant: #cdd2fa;
+  --md-sys-color-surface-dim: #363c5c;
+  --md-sys-color-surface-bright: #747a9e;
+  --md-sys-color-surface-container-lowest: #1b2240;
+  --md-sys-color-surface-container-low: #282e4e;
+  --md-sys-color-surface-container: #313757;
+  --md-sys-color-surface-container-high: #3a4061;
+  --md-sys-color-surface-container-highest: #43496b;
+  --md-sys-color-outline: #a3a9cf;
+  --md-sys-color-outline-variant: #565c7f;
   --md-sys-color-inverse-surface: #e4e2e6;
   --md-sys-color-inverse-on-surface: #303034;
   --md-sys-color-inverse-primary: #535d80;
   --md-sys-color-shadow: #000000;
   --md-sys-color-scrim: #000000;
-  --md-sys-color-surface-tint: #bbc5ed;
+  --md-sys-color-surface-tint: #ccd6fe;
 }
 
 /* ------------------------------------------------------------------
@@ -90,6 +90,20 @@
   --md-ref-palette-tertiary-95: #ffedeb;
   --md-ref-palette-tertiary-99: #fffbff;
   --md-ref-palette-tertiary-100: #ffffff;
+
+  --md-ref-palette-brand-0: #000000;
+  --md-ref-palette-brand-10: #131938;
+  --md-ref-palette-brand-20: #282e4e;
+  --md-ref-palette-brand-30: #3f4566;
+  --md-ref-palette-brand-40: #565c7f;
+  --md-ref-palette-brand-50: #6f7599;
+  --md-ref-palette-brand-60: #898fb4;
+  --md-ref-palette-brand-70: #a3a9cf;
+  --md-ref-palette-brand-80: #bfc4ec;
+  --md-ref-palette-brand-90: #dee1ff;
+  --md-ref-palette-brand-95: #f0efff;
+  --md-ref-palette-brand-99: #fefbff;
+  --md-ref-palette-brand-100: #ffffff;
 
   --md-ref-palette-neutral-0: #000000;
   --md-ref-palette-neutral-10: #1b1b1f;

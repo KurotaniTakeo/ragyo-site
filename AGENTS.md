@@ -19,7 +19,7 @@ Anything headed "自动生成，请勿手动编辑" is an output; change the scr
 
 Prereqs: `gen:surprise` needs `ffmpeg`/`ffprobe` (H.264/libx264) on PATH. `gen:palette` relies on `scripts/esm-ext-hook.mjs` because `@material/material-color-utilities` ships extensionless relative imports that Node's ESM resolver rejects.
 
-The surface color `#131316` is hardcoded in both `gen-images.mjs` and `gen-surprise.mjs` to composite transparent art. If `gen:palette` changes `--md-sys-color-surface`, update both.
+The surface color `#505678` is hardcoded in both `gen-images.mjs` and `gen-surprise.mjs` to composite transparent art. If `gen:palette` changes `--md-sys-color-surface`, update both.
 
 Illustration sources (`assets/illustration/character/1.png`…) may be renamed; the only source of truth is `scripts/assets.manifest.json`. Note `3.png`, `5.png`, `6.png` are unused originals kept on purpose (not in the manifest). Reference images by semantic key via `src/data/assets.ts`, never by filename.
 

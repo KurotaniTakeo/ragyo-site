@@ -45,7 +45,7 @@ pnpm build           # 或 pnpm dev
 | `src/data/assets.generated.ts` + `public/img/generated/*` | `scripts/gen-images.mjs` + `scripts/assets.manifest.json` |
 | `src/data/surprise.generated.ts` + `public/surprise/generated/*` | `scripts/gen-surprise.mjs` |
 
-注意：surface 色 `#131316` 同时硬编码在 `gen-images.mjs` 与 `gen-surprise.mjs` 中用于合成透明素材；
+注意：surface 色 `#505678` 同时硬编码在 `gen-images.mjs` 与 `gen-surprise.mjs` 中用于合成透明素材；
 若 `gen:palette` 改动了 `--md-sys-color-surface`，需同步更新这两个脚本。
 
 ## 目录结构
