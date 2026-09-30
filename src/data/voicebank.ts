@@ -85,8 +85,7 @@ export const voicebank = {
     weight: '64kg',
   },
 
-  /** 官方链接中枢，取自 character.yaml 的 version 字段 */
-  linkHub: 'https://linktr.ee/Ragyo',
+  /* 官方链接合集（大陆 / 海外）统一由 src/data/credits.ts 维护，此处不再重复。 */
 
   /** ACE Studio 上的 AI 声库（規約中提及，供需要时引导） */
   aceStudioNote: true,

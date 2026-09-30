@@ -14,7 +14,7 @@ import M3Icon from '@/components/M3Icon.vue'
 import M3Button from '@/components/M3Button.vue'
 import BrandIcon from '@/components/BrandIcon.vue'
 import type { BrandIconName } from '@/components/brandIcons'
-import { credits, officialLinkHub, type SocialLink } from '@/data/credits'
+import { credits, officialLinkHubs, type SocialLink } from '@/data/credits'
 import { voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
 import type { Locale } from '@/i18n'
@@ -86,14 +86,18 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
       <p class="copyright md-body-small">
         {{ t('credits.copyrightNote') }}
       </p>
-      <M3Button
-        variant="outlined"
-        icon="open_in_new"
-        :href="officialLinkHub"
-        external
-      >
-        {{ t('credits.linkHub') }}
-      </M3Button>
+      <div class="credits-links">
+        <M3Button
+          v-for="hub in officialLinkHubs"
+          :key="hub.region"
+          variant="outlined"
+          icon="open_in_new"
+          :href="hub.url"
+          external
+        >
+          {{ t(`credits.linkHubs.${hub.region}`) }}
+        </M3Button>
+      </div>
       <p class="footer-rights md-body-small">
         {{ t('footer.rights') }}
         <span class="footer-sep" aria-hidden="true">·</span>
@@ -200,6 +204,13 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
   gap: 12px;
 }
 
+/* 官方链接合集：大陆 / 海外两个按钮并排，窄屏自动换行 */
+.credits-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .copyright,
 .footer-rights {
   margin: 0;
@@ -222,6 +233,10 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
 
   .credits-footer {
     margin-top: 12px;
+    gap: 8px;
+  }
+
+  .credits-links {
     gap: 8px;
   }
 }

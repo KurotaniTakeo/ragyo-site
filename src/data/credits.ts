@@ -53,5 +53,21 @@ export const credits: Credit[] = [
   },
 ]
 
-/** 官方链接中枢，取自 character.yaml 的 version 字段 */
-export const officialLinkHub = 'https://linktr.ee/Ragyo'
+/** 官方链接中枢的适用地区：大陆用 vlink，海外用 linktree */
+export type LinkHubRegion = 'mainland' | 'overseas'
+
+export interface LinkHub {
+  region: LinkHubRegion
+  url: string
+}
+
+/**
+ * 官方链接合集。
+ *
+ * 大陆用户走 vlink，海外用户走 linktree —— 两个聚合页内容一致，
+ * 只是分发渠道不同，故并列展示而不做自动跳转。
+ */
+export const officialLinkHubs: LinkHub[] = [
+  { region: 'mainland', url: 'https://vlink.cc/ragyo' },
+  { region: 'overseas', url: 'https://linktr.ee/Ragyo' },
+]
