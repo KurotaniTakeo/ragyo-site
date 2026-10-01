@@ -67,8 +67,11 @@ async function onCopy() {
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* 提取码需要一眼看清，用等宽字形 + 字距，避免 l/1/O/0 混淆 */
-.chip-value {
+/* 提取码需要一眼看清，用等宽字形 + 字距，避免 l/1/O/0 混淆。
+   选择器写成 .assist-chip .chip-value 提高权重：m3-type.css 里
+   html:lang(zh) .md-label-large { letter-spacing: 0 } 的权重 (0,2,1)
+   会压过单个 scoped 类 (0,2,0)，导致中日文页字距被归零、与英文页不一致。 */
+.assist-chip .chip-value {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: 0.12em;
   font-weight: 600;
