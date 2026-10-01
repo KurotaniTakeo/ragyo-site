@@ -17,7 +17,7 @@
         var path = location.pathname
         if (path !== '/' && path !== '/index.html') return
 
-        var supported = ['ja', 'zh', 'en']
+        var supported = ['ja', 'zh', 'zh-Hant', 'en']
         var stored = null
         try {
           stored = localStorage.getItem('ragyo.locale')
@@ -32,7 +32,13 @@
           for (var i = 0; i < langs.length; i += 1) {
             var tag = String(langs[i]).toLowerCase()
             if (tag.indexOf('zh') === 0) {
-              target = 'zh'
+              // 繁体：显式 Hant 脚本，或台/港/澳地区码；其余中文按简体处理
+              var hant =
+                tag.indexOf('hant') !== -1 ||
+                tag.indexOf('-tw') !== -1 ||
+                tag.indexOf('-hk') !== -1 ||
+                tag.indexOf('-mo') !== -1
+              target = hant ? 'zh-Hant' : 'zh'
               break
             }
             if (tag.indexOf('ja') === 0) {

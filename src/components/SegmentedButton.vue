@@ -114,4 +114,12 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
     font-size: 0.75rem;
   }
 }
+
+/* 四语并列时进一步收紧，避免窄屏顶栏放不下 */
+@media (max-width: 480px) {
+  .segment {
+    padding: 0 7px;
+    font-size: 0.6875rem;
+  }
+}
 </style>

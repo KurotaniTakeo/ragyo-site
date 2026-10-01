@@ -2,8 +2,9 @@ import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
 import ja from './locales/ja.json'
 import zh from './locales/zh.json'
+import zhHant from './locales/zh-Hant.json'
 
-export const SUPPORTED_LOCALES = ['ja', 'zh', 'en'] as const
+export const SUPPORTED_LOCALES = ['ja', 'zh', 'zh-Hant', 'en'] as const
 export type Locale = (typeof SUPPORTED_LOCALES)[number]
 
 export const DEFAULT_LOCALE: Locale = 'en'
@@ -15,13 +16,15 @@ export const LOCALE_STORAGE_KEY = 'ragyo.locale'
 export const LOCALE_LABELS: Record<Locale, string> = {
   ja: '日本語',
   zh: '简体中文',
+  'zh-Hant': '繁體中文',
   en: 'English',
 }
 
-/** 写入 <html lang> 的值。中文用 zh-Hans，便于浏览器选择简体字形。 */
+/** 写入 <html lang> 的值。中文按字形细分：zh 用 zh-Hans，zh-Hant 用 zh-Hant。 */
 export const HTML_LANG: Record<Locale, string> = {
   ja: 'ja',
   zh: 'zh-Hans',
+  'zh-Hant': 'zh-Hant',
   en: 'en',
 }
 
@@ -29,6 +32,7 @@ export const HTML_LANG: Record<Locale, string> = {
 export const HREFLANG: Record<Locale, string> = {
   ja: 'ja',
   zh: 'zh-Hans',
+  'zh-Hant': 'zh-Hant',
   en: 'en',
 }
 
@@ -36,6 +40,7 @@ export const HREFLANG: Record<Locale, string> = {
 export const OG_LOCALE: Record<Locale, string> = {
   ja: 'ja_JP',
   zh: 'zh_CN',
+  'zh-Hant': 'zh_TW',
   en: 'en',
 }
 
@@ -47,8 +52,8 @@ export const createI18nInstance = () =>
     legacy: false,
     locale: DEFAULT_LOCALE,
     fallbackLocale: DEFAULT_LOCALE,
-    messages: { ja, zh, en },
-    // 三语内容均已完整翻译，缺键时应在开发阶段就暴露出来
+    messages: { ja, zh, 'zh-Hant': zhHant, en },
+    // 四语内容均已完整翻译，缺键时应在开发阶段就暴露出来
     missingWarn: import.meta.env.DEV,
     fallbackWarn: import.meta.env.DEV,
   })

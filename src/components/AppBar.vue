@@ -7,7 +7,7 @@
  */
 import { useI18n } from 'vue-i18n'
 import SegmentedButton from './SegmentedButton.vue'
-import { LOCALE_LABELS, SUPPORTED_LOCALES } from '@/i18n'
+import { LOCALE_LABELS, SUPPORTED_LOCALES, type Locale } from '@/i18n'
 import { voicebank } from '@/data/voicebank'
 
 defineProps<{
@@ -33,7 +33,7 @@ const localeOptions = SUPPORTED_LOCALES.map((value) => ({
     <a class="brand" :href="`#hero`" @click.prevent="emit('select-hero')">
       <span class="brand-mark" aria-hidden="true" />
       <span class="brand-text">
-        <span class="brand-name md-title-medium">{{ voicebank.name[locale as 'ja'] ?? voicebank.name.ja }}</span>
+        <span class="brand-name md-title-medium">{{ voicebank.name[locale as Locale] }}</span>
         <span class="brand-sub md-label-small">{{ voicebank.libraryName }}</span>
       </span>
     </a>

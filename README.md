@@ -14,7 +14,7 @@ Vue 3 + Vite + vite-ssg + Tailwind v4 + vue-i18n，TypeScript 严格模式。
 | 命令 | 说明 |
 | --- | --- |
 | `pnpm dev` | 启动 Vite 开发服务器 |
-| `pnpm build` | `vite-ssg build`，预渲染 `/ja/ /zh/ /en/` 到 `dist/` |
+| `pnpm build` | `vite-ssg build`，预渲染 `/ja/ /zh/ /zh-Hant/ /en/` 到 `dist/` |
 | `pnpm preview` | 本地预览构建产物 |
 | `pnpm typecheck` | `vue-tsc --noEmit`，**唯一的自动化检查**（无 linter / 测试 / CI） |
 | `pnpm gen:palette` | 由种子色重新生成 `src/styles/m3-tokens.css` |
@@ -55,7 +55,7 @@ src/
 ├── components/   M3 风格通用组件
 ├── composables/  整页滚动、滚动上下文、Snackbar
 ├── data/         语言无关的结构化数据（声库、下载、样本、版权、section 定义）
-├── i18n/         三语文案 locales/{ja,zh,en}.json
+├── i18n/         四语文案 locales/{ja,zh,zh-Hant,en}.json
 ├── sections/     首页 9 个区块
 ├── styles/       Material 3 tokens / 排版 + Tailwind 入口
 └── views/        HomePage.vue（仅渲染各 section）
@@ -83,9 +83,9 @@ assets/
 
 ## 内容维护约定
 
-- 面向用户的文案放 `src/i18n/locales/{ja,zh,en}.json`；语言无关的结构化数据放 `src/data/*.ts`。三个语言文件须保持结构一致——缺键警告只在 dev 触发，缺漏会静默上线。
-- 区块的顺序与 id 定义在 `src/data/sections.ts`；id 同时是 URL hash、`data-section`、导航键与 i18n 键 `nav.<id>` / `sections.<id>.*`。增删或移动区块需同时改 `sections.ts`、`HomePage.vue` 与三语文案。
-- 声库版本号等信息在 `src/data/voicebank.ts`、`src/data/downloads.ts` 与三语 changelog 中重复出现，改动时需一并更新。
+- 面向用户的文案放 `src/i18n/locales/{ja,zh,zh-Hant,en}.json`；语言无关的结构化数据放 `src/data/*.ts`。四个语言文件须保持结构一致——缺键警告只在 dev 触发，缺漏会静默上线。
+- 区块的顺序与 id 定义在 `src/data/sections.ts`；id 同时是 URL hash、`data-section`、导航键与 i18n 键 `nav.<id>` / `sections.<id>.*`。增删或移动区块需同时改 `sections.ts`、`HomePage.vue` 与各语文案。
+- 声库版本号等信息在 `src/data/voicebank.ts`、`src/data/downloads.ts` 与各语 changelog 中重复出现，改动时需一并更新。
 - 代码注释使用中文。
 
 ## 已知待办

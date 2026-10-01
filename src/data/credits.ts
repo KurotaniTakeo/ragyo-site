@@ -29,7 +29,7 @@ export interface Credit {
 export const credits: Credit[] = [
   {
     key: 'luowei',
-    name: { ja: '羅威', zh: '羅威', en: 'Luowei' },
+    name: { ja: '羅威', zh: '羅威', 'zh-Hant': '羅威', en: 'Luowei' },
     year: '2025',
     links: [
       { platform: 'X', handle: '@Luowei_Roui', url: 'https://x.com/Luowei_Roui' },
@@ -38,7 +38,7 @@ export const credits: Credit[] = [
   },
   {
     key: 'lan',
-    name: { ja: 'LAN', zh: 'LAN', en: 'LAN' },
+    name: { ja: 'LAN', zh: 'LAN', 'zh-Hant': 'LAN', en: 'LAN' },
     year: '2025',
     links: [
       { platform: 'X', handle: '@LAN_SHU_1', url: 'https://x.com/LAN_SHU_1' },
@@ -47,7 +47,7 @@ export const credits: Credit[] = [
   },
   {
     key: 'dailing',
-    name: { ja: 'Dailing', zh: 'Dailing', en: 'Dailing' },
+    name: { ja: 'Dailing', zh: 'Dailing', 'zh-Hant': 'Dailing', en: 'Dailing' },
     year: '2026',
     links: [{ platform: 'Bilibili', handle: '@哒达哒达令', url: null }],
   },

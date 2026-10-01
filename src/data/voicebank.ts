@@ -13,6 +13,7 @@
 export interface Localized<T = string> {
   ja: T
   zh: T
+  'zh-Hant': T
   en: T
 }
 
@@ -38,6 +39,7 @@ export const voicebank = {
   name: {
     ja: '羅行',
     zh: '羅行',
+    'zh-Hant': '羅行',
     en: 'Ragyo',
   } satisfies Localized,
 
@@ -45,6 +47,7 @@ export const voicebank = {
   reading: {
     ja: 'らぎょう',
     zh: 'Ragyo',
+    'zh-Hant': 'Ragyo',
     en: '羅行',
   } satisfies Localized,
 

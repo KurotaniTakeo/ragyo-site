@@ -4,6 +4,7 @@
    不使用 Google Fonts CDN —— 站点主要面向中文与日文用户，跨境 CDN 会拖慢首屏。 */
 @import '@fontsource-variable/noto-sans-jp';
 @import '@fontsource-variable/noto-sans-sc';
+@import '@fontsource-variable/noto-sans-tc';
 
 @import './m3-tokens.css' layer(base);
 @import './m3-foundation.css' layer(base);
@@ -69,18 +70,24 @@
 
 @layer base {
   :root {
-    /* 日文页用 Noto Sans JP，中文页用 Noto Sans SC。
-       两者都含拉丁字形，因此不额外引入拉丁字体。
-       按语言只挂载一套，避免两套 CJK 字体的分片同时下载。 */
+    /* 日文页用 Noto Sans JP，中文页按字形分别用 Noto Sans SC / TC。
+       三者都含拉丁字形，因此不额外引入拉丁字体。
+       按语言只挂载一套，避免多套 CJK 字体的分片同时下载。 */
     --app-font-sans: 'Noto Sans JP Variable', system-ui, -apple-system, 'Hiragino Kaku Gothic ProN',
       'Yu Gothic', sans-serif;
   }
 
-  /* 注意：SSG 会给中文页写 lang="zh-Hans"，所以用 :lang(zh) 而不是 [lang='zh']，
-     否则选择器匹配不上、中文页会回退到日文字体。 */
+  /* 注意：SSG 会给中文页写 lang="zh-Hans" / "zh-Hant"，所以用 :lang(zh) 而不是 [lang='zh']，
+     否则选择器匹配不上、中文页会回退到日文字体。
+     :lang(zh) 也会命中 zh-Hant，因此繁体规则必须排在其后覆盖。 */
   html:lang(zh) {
     --app-font-sans: 'Noto Sans SC Variable', system-ui, -apple-system, 'PingFang SC',
       'Microsoft YaHei', sans-serif;
+  }
+
+  html:lang(zh-Hant) {
+    --app-font-sans: 'Noto Sans TC Variable', system-ui, -apple-system, 'PingFang TC',
+      'Microsoft JhengHei', sans-serif;
   }
 
   *,

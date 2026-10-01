@@ -5,7 +5,7 @@ Promotional site for the "Ragyo" UTAU/OpenUTAU voicebank: a single static, pre-r
 ## Commands
 - `pnpm dev` — Vite dev server. Use **pnpm** (`pnpm-lock.yaml`); do not use npm/yarn.
 - `pnpm typecheck` — `vue-tsc --noEmit`. This is the **only** automated check; there is no linter, test suite, or CI.
-- `pnpm build` — `vite-ssg build`, pre-renders `/ja/ /zh/ /en/` into static HTML in `dist/`.
+- `pnpm build` — `vite-ssg build`, pre-renders `/ja/ /zh/ /zh-Hant/ /en/` into static HTML in `dist/`.
 - `pnpm preview` — serve the built `dist/`.
 - Generators: `pnpm gen:palette`, `pnpm gen:images`, `pnpm gen:surprise`.
 
@@ -24,7 +24,7 @@ The surface color `#131316` is hardcoded in both `gen-images.mjs` and `gen-surpr
 Illustration sources (`assets/illustration/character/1.png`…) may be renamed; the only source of truth is `scripts/assets.manifest.json`. Note `3.png`, `5.png`, `6.png` are unused originals kept on purpose (not in the manifest). Reference images by semantic key via `src/data/assets.ts`, never by filename.
 
 ## Architecture facts that are easy to miss
-- **SSG only**: one static route per locale (`/ja/`, `/zh/`, `/en/`), deliberately not a dynamic `/:locale`, so each gets correct `<html lang>`, title, OGP and hreflang. Don't collapse it.
+- **SSG only**: one static route per locale (`/ja/`, `/zh/`, `/zh-Hant/`, `/en/`), deliberately not a dynamic `/:locale`, so each gets correct `<html lang>`, title, OGP and hreflang. Don't collapse it.
 - SSG runs on Node: guard browser APIs (`window`, `localStorage`, `matchMedia`) with `import.meta.env.SSR` or run them in `onMounted`.
 - Locale source of truth is **route meta**, not the i18n instance — `App.vue` watches the route and sets `locale`. Root `/` is redirected client-side by the inline script in `index.html` (localStorage key `ragyo.locale`).
 - The site's single scroll container (`.snap-scroller`) lives in `App.vue`; `views/HomePage.vue` only renders the 9 sections. Full-page scrolling = CSS scroll-snap plus a desktop wheel-hijack in `composables/useFullPageScroll.ts`. `SectionShell.vue` must keep rendering `data-section` / `data-scrollable` — that logic queries them.
@@ -33,7 +33,7 @@ Illustration sources (`assets/illustration/character/1.png`…) may be renamed; 
 - Alias `@` → `src/`.
 
 ## Content conventions
-- User-facing prose goes in `src/i18n/locales/{ja,zh,en}.json`; language-invariant structured data goes in `src/data/*.ts`. Keep the three locale files structurally identical — missing-key warnings fire only in dev, so gaps ship silently.
+- User-facing prose goes in `src/i18n/locales/{ja,zh,zh-Hant,en}.json`; language-invariant structured data goes in `src/data/*.ts`. Keep the four locale files structurally identical — missing-key warnings fire only in dev, so gaps ship silently.
 - Facts like the voicebank version are duplicated across `src/data/voicebank.ts`, `src/data/downloads.ts`, and the locale changelog; update all.
 - Code comments are written in Chinese; match that style.
 - `SITE_URL` in `src/config.ts` is `null`, so canonical/hreflang/OGP fall back to relative URLs. `config.ts` points at `/og/<locale>.png` and `scripts/gen-og.mjs`, but neither the script nor `public/og/` exists yet, so OGP images currently 404.
