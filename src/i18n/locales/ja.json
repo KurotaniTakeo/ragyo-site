@@ -211,7 +211,7 @@
     "metaVersion": "バージョン",
     "metaPackagedAt": "パッケージ日",
     "metaSize": "ファイルサイズ",
-    "overseasHint": "百度網盤・夸克網盤は中国本土向けのサービスです。海外からは Google ドライブをご利用ください。",
+    "overseasHint": "{platform}は中国本土向けのサービスです。海外からは Google ドライブをご利用ください。",
     "gdriveHint": "Google ドライブは中国本土からのアクセスが不安定です。中国本土の方は百度網盤・夸克網盤をご利用ください。",
     "pendingTitle": "ダウンロードリンク準備中",
     "pendingBody": "現在ダウンロードリンクを準備しています。公開までしばらくお待ちください。",

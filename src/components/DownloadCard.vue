@@ -56,7 +56,7 @@ const { t } = useI18n()
         </div>
 
         <p v-if="!isChinese && mirror.mainlandOnly" class="mirror-hint md-body-small">
-          {{ t('download.overseasHint') }}
+          {{ t('download.overseasHint', { platform: t(`download.platforms.${mirror.platform}`) }) }}
         </p>
         <p v-else-if="isChinese && !mirror.mainlandOnly" class="mirror-hint md-body-small">
           {{ t('download.gdriveHint') }}
