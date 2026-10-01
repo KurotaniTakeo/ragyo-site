@@ -77,7 +77,7 @@ const likes = () => tm('character.likes') as string[]
         <ResponsiveImage
           :image-key="SHEET_IMAGE"
           :alt="t('character.alt.sheet')"
-          sizes="(max-width: 980px) 90vw, 46vw"
+          sizes="(max-width: 860px) 90vw, 520px"
           class="sheet-image"
         />
         <figcaption class="md-label-small">{{ t('character.galleryTitle') }}</figcaption>
@@ -89,9 +89,11 @@ const likes = () => tm('character.likes') as string[]
 <style scoped>
 .character-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(14px, 2vw, 24px);
-  align-items: stretch;
+  /* 居中而非拉伸：整行仍由 flex:1 撑满一屏，但信息卡与设定图各自按
+     内容高度在行内垂直居中，避免设计备忘卡被拉出大片空白 */
+  align-items: center;
   min-height: 0;
   flex: 1;
 }
@@ -194,6 +196,7 @@ const likes = () => tm('character.likes') as string[]
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
+  width: 100%;
   min-height: 0;
   border-radius: var(--md-sys-shape-corner-large);
   /* 不加 overflow: hidden —— 透明底立绘无需在圆角处裁切，
@@ -208,14 +211,17 @@ const likes = () => tm('character.likes') as string[]
 /* ResponsiveImage 内部用 <picture>（display:contents）包裹，
    尺寸样式需穿透到真正的 <img> */
 :deep(.sheet-image) {
+  /* 双列时填满立绘列：行高由左栏内容决定，避免设定图自身把整行拉高；
+     contain 保证宽/高任一先到极限都不变形。设定图上下有透明留白，
+     用 center 垂直居中比贴底更平衡。 */
+  width: 100%;
   height: 100%;
-  max-height: 100%;
-  width: auto;
   max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  object-position: bottom center;
+  object-position: center;
   background-size: contain;
-  background-position: bottom center;
+  background-position: center;
 }
 
 .character-figure figcaption {
@@ -223,7 +229,9 @@ const likes = () => tm('character.likes') as string[]
   padding-bottom: 4px;
 }
 
-@media (max-width: 980px) {
+/* 断点与 AppBar / NavigationRail / SectionShell 对齐（860px），
+   避免 861–980px 区间出现「桌面导轨 + 单列内容」的错配 */
+@media (max-width: 860px) {
   .character-grid {
     grid-template-columns: minmax(0, 1fr);
     /* 单列时不再强行撑满一屏：让网格按内容高度排布，
@@ -236,8 +244,43 @@ const likes = () => tm('character.likes') as string[]
   }
 
   :deep(.sheet-image) {
+    /* 满宽度 + 自然高度：设定图铺满整行，不再被高度上限压成
+       居中的小图、两侧留下大片空白。超出视口交给面板内滚。 */
+    width: 100%;
     height: auto;
-    max-height: 40dvh;
+    max-height: none;
+    object-position: center bottom;
+  }
+}
+
+/* 矮屏（横屏手机 / 小窗口）：满宽设定图会过高，收回高度上限保证可用 */
+@media (max-width: 860px) and (max-height: 720px) {
+  :deep(.sheet-image) {
+    width: auto;
+    max-height: 48dvh;
+  }
+}
+
+/* 横屏手机：单列上下堆叠时设定图会掉到首屏之外，改为左右并排 */
+@media (max-width: 860px) and (orientation: landscape) {
+  .character-grid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: stretch;
+    /* 横屏视口高度很小：不强行塞进一屏，让行高随内容增长，
+       设定图拿到足够高度、由面板内滚查看，而不是缩成一枚小图 */
+    flex: none;
+  }
+
+  .character-figure {
+    order: 0;
+    min-height: 0;
+  }
+
+  :deep(.sheet-image) {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-position: center;
   }
 }
 
