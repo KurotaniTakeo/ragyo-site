@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * 社交平台品牌图标（X / Bilibili）。
+ * 社交平台品牌图标（X / Bilibili / GitHub）。
  *
  * 路径内联在 brandIcons.ts 中，不引入图标字体。
  * 视觉上以 currentColor 着色，通过 size 控制尺寸。

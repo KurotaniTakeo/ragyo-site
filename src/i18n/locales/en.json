@@ -251,7 +251,11 @@
     "roles": {
       "luowei": "Character concept & voice",
       "lan": "Illustration",
-      "dailing": "Voice library parameters"
+      "dailing": "Voice library parameters",
+      "takeo": "Final QA & web development"
+    },
+    "notes": {
+      "takeo": "The front-end code in the repository was produced with assistance from DeepSeek V4.1 Flash."
     },
     "copyrightNote": "Copyright for each work belongs to its respective holder.",
     "linkHubsTitle": "Official link hub",

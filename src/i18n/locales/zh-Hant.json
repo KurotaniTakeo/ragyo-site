@@ -251,7 +251,11 @@
     "roles": {
       "luowei": "角色設定 · 聲音",
       "lan": "立繪",
-      "dailing": "聲庫參數"
+      "dailing": "聲庫參數",
+      "takeo": "最終排查修正 · 網頁製作"
+    },
+    "notes": {
+      "takeo": "倉庫中前端程式碼由 DeepSeek V4.1 Flash 協助製作。"
     },
     "copyrightNote": "各項著作權歸各自權利人所有。",
     "linkHubsTitle": "官方連結彙整",

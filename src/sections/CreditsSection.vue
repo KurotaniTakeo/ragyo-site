@@ -23,12 +23,17 @@ import type { Locale } from '@/i18n'
 
 defineProps<{ active: boolean }>()
 
-const { t, locale } = useI18n()
+const { t, te, locale } = useI18n()
 const { highlightRequest } = useScrollContext()
 
 /** 平台 → 品牌图标 */
-const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
-  platform === 'X' ? 'x' : 'bilibili'
+const platformIcons: Record<SocialLink['platform'], BrandIconName> = {
+  X: 'x',
+  Bilibili: 'bilibili',
+  GitHub: 'github',
+}
+
+const platformIcon = (platform: SocialLink['platform']): BrandIconName => platformIcons[platform]
 
 /* ------------------------------------------------------------ 高亮 */
 
@@ -76,7 +81,17 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
           :style="`--reveal-delay: ${index * 60}ms`"
         >
           <div class="credit-head">
-            <span class="credit-avatar md-title-large" aria-hidden="true">
+            <img
+              v-if="credit.avatar"
+              class="credit-avatar credit-avatar-img"
+              :src="credit.avatar"
+              alt=""
+              width="44"
+              height="44"
+              loading="lazy"
+              decoding="async"
+            />
+            <span v-else class="credit-avatar md-title-large" aria-hidden="true">
               {{ credit.name[locale as Locale].slice(0, 1) }}
             </span>
             <div class="credit-id">
@@ -107,6 +122,13 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
               </span>
             </li>
           </ul>
+
+          <p
+            v-if="te(`credits.notes.${credit.key}`)"
+            class="credit-note md-body-small"
+          >
+            {{ t(`credits.notes.${credit.key}`) }}
+          </p>
         </M3Card>
       </li>
     </ul>
@@ -191,7 +213,7 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
   min-width: 0;
 }
 
-/* 头像用姓氏首字 + 容器色，避免额外引入图片 */
+/* 无头像时回退为姓氏首字 + 容器色色块 */
 .credit-avatar {
   display: grid;
   place-items: center;
@@ -201,6 +223,11 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
   border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
+}
+
+/* 自托管头像：与视频封面一样直接引用本地文件 */
+.credit-avatar-img {
+  object-fit: cover;
 }
 
 .credit-id {
@@ -215,6 +242,12 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
 
 .credit-role {
   color: var(--md-sys-color-on-surface-variant);
+}
+
+/* 补充说明（如前端代码的协作来源），比角色描述更弱 */
+.credit-note {
+  margin: 0;
+  color: var(--md-sys-color-outline);
 }
 
 .credit-links {

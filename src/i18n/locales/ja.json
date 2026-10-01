@@ -250,7 +250,11 @@
     "roles": {
       "luowei": "キャラクター設定・音声",
       "lan": "立ち絵",
-      "dailing": "ライブラリパラメータ"
+      "dailing": "ライブラリパラメータ",
+      "takeo": "最終調整・Web 制作"
+    },
+    "notes": {
+      "takeo": "リポジトリのフロントエンドコードは DeepSeek V4.1 Flash の支援を受けて制作しました。"
     },
     "copyrightNote": "各著作権はそれぞれの権利者に帰属します。",
     "linkHubsTitle": "公式リンク集",
