@@ -227,7 +227,9 @@ const specs = computed(() => [
   border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface-variant);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* 药丸含「普通 / 一般」等汉字，等宽体不一定覆盖 CJK，直接沿用正文无衬线体，
+     避免简体/英文下回退到宋体、Courier 等衬线字体 */
+  font-family: var(--app-font-sans);
   letter-spacing: 0.04em;
 }
 
