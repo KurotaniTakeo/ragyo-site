@@ -1,0 +1,37 @@
+NOTICE — 素材著作权与授权范围
+================================
+
+本文件说明本仓库中**不属于 MIT 授权范围**的第三方素材及其权利人。
+`LICENSE`（MIT）仅覆盖源码；下列内容一律 **All Rights Reserved**，
+其使用须遵循各自的授权条款，尤其是 `assets/voicebank/readme-{jp,cn,en}.txt`
+中的《使用规约》。
+
+著作权归属（与站内 credits 区块、assets/voicebank/readme-*.txt 一致）
+------------------------------------------------------------------
+  羅行（Ragyo）角色形象与声音  —  羅威 (Luowei)  ©2025  All Rights Reserved
+  羅行 官方立绘                —  LAN           ©2025  All Rights Reserved
+  羅行 音源制作                —  Dailing       ©2026  All Rights Reserved
+
+免责声明：以上权利状态以 `assets/voicebank/` 内的原始规约文本为准，
+本文件仅为便于识别的转写，若与原件冲突以原件为准。
+
+不在 MIT 范围内的目录
+------------------------------------------------------------------
+  assets/illustration/character/*.png    官方立绘原稿          © LAN
+  assets/illustration/surprise/*.gif      彩蛋源图（基于官方立绘）© LAN
+  assets/illustration/readme-*.txt        立绘与角色设定说明     © LAN / 羅威
+  assets/voicebank/*                      声库设定、使用规约原文  © Dailing / 羅威 / LAN
+  public/samples/*.jpg                    视频封面图，来源与署名待补
+
+说明：
+  - 立绘可在**非营利**二创中自由使用；营利性使用需事先告知权利人。
+  - 本仓库不托管音源本体（下载经网盘分发），故不涉及音源的再分发。
+  - `public/samples/` 的封面图版权来源尚未确认，署名待补（见 README「已知待办」）。
+
+第三方依赖与字体（非本仓库版权，按各自许可分发）
+------------------------------------------------------------------
+  @fontsource/noto-sans-jp, @fontsource/noto-sans-sc   SIL OFL 1.1
+  @material/material-color-utilities                    Apache License 2.0
+  Vue 3 / vue-router / vue-i18n / Vite / vite-ssg / Tailwind CSS / sharp
+                                                        MIT（sharp 为 Apache-2.0）
+  完整版本见 package.json 与 pnpm-lock.yaml。
