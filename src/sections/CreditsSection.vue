@@ -86,17 +86,25 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
       <p class="copyright md-body-small">
         {{ t('credits.copyrightNote') }}
       </p>
-      <div class="credits-links">
-        <M3Button
-          v-for="hub in officialLinkHubs"
-          :key="hub.region"
-          variant="outlined"
-          icon="open_in_new"
-          :href="hub.url"
-          external
-        >
-          {{ t(`credits.linkHubs.${hub.region}`) }}
-        </M3Button>
+      <div class="credits-links-group">
+        <p id="credits-links-title" class="credits-links-title md-label-large">
+          {{ t('credits.linkHubsTitle') }}
+        </p>
+        <ul class="credits-links" aria-labelledby="credits-links-title">
+          <li v-for="hub in officialLinkHubs" :key="hub.region" class="credits-link-item">
+            <M3Button
+              variant="outlined"
+              icon="open_in_new"
+              :href="hub.url"
+              external
+            >
+              {{ hub.platform }}
+            </M3Button>
+            <span class="credits-link-region md-body-small">
+              {{ t(`credits.linkHubs.${hub.region}`) }}
+            </span>
+          </li>
+        </ul>
       </div>
       <p class="footer-rights md-body-small">
         {{ t('footer.rights') }}
@@ -204,11 +212,37 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
   gap: 12px;
 }
 
-/* 官方链接合集：大陆 / 海外两个按钮并排，窄屏自动换行 */
+/* 官方链接合集：标题在上，每个平台按钮下方标注适用地区 */
+.credits-links-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.credits-links-title {
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
 .credits-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 16px;
+}
+
+.credits-link-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.credits-link-region {
+  margin: 0;
+  color: var(--md-sys-color-outline);
 }
 
 .copyright,
@@ -234,6 +268,14 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
   .credits-footer {
     margin-top: 12px;
     gap: 8px;
+  }
+
+  .credits-links-group {
+    gap: 6px;
+  }
+
+  .credits-link-item {
+    gap: 4px;
   }
 
   .credits-links {

@@ -58,6 +58,8 @@ export type LinkHubRegion = 'mainland' | 'overseas'
 
 export interface LinkHub {
   region: LinkHubRegion
+  /** 平台名称，品牌名不参与翻译 */
+  platform: string
   url: string
 }
 
@@ -68,6 +70,6 @@ export interface LinkHub {
  * 只是分发渠道不同，故并列展示而不做自动跳转。
  */
 export const officialLinkHubs: LinkHub[] = [
-  { region: 'mainland', url: 'https://vlink.cc/ragyo' },
-  { region: 'overseas', url: 'https://linktr.ee/Ragyo' },
+  { region: 'mainland', platform: 'vlink', url: 'https://vlink.cc/ragyo' },
+  { region: 'overseas', platform: 'Linktree', url: 'https://linktr.ee/Ragyo' },
 ]

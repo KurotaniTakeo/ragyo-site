@@ -252,9 +252,10 @@
       "dailing": "声库参数"
     },
     "copyrightNote": "各项著作权归各自权利人所有。",
+    "linkHubsTitle": "官方链接合集",
     "linkHubs": {
-      "mainland": "官方链接合集（大陆）",
-      "overseas": "官方链接合集（海外）"
+      "mainland": "大陆地区",
+      "overseas": "海外地区"
     }
   },
   "surprise": {

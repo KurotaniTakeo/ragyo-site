@@ -251,9 +251,10 @@
       "dailing": "ライブラリパラメータ"
     },
     "copyrightNote": "各著作権はそれぞれの権利者に帰属します。",
+    "linkHubsTitle": "公式リンク集",
     "linkHubs": {
-      "mainland": "公式リンク集（中国本土）",
-      "overseas": "公式リンク集（海外）"
+      "mainland": "中国本土",
+      "overseas": "海外"
     }
   },
   "surprise": {

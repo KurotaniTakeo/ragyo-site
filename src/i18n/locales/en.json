@@ -252,9 +252,10 @@
       "dailing": "Voice library parameters"
     },
     "copyrightNote": "Copyright for each work belongs to its respective holder.",
+    "linkHubsTitle": "Official link hub",
     "linkHubs": {
-      "mainland": "Official link hub (Mainland China)",
-      "overseas": "Official link hub (Overseas)"
+      "mainland": "Mainland China",
+      "overseas": "Overseas"
     }
   },
   "surprise": {
