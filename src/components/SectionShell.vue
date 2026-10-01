@@ -72,7 +72,13 @@ withDefaults(
 
 @media (max-width: 860px) {
   .section-body {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: var(--app-bottom-nav);
+  }
+
+  /* 通铺分屏（首屏）在窄屏同样要让出底栏高度，
+     否则立绘会被固定的底部导航条压住 */
+  .section-body.is-bleed {
+    padding-bottom: var(--app-bottom-nav);
   }
 }
 
@@ -88,6 +94,14 @@ withDefaults(
   overscroll-behavior: contain;
   /* 固定预留滚动条槽位，避免不同分屏之间出现横向位移 */
   scrollbar-gutter: stable;
+}
+
+/* 通铺分屏（bleed）不受内容栅格的最大宽度约束：
+   否则 HeroSection 自身的 max-width 永远到不了，立绘会被挤在 1180px 窄带里。
+   留白与上限改由分屏自身管理（见 HeroSection 的 .hero）。 */
+.section-body.is-bleed .section-inner {
+  max-width: none;
+  padding-inline: 0;
 }
 
 .section-inner {

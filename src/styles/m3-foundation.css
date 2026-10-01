@@ -46,6 +46,9 @@
   /* 布局栅格 */
   --app-rail-width: 88px;
   --app-bar-height: 64px;
+  /* 窄屏底部导航条（NavigationRail ≤860px）的整体高度，含安全区。
+     分屏底部留白统一引用它，避免立绘/内容被底栏压住。 */
+  --app-bottom-nav: calc(64px + env(safe-area-inset-bottom, 0px));
   --app-content-max: 1180px;
   --app-gutter: clamp(20px, 5vw, 96px);
   /* 顶栏之外再留出的呼吸空间：随视口高度自适应，矮屏最小 16px，

@@ -29,9 +29,9 @@ export const images = {
     "srcset": "/img/generated/character-outfit-b-bust-640.webp 640w, /img/generated/character-outfit-b-bust-1024.webp 1024w, /img/generated/character-outfit-b-bust-1600.webp 1600w, /img/generated/character-outfit-b-bust-2400.webp 2400w",
     "avifSrcset": "/img/generated/character-outfit-b-bust-640.avif 640w, /img/generated/character-outfit-b-bust-1024.avif 1024w, /img/generated/character-outfit-b-bust-1600.avif 1600w, /img/generated/character-outfit-b-bust-2400.avif 2400w",
     "width": 2400,
-    "height": 2870,
-    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABwBACdASoUABgAPu1orE+ppaQiMBgIATAdiWUAtsgQ78fSipPBoJFjTZJxwAD+by32k6pBUyJ3EO2W9c2tMoeGU+gkFRNiVyXtUXG+zfodL+OUTZlRRRdShggyLv6QzL9VDwbnuju+kH8XIwznBywMSAA=",
-    "note": "服装 B・半身像（头部至腰部）。首页主视觉用它放大展示，crop 比例可调。"
+    "height": 2562,
+    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQBACdASoUABUAPu1oq08ppiOiMBgIATAdiWcAv+wQ7+/F5cpxLyNywAD+bdXIt6Hsn/QUQzQc+n4Ivcer9ME3YbASotsj6L0mO7906igoAplNFoNeAA==",
+    "note": "服装 B・半身像（头部至半腿）。保留整幅宽度以容纳完整的麦克风线回环，仅纵向裁剪。"
   },
   "character.outfit-a": {
     "src": "/img/generated/character-outfit-a-3200.webp",
