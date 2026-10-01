@@ -6,18 +6,38 @@
  * 因此没有校验值、断点续传等信息，改为版本号 + 打包日期。
  * 链接未提供前，DownloadCard 会渲染为「准备中」而不是死链。
  */
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
 import M3Icon from '@/components/M3Icon.vue'
 import DownloadCard from '@/components/DownloadCard.vue'
-import { allMirrorsPending, downloadMeta, illustrationMirrors, mirrors } from '@/data/downloads'
+import {
+  allMirrorsPending,
+  downloadMeta,
+  illustrationMirrors,
+  mirrors,
+  orderMirrors,
+} from '@/data/downloads'
+import { authorCreditKey } from '@/data/credits'
 import { sections } from '@/data/sections'
+import { useScrollContext } from '@/composables/useScrollContext'
 
 defineProps<{ active: boolean }>()
 
 const { t, tm, locale } = useI18n()
+const { goToId, requestHighlight } = useScrollContext()
+
+/** 按当前语言重排渠道：中文下 Google Drive 沉底 */
+const orderedMirrors = computed(() => orderMirrors(mirrors, locale.value))
+const orderedIllustrationMirrors = computed(() => orderMirrors(illustrationMirrors, locale.value))
+
+/** 跳到制作名单并短暂高亮原作者 */
+const onContactAuthor = () => {
+  goToId('credits')
+  requestHighlight('credits', authorCreditKey)
+}
 
 const installKeys = ['download.installSteps', 'download.installStepsUtau'] as const
 const installTitles = ['download.installTitle', 'download.installTitleUtau'] as const
@@ -61,7 +81,7 @@ const steps = (key: string) => tm(key) as unknown as string[]
         </h3>
 
         <DownloadCard
-          :mirrors="mirrors"
+          :mirrors="orderedMirrors"
           :is-chinese="locale === 'zh'"
           data-reveal
           style="--reveal-delay: 60ms"
@@ -71,7 +91,13 @@ const steps = (key: string) => tm(key) as unknown as string[]
           {{ t('download.pendingBody') }}
         </p>
         <p v-else class="pending-note md-body-small" data-reveal>
-          {{ t('download.feedback') }}
+          <i18n-t keypath="download.feedback">
+            <template #author>
+              <a class="feedback-link" href="#credits" @click.prevent="onContactAuthor">
+                {{ t('download.feedbackAuthor') }}
+              </a>
+            </template>
+          </i18n-t>
         </p>
 
         <h3 class="group-title md-title-medium" data-reveal style="--reveal-delay: 90ms">
@@ -79,7 +105,7 @@ const steps = (key: string) => tm(key) as unknown as string[]
         </h3>
 
         <DownloadCard
-          :mirrors="illustrationMirrors"
+          :mirrors="orderedIllustrationMirrors"
           :is-chinese="locale === 'zh'"
           data-reveal
           style="--reveal-delay: 120ms"
@@ -157,6 +183,28 @@ const steps = (key: string) => tm(key) as unknown as string[]
 .pending-note {
   margin: 0;
   color: var(--md-sys-color-outline);
+}
+
+/* 「联系作者」：跳转到制作名单的正文内链接 */
+.feedback-link {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: 2px;
+  transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+@media (hover: hover) {
+  .feedback-link:hover {
+    color: var(--md-sys-color-on-surface);
+  }
+}
+
+.feedback-link:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+  text-decoration: none;
 }
 
 .install-column {

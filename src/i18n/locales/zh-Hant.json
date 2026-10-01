@@ -203,7 +203,7 @@
       "illustration": "立繪"
     },
     "platforms": {
-      "gdrive": "Google Drive",
+      "gdrive": "Google 雲端硬碟",
       "baidu": "百度網盤",
       "quark": "夸克網盤"
     },
@@ -212,10 +212,12 @@
     "metaVersion": "版本",
     "metaPackagedAt": "封裝日期",
     "metaSize": "檔案大小",
-    "overseasHint": "百度網盤與夸克網盤主要面向中國大陸使用者，海外使用者請使用 Google Drive。",
+    "overseasHint": "百度網盤與夸克網盤主要面向中國大陸使用者，海外使用者請使用 Google 雲端硬碟。",
+    "gdriveHint": "Google 雲端硬碟在中國大陸存取不便，中國大陸使用者請優先使用百度網盤或夸克網盤。",
     "pendingTitle": "下載連結準備中",
     "pendingBody": "下載連結正在準備中，敬請期待。",
-    "feedback": "若連結無法開啟，請聯絡作者。",
+    "feedback": "若連結無法開啟，請聯絡{author}。",
+    "feedbackAuthor": "作者",
     "installTitle": "在 OpenUTAU 中安裝",
     "installSteps": [
       "透過「工具 → 安裝歌手」安裝音源，支援 rar、zip、uar 壓縮檔，也可以直接把壓縮檔拖入 OpenUTAU 視窗。",

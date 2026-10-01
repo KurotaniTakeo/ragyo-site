@@ -6,6 +6,7 @@
  * 只有「担当什么」的描述走 i18n。
  * 没有确切网址的账号只显示 handle 纯文本，不渲染成假链接。
  */
+import { onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -17,15 +18,39 @@ import type { BrandIconName } from '@/components/brandIcons'
 import { credits, officialLinkHubs, type SocialLink } from '@/data/credits'
 import { voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
+import { useScrollContext } from '@/composables/useScrollContext'
 import type { Locale } from '@/i18n'
 
 defineProps<{ active: boolean }>()
 
 const { t, locale } = useI18n()
+const { highlightRequest } = useScrollContext()
 
 /** 平台 → 品牌图标 */
 const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
   platform === 'X' ? 'x' : 'bilibili'
+
+/* ------------------------------------------------------------ 高亮 */
+
+/** 高亮持续时长，与 CSS 脉冲动画总时长一致 */
+const HIGHLIGHT_DURATION = 1800
+
+const highlightedKey = ref<string | null>(null)
+let highlightTimer = 0
+
+watch(
+  () => highlightRequest.value,
+  (request) => {
+    if (!request || request.section !== 'credits') return
+    highlightedKey.value = request.target
+    window.clearTimeout(highlightTimer)
+    highlightTimer = window.setTimeout(() => {
+      highlightedKey.value = null
+    }, HIGHLIGHT_DURATION)
+  },
+)
+
+onBeforeUnmount(() => window.clearTimeout(highlightTimer))
 </script>
 
 <template>
@@ -38,7 +63,11 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
     />
 
     <ul class="credit-list">
-      <li v-for="(credit, index) in credits" :key="credit.key">
+      <li
+        v-for="(credit, index) in credits"
+        :key="credit.key"
+        :class="{ 'is-highlighted': highlightedKey === credit.key }"
+      >
         <M3Card
           class="credit-card"
           padding="md"
@@ -130,6 +159,29 @@ const platformIcon = (platform: SocialLink['platform']): BrandIconName =>
   flex-direction: column;
   gap: 14px;
   height: 100%;
+}
+
+/* 「联系作者」跳转后的短暂强调：主题色描边脉冲两下 */
+.credit-list li.is-highlighted .credit-card {
+  animation: credit-highlight 900ms var(--md-sys-motion-easing-emphasized) 2;
+}
+
+@keyframes credit-highlight {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    box-shadow: 0 0 0 3px var(--md-sys-color-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .credit-list li.is-highlighted .credit-card {
+    animation: none;
+    box-shadow: 0 0 0 2px var(--md-sys-color-primary);
+  }
 }
 
 .credit-head {

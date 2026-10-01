@@ -19,8 +19,8 @@ export interface Mirror {
   /** 百度網盤提取码；为空则不渲染复制控件 */
   code: string | null
   status: 'live' | 'pending'
-  /** 该渠道对海外用户可用性差，日/英页面需要额外提示 */
-  overseasNote: boolean
+  /** 主要面向中国大陆，海外用户可用性差 */
+  mainlandOnly: boolean
 }
 
 /** 音源本体 */
@@ -30,21 +30,21 @@ export const mirrors: Mirror[] = [
     url: 'https://drive.google.com/file/d/1UBcn743YSGFsZcVRtazrXjPNyvHC84jQ/view',
     code: null,
     status: 'live',
-    overseasNote: true,
+    mainlandOnly: false,
   },
   {
     platform: 'baidu',
     url: 'https://pan.baidu.com/s/17CJLRh6XVqmh4ZJ8gMJy-w?pwd=ragy',
     code: 'ragy',
     status: 'live',
-    overseasNote: false,
+    mainlandOnly: true,
   },
   {
     platform: 'quark',
     url: 'https://pan.quark.cn/s/5744225af407',
     code: null,
     status: 'live',
-    overseasNote: false,
+    mainlandOnly: true,
   },
 ]
 
@@ -55,16 +55,37 @@ export const illustrationMirrors: Mirror[] = [
     url: 'https://pan.quark.cn/s/c3d31d732623',
     code: null,
     status: 'live',
-    overseasNote: false,
+    mainlandOnly: true,
   },
   {
     platform: 'baidu',
     url: 'https://pan.baidu.com/s/1ZbEUpbk7wIq7MGf4819Ltg?pwd=ragy',
     code: 'ragy',
     status: 'live',
-    overseasNote: false,
+    mainlandOnly: true,
   },
 ]
+
+/**
+ * 各语言下需要「沉底」的渠道。
+ * 中文（大陆）用户访问 Google Drive 不便，因此排在最后；
+ * 其他语言保持声明顺序（Google Drive 优先）。
+ */
+const demotedPlatforms: Record<string, Platform[]> = {
+  zh: ['gdrive'],
+}
+
+/**
+ * 按语言重排渠道，只移动需要沉底的平台，其余保持原有相对顺序。
+ * 立绘渠道不含 Google Drive，因此不受影响。
+ */
+export function orderMirrors(list: Mirror[], locale: string): Mirror[] {
+  const demoted = demotedPlatforms[locale]
+  if (!demoted) return list
+  return [...list].sort(
+    (a, b) => Number(demoted.includes(a.platform)) - Number(demoted.includes(b.platform)),
+  )
+}
 
 export const downloadMeta = {
   version: '1.0',

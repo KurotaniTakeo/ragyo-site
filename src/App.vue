@@ -16,7 +16,10 @@ import AppBar from '@/components/AppBar.vue'
 import NavigationRail from '@/components/NavigationRail.vue'
 import SnackbarHost from '@/components/SnackbarHost.vue'
 import { useFullPageScroll } from '@/composables/useFullPageScroll'
-import { provideScrollContext } from '@/composables/useScrollContext'
+import {
+  provideScrollContext,
+  type HighlightRequest,
+} from '@/composables/useScrollContext'
 import { sections } from '@/data/sections'
 import { voicebank } from '@/data/voicebank'
 import {
@@ -69,7 +72,26 @@ const goToId = (id: string) => {
   if (index >= 0) goTo(index)
 }
 
-provideScrollContext({ activeIndex, hijacking, suspended, goTo, goToId })
+/* ------------------------------------------------------------ 跳转高亮 */
+
+// 只负责发出一份请求；何时结束高亮由目标分屏自己决定
+const highlightRequest = ref<HighlightRequest | null>(null)
+let highlightToken = 0
+
+const requestHighlight = (section: string, target: string) => {
+  highlightToken += 1
+  highlightRequest.value = { section, target, token: highlightToken }
+}
+
+provideScrollContext({
+  activeIndex,
+  hijacking,
+  suspended,
+  goTo,
+  goToId,
+  highlightRequest,
+  requestHighlight,
+})
 
 function onScroll() {
   scrolled.value = (scroller.value?.scrollTop ?? 0) > 8

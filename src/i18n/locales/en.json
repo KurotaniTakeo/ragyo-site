@@ -213,9 +213,11 @@
     "metaPackagedAt": "Packaged",
     "metaSize": "File size",
     "overseasHint": "Baidu Netdisk and Quark Drive primarily serve mainland China. Outside China, please use Google Drive.",
+    "gdriveHint": "Google Drive can be unreliable to access from mainland China; users in China should prefer Baidu Netdisk or Quark Drive.",
     "pendingTitle": "Download links coming soon",
     "pendingBody": "The download links are being prepared. Please check back once the release is public.",
-    "feedback": "If a link does not open, please contact the author.",
+    "feedback": "If a link does not open, please contact {author}.",
+    "feedbackAuthor": "the author",
     "installTitle": "Installing in OpenUTAU",
     "installSteps": [
       "Use Tools → Install Singer to install the voicebank. rar, zip and uar archives are supported, and you can also drag an archive into the OpenUTAU window.",

@@ -18,6 +18,25 @@ export interface ScrollContext {
   goTo: (index: number) => void
   /** 跳到指定 section id */
   goToId: (id: string) => void
+  /** 最近一次高亮请求，目标分屏据此播放短暂高亮 */
+  highlightRequest: Ref<HighlightRequest | null>
+  /** 请求在跳转后短暂高亮某个子目标 */
+  requestHighlight: (section: string, target: string) => void
+}
+
+/**
+ * 一次「跳转后短暂高亮」的请求。
+ *
+ * 跨分屏的强调动作（例如从下载区跳到制作名单里的作者）不能直接操作 DOM，
+ * 因此由发起方写入请求、目标分屏自行读取并播放高亮。
+ */
+export interface HighlightRequest {
+  /** 目标分屏 id */
+  section: string
+  /** 该分屏内的子目标 key，由目标分屏自行解释 */
+  target: string
+  /** 自增序号，保证重复点击同一目标也能重新触发 */
+  token: number
 }
 
 export const SCROLL_CONTEXT_KEY: InjectionKey<ScrollContext> = Symbol('ragyo-scroll-context')

@@ -53,6 +53,12 @@ export const credits: Credit[] = [
   },
 ]
 
+/**
+ * 角色原作者。
+ * 下载区的「联系作者」会跳到制作名单并短暂高亮这一条，避免调用方硬编码字符串。
+ */
+export const authorCreditKey: Credit['key'] = 'luowei'
+
 /** 官方链接中枢的适用地区：大陆用 vlink，海外用 linktree */
 export type LinkHubRegion = 'mainland' | 'overseas'
 

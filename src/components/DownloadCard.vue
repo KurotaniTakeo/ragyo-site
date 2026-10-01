@@ -13,7 +13,7 @@ import type { Mirror } from '@/data/downloads'
 
 defineProps<{
   mirrors: Mirror[]
-  /** 当前语言是否为中文。非中文时对国内网盘给出额外提示 */
+  /** 当前语言是否为中文。非中文时提示国内网盘，中文时提示 Google Drive */
   isChinese: boolean
 }>()
 
@@ -55,8 +55,11 @@ const { t } = useI18n()
           </span>
         </div>
 
-        <p v-if="!isChinese && !mirror.overseasNote" class="mirror-hint md-body-small">
+        <p v-if="!isChinese && mirror.mainlandOnly" class="mirror-hint md-body-small">
           {{ t('download.overseasHint') }}
+        </p>
+        <p v-else-if="isChinese && !mirror.mainlandOnly" class="mirror-hint md-body-small">
+          {{ t('download.gdriveHint') }}
         </p>
       </li>
     </ul>

@@ -202,7 +202,7 @@
       "illustration": "立ち絵"
     },
     "platforms": {
-      "gdrive": "Google Drive",
+      "gdrive": "Google ドライブ",
       "baidu": "百度網盤",
       "quark": "夸克網盤"
     },
@@ -211,10 +211,12 @@
     "metaVersion": "バージョン",
     "metaPackagedAt": "パッケージ日",
     "metaSize": "ファイルサイズ",
-    "overseasHint": "百度網盤・夸克網盤は中国本土向けのサービスです。海外からは Google Drive をご利用ください。",
+    "overseasHint": "百度網盤・夸克網盤は中国本土向けのサービスです。海外からは Google ドライブをご利用ください。",
+    "gdriveHint": "Google ドライブは中国本土からのアクセスが不安定です。中国本土の方は百度網盤・夸克網盤をご利用ください。",
     "pendingTitle": "ダウンロードリンク準備中",
     "pendingBody": "現在ダウンロードリンクを準備しています。公開までしばらくお待ちください。",
-    "feedback": "リンクが開けない場合は作者までご連絡ください。",
+    "feedback": "リンクが開けない場合は{author}までご連絡ください。",
+    "feedbackAuthor": "作者",
     "installTitle": "OpenUTAU への導入",
     "installSteps": [
       "「ツール → 歌手をインストール」から音源をインストールします。rar / zip / uar に対応し、アーカイブを OpenUTAU のウィンドウにドラッグしてもインストールできます。",
