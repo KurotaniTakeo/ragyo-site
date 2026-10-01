@@ -16,7 +16,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/1-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 1.81
+    "duration": 1.9
   },
   {
     "id": "2",
@@ -24,7 +24,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/2-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 1.79
+    "duration": 1.88
   },
   {
     "id": "3",
@@ -56,7 +56,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/6-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 1.03
+    "duration": 1.12
   },
   {
     "id": "7",
@@ -64,7 +64,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/7-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 1.78
+    "duration": 1.87
   },
   {
     "id": "8",
@@ -72,7 +72,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/8-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 1.78
+    "duration": 1.87
   },
   {
     "id": "9",
@@ -120,7 +120,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/14-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 2.08
+    "duration": 2.17
   },
   {
     "id": "15",
@@ -136,7 +136,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/16-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 2.69
+    "duration": 2.78
   },
   {
     "id": "17",
@@ -144,7 +144,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/17-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 2.68
+    "duration": 2.77
   },
   {
     "id": "18",
@@ -152,7 +152,7 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/18-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 1.78
+    "duration": 1.87
   },
   {
     "id": "19",
@@ -160,6 +160,6 @@ export const surpriseClips: SurpriseClip[] = [
     "poster": "/surprise/generated/19-poster.webp",
     "width": 500,
     "height": 500,
-    "duration": 2.68
+    "duration": 2.77
   }
 ]

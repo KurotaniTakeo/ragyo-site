@@ -1,0 +1,4 @@
+# pnpm 12 引入了供应链「最小发布时长」策略：锁文件里若含发布未满 24h 的版本，
+# 连 `pnpm dev` 都会在启动前被拦下（ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION）。
+# 本仓库锁文件已入库、视为可信，故对项目关闭该策略，避免误伤新发布的补丁版本。
+minimumReleaseAge: 0
