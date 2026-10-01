@@ -96,7 +96,7 @@ const { t } = useI18n()
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
   max-height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
@@ -155,7 +155,7 @@ const { t } = useI18n()
   position: relative;
   z-index: 2;
   /* 与胶囊之间留出一段距离，而不是紧贴 */
-  margin-top: 8px;
+  margin-top: 4px;
   font-size: 0.625rem;
   line-height: 1.2;
   max-width: 100%;

@@ -1,5 +1,5 @@
 /* 此文件由 scripts/gen-palette.mjs 自动生成，请勿手动编辑。 */
-/* 种子色 primary #4D5779 / secondary #8E6D4F / tertiary #CF3A3D */
+/* 种子色 primary #4D5779 / secondary #545873 / tertiary #CF3A3D */
 
 :root {
   color-scheme: dark;
@@ -8,10 +8,10 @@
   --md-sys-color-on-primary: #252f4f;
   --md-sys-color-primary-container: #3c4666;
   --md-sys-color-on-primary-container: #dbe1ff;
-  --md-sys-color-secondary: #e7bf9c;
-  --md-sys-color-on-secondary: #442b12;
-  --md-sys-color-secondary-container: #5d4126;
-  --md-sys-color-on-secondary-container: #ffdcbf;
+  --md-sys-color-secondary: #c1c4e4;
+  --md-sys-color-on-secondary: #2b2f48;
+  --md-sys-color-secondary-container: #41455f;
+  --md-sys-color-on-secondary-container: #dee0ff;
   --md-sys-color-tertiary: #ffb3af;
   --md-sys-color-on-tertiary: #68000d;
   --md-sys-color-tertiary-container: #910518;
@@ -64,17 +64,17 @@
   --md-ref-palette-primary-100: #ffffff;
 
   --md-ref-palette-secondary-0: #000000;
-  --md-ref-palette-secondary-10: #2c1702;
-  --md-ref-palette-secondary-20: #442b12;
-  --md-ref-palette-secondary-30: #5d4126;
-  --md-ref-palette-secondary-40: #77583c;
-  --md-ref-palette-secondary-50: #927152;
-  --md-ref-palette-secondary-60: #ae8a6a;
-  --md-ref-palette-secondary-70: #caa483;
-  --md-ref-palette-secondary-80: #e7bf9c;
-  --md-ref-palette-secondary-90: #ffdcbf;
-  --md-ref-palette-secondary-95: #ffeee1;
-  --md-ref-palette-secondary-99: #fffbff;
+  --md-ref-palette-secondary-10: #161a32;
+  --md-ref-palette-secondary-20: #2b2f48;
+  --md-ref-palette-secondary-30: #41455f;
+  --md-ref-palette-secondary-40: #595d78;
+  --md-ref-palette-secondary-50: #727592;
+  --md-ref-palette-secondary-60: #8b8fac;
+  --md-ref-palette-secondary-70: #a6a9c8;
+  --md-ref-palette-secondary-80: #c1c4e4;
+  --md-ref-palette-secondary-90: #dee0ff;
+  --md-ref-palette-secondary-95: #f0efff;
+  --md-ref-palette-secondary-99: #fefbff;
   --md-ref-palette-secondary-100: #ffffff;
 
   --md-ref-palette-tertiary-0: #000000;

@@ -5,7 +5,7 @@
  *
  * 种子色来源见 docs/DESIGN.md §3.2（由 Pillow 对立绘做分色簇统计得到）：
  *   primary   #4D5779  墨蓝毛色
- *   secondary #8E6D4F  靴棕（橙黄色相）
+ *   secondary #545873  石板蓝（贴近主色墨蓝的中性蓝灰）
  *   tertiary  #CF3A3D  领带赤
  *
  * M3 默认只会从单一种子色推导全部五个 palette（并做 harmonize，
@@ -28,7 +28,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 const SEEDS = {
   primary: '#4D5779',
-  secondary: '#8E6D4F',
+  secondary: '#545873',
   tertiary: '#CF3A3D',
 }
 
