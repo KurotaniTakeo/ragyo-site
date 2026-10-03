@@ -4,8 +4,8 @@
  *
  * 重点是把 character.yaml 里的 subbanks 结构翻译成一眼能看懂的形态：
  *   1. 关键规格一览
- *   2. 音域条 —— 三个音阶在 C1–B7 上的实际占位与重叠
- *   3. 每个音阶的通常音色 / Soft 音色文件后缀
+ *   2. 音域条 —— 三个音阶在 C2–B4 上的实际占位与重叠
+ *   3. 每个音阶的通常 / Soft / Power 音色文件后缀
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -81,6 +81,7 @@ const specs = computed(() => [
             <span class="subbank-files md-label-small">
               <span class="subbank-tag">{{ t('about.toneDefault') }}&nbsp;{{ bar.normal }}</span>
               <span class="subbank-tag is-soft">{{ t('about.toneSoft') }}&nbsp;{{ bar.soft }}</span>
+              <span class="subbank-tag is-power">{{ t('about.tonePower') }}&nbsp;{{ bar.power }}</span>
             </span>
           </li>
         </ul>
@@ -144,7 +145,7 @@ const specs = computed(() => [
   color: var(--md-sys-color-on-surface-variant);
 }
 
-/* 音域条：宽度按半音数分配，因此 F4 档明显最长，与真实音域一致 */
+/* 音域条：宽度按半音数分配，B2 档覆盖范围最广，与各档真实音域一致 */
 .range-bar {
   display: flex;
   gap: 4px;
@@ -240,6 +241,15 @@ const specs = computed(() => [
     var(--md-sys-color-surface-container-highest)
   );
   color: var(--md-sys-color-primary);
+}
+
+.subbank-tag.is-power {
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-tertiary) 22%,
+    var(--md-sys-color-surface-container-highest)
+  );
+  color: var(--md-sys-color-tertiary);
 }
 
 .about-notes {

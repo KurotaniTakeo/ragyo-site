@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "羅行 / Ragyo — UTAU・OpenUTAU 音源",
-    "description": "羅行（Ragyo）は VCV 連続音の UTAU / OpenUTAU 音源です。3 音階 + Soft 音色で C1–B7 をカバー。試聴、利用規約、ダウンロードはこちらから。"
+    "description": "羅行（Ragyo）は VCV 連続音の UTAU / OpenUTAU 音源です。3 音階 + Soft&Power 音色で C2–B4 をカバー。試聴、利用規約、ダウンロードはこちらから。"
   },
   "common": {
     "langName": "日本語",
@@ -31,15 +31,15 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 音源",
-    "tagline": "インクのような青。マイクの前に立つ、狼の声。",
-    "facts": "VCV 連続音 ／ 3 音階 + Soft ／ C1–B7",
+    "tagline": "墨の青、一筆に綴る憧憬の声。",
+    "facts": "VCV 連続音 ／ 3 音階 + Soft&Power ／ C2–B4",
     "ctaPrimary": "ダウンロード",
     "ctaSecondary": "試聴する",
     "version": "バージョン {version}"
   },
   "about": {
     "title": "声庫紹介",
-    "lead": "「羅行」は VCV 連続音で収録された UTAU 音源です。3 つの音階それぞれに通常音色と Soft 音色を用意し、C1 から B7 までをカバーします。",
+    "lead": "「羅行」は VCV 連続音で収録された UTAU 音源です。3 つの音階それぞれに通常・Soft・Power の音色を用意し、C2 から B4 までをカバーします。",
     "labels": {
       "type": "音源タイプ",
       "pitches": "収録音階",
@@ -51,16 +51,17 @@
     "values": {
       "type": "VCV（連続音）",
       "pitches": "3 音階",
-      "tones": "6 サブバンク",
+      "tones": "8 サブバンク",
       "engines": "UTAU / OpenUTAU",
       "encoding": "Shift_JIS"
     },
     "subbanksTitle": "収録音階と音色",
-    "subbanksLead": "character.yaml の subbanks 定義に対応しています。同じ音階に通常音色と Soft 音色があり、表現に応じて選べます。",
+    "subbanksLead": "character.yaml の subbanks 定義に対応しています。同じ音階に通常・Soft・Power の音色があり、表現に応じて選べます。",
     "toneDefault": "通常",
     "toneSoft": "Soft",
+    "tonePower": "Power",
     "enginesTitle": "対応エンジンについて",
-    "enginesNote": "OpenUTAU では character.yaml の subbanks 定義をそのまま読み込むため、音階と Soft 音色をソフト上で切り替えられます。",
+    "enginesNote": "OpenUTAU では character.yaml の subbanks 定義をそのまま読み込むため、音階と Soft / Power 音色をソフト上で切り替えられます。",
     "sourceNote": "※ 本ページの音源情報は、配布ファイルに含まれる character.yaml および character.txt の記載に基づいています。"
   },
   "samples": {
@@ -211,8 +212,8 @@
     "metaVersion": "バージョン",
     "metaPackagedAt": "パッケージ日",
     "metaSize": "ファイルサイズ",
-    "overseasHint": "{platform}は中国本土向けのサービスです。海外からは Google ドライブをご利用ください。",
-    "gdriveHint": "Google ドライブは中国本土からのアクセスが不安定です。中国本土の方は百度網盤・夸克網盤をご利用ください。",
+    "overseasHint": "{platform}は中国大陸向けのサービスです。中国大陸以外の地域からは Google ドライブをご利用ください。",
+    "gdriveHint": "Google ドライブは中国大陸からのアクセスが不安定です。中国大陸の方は百度網盤・夸克網盤をご利用ください。",
     "pendingTitle": "ダウンロードリンク準備中",
     "pendingBody": "現在ダウンロードリンクを準備しています。公開までしばらくお待ちください。",
     "feedback": "リンクが開けない場合は{author}までご連絡ください。",
@@ -221,7 +222,7 @@
     "installSteps": [
       "「ツール → 歌手をインストール」から音源をインストールします。rar / zip / uar に対応し、アーカイブを OpenUTAU のウィンドウにドラッグしてもインストールできます。",
       "インストール画面ではアーカイブ内の wav ファイル名と oto.ini をプレビューできます。文字化けする場合は右上で正しい文字コードを選択してください。",
-      "注意：日本語以外のシステムでは直接解凍せず、必ず「歌手をインストール」から導入してください。完了すると歌手一覧に「羅行」が表示され、3 音階と Soft 音色がそのまま選べます。"
+      "注意：日本語以外のシステムでは直接解凍せず、必ず「歌手をインストール」から導入してください。完了すると歌手一覧に「羅行」が表示され、3 音階と Soft / Power 音色がそのまま選べます。"
     ],
     "installTitleUtau": "UTAU への導入",
     "installStepsUtau": [
@@ -234,6 +235,13 @@
     "lead": "音源の更新内容をまとめています。",
     "datePending": "公開日未定",
     "entries": [
+      {
+        "version": "1.0.1",
+        "date": "2026.10.01",
+        "notes": [
+          "character.txt と prefix.map を更新。OpenUTAU の表情音切り替えで「Power」が欠落する問題のみを修正（標準 UTAU には影響ありません）。"
+        ]
+      },
       {
         "version": "1.0",
         "date": null,
@@ -259,8 +267,8 @@
     "copyrightNote": "各著作権はそれぞれの権利者に帰属します。",
     "linkHubsTitle": "公式リンク集",
     "linkHubs": {
-      "mainland": "中国本土",
-      "overseas": "海外"
+      "mainland": "中国大陸",
+      "overseas": "中国大陸以外の地域"
     }
   },
   "surprise": {

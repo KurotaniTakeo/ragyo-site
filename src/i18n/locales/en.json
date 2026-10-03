@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Ragyo — UTAU / OpenUTAU Voice Library",
-    "description": "Ragyo is a VCV UTAU / OpenUTAU voice library covering C1–B7 across three pitches plus a Soft tone. Samples, terms of use and downloads."
+    "description": "Ragyo is a VCV UTAU / OpenUTAU voice library covering C2–B4 across three pitches plus Soft & Power tones. Samples, terms of use and downloads."
   },
   "common": {
     "langName": "English",
@@ -31,15 +31,15 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU Voice Library",
-    "tagline": "Ink-blue fur, red eyes — a wolf's voice at the microphone.",
-    "facts": "VCV ／ 3 pitches + Soft ／ C1–B7",
+    "tagline": "Ink-blue, a vision's voice in one stroke.",
+    "facts": "VCV ／ 3 pitches + Soft&Power ／ C2–B4",
     "ctaPrimary": "Download",
     "ctaSecondary": "Listen",
     "version": "Version {version}"
   },
   "about": {
     "title": "The Library",
-    "lead": "Ragyo is a VCV voice library for UTAU. Each of the three pitches is recorded in both a normal and a Soft tone, covering C1 through B7.",
+    "lead": "Ragyo is a VCV voice library for UTAU. Each of the three pitches is recorded in normal, Soft and Power tones, covering C2 through B4.",
     "labels": {
       "type": "Voice type",
       "pitches": "Pitches",
@@ -51,16 +51,17 @@
     "values": {
       "type": "VCV",
       "pitches": "3 pitches",
-      "tones": "6 subbanks",
+      "tones": "8 subbanks",
       "engines": "UTAU / OpenUTAU",
       "encoding": "Shift_JIS"
     },
     "subbanksTitle": "Pitches and tones",
-    "subbanksLead": "These correspond to the subbanks defined in character.yaml. Each pitch is recorded in both a normal and a Soft tone so you can pick per phrase.",
+    "subbanksLead": "These correspond to the subbanks defined in character.yaml. Each pitch is offered in normal, Soft and Power tones so you can pick per phrase.",
     "toneDefault": "Normal",
     "toneSoft": "Soft",
+    "tonePower": "Power",
     "enginesTitle": "About engine support",
-    "enginesNote": "OpenUTAU reads the subbanks declared in character.yaml directly, so pitches and the Soft tone can be switched from inside the software.",
+    "enginesNote": "OpenUTAU reads the subbanks declared in character.yaml directly, so pitches and the Soft / Power tones can be switched from inside the software.",
     "sourceNote": "※ Library details on this page are taken from the character.yaml and character.txt files bundled with the release."
   },
   "samples": {
@@ -212,8 +213,8 @@
     "metaVersion": "Version",
     "metaPackagedAt": "Packaged",
     "metaSize": "File size",
-    "overseasHint": "{platform} primarily serves mainland China. Outside China, please use Google Drive.",
-    "gdriveHint": "Google Drive can be unreliable to access from mainland China; users in China should prefer Baidu Netdisk or Quark Drive.",
+    "overseasHint": "{platform} primarily serves mainland China. Outside mainland China, please use Google Drive.",
+    "gdriveHint": "Google Drive can be unreliable to access from mainland China; users in mainland China should prefer Baidu Netdisk or Quark Drive.",
     "pendingTitle": "Download links coming soon",
     "pendingBody": "The download links are being prepared. Please check back once the release is public.",
     "feedback": "If a link does not open, please contact {author}.",
@@ -222,7 +223,7 @@
     "installSteps": [
       "Use Tools → Install Singer to install the voicebank. rar, zip and uar archives are supported, and you can also drag an archive into the OpenUTAU window.",
       "The installer previews the wav filenames and oto.ini inside the archive. If the text is garbled, choose the correct text encoding in the top-right corner.",
-      "Note: on non-Japanese systems, do not extract the archive manually — always install it via Install Singer. Once installed, \"Ragyo\" appears in the singer list with all three pitches and the Soft tone ready to use."
+      "Note: on non-Japanese systems, do not extract the archive manually — always install it via Install Singer. Once installed, \"Ragyo\" appears in the singer list with all three pitches and the Soft / Power tones ready to use."
     ],
     "installTitleUtau": "Installing in UTAU",
     "installStepsUtau": [
@@ -235,6 +236,13 @@
     "lead": "A summary of updates to the voice library.",
     "datePending": "Release date TBA",
     "entries": [
+      {
+        "version": "1.0.1",
+        "date": "2026.10.01",
+        "notes": [
+          "Updated \"character.txt\" and \"prefix.map\". Fixed missing Power when switching expression phonemes in OpenUTAU. (Standard UTAU unaffected.)"
+        ]
+      },
       {
         "version": "1.0",
         "date": null,
@@ -261,7 +269,7 @@
     "linkHubsTitle": "Official link hub",
     "linkHubs": {
       "mainland": "Mainland China",
-      "overseas": "Overseas"
+      "overseas": "Outside mainland China"
     }
   },
   "surprise": {

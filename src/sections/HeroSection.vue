@@ -166,6 +166,8 @@ const { t, locale } = useI18n()
 .hero-tagline {
   max-width: 26ch;
   color: var(--md-sys-color-on-surface);
+  /* 首页文案使用衬线体，营造「书写」的质感；正文仍用无衬线体 */
+  font-family: var(--app-font-serif);
   font-weight: 500;
 }
 

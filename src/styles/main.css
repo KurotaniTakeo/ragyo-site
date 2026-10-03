@@ -5,6 +5,9 @@
 @import '@fontsource-variable/noto-sans-jp';
 @import '@fontsource-variable/noto-sans-sc';
 @import '@fontsource-variable/noto-sans-tc';
+@import '@fontsource-variable/noto-serif-jp';
+@import '@fontsource-variable/noto-serif-sc';
+@import '@fontsource-variable/noto-serif-tc';
 
 @import './m3-tokens.css' layer(base);
 @import './m3-foundation.css' layer(base);
@@ -50,6 +53,7 @@
   --color-scrim: var(--md-sys-color-scrim);
 
   --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
 
   --radius-xs: var(--md-sys-shape-corner-extra-small);
   --radius-sm: var(--md-sys-shape-corner-small);
@@ -72,9 +76,11 @@
   :root {
     /* 日文页用 Noto Sans JP，中文页按字形分别用 Noto Sans SC / TC。
        三者都含拉丁字形，因此不额外引入拉丁字体。
-       按语言只挂载一套，避免多套 CJK 字体的分片同时下载。 */
+       按语言只挂载一套，避免多套 CJK 字体的分片同时下载。
+       衬线体与之对应，仅用于首页文案等需要书写感的少量文字。 */
     --app-font-sans: 'Noto Sans JP Variable', system-ui, -apple-system, 'Hiragino Kaku Gothic ProN',
       'Yu Gothic', sans-serif;
+    --app-font-serif: 'Noto Serif JP Variable', 'Yu Mincho', 'Hiragino Mincho ProN', serif;
   }
 
   /* 注意：SSG 会给中文页写 lang="zh-Hans" / "zh-Hant"，所以用 :lang(zh) 而不是 [lang='zh']，
@@ -83,11 +89,13 @@
   html:lang(zh) {
     --app-font-sans: 'Noto Sans SC Variable', system-ui, -apple-system, 'PingFang SC',
       'Microsoft YaHei', sans-serif;
+    --app-font-serif: 'Noto Serif SC Variable', 'Songti SC', 'SimSun', serif;
   }
 
   html:lang(zh-Hant) {
     --app-font-sans: 'Noto Sans TC Variable', system-ui, -apple-system, 'PingFang TC',
       'Microsoft JhengHei', sans-serif;
+    --app-font-serif: 'Noto Serif TC Variable', 'Songti TC', 'PMingLiU', serif;
   }
 
   *,

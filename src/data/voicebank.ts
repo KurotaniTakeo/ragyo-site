@@ -53,7 +53,7 @@ export const voicebank = {
 
   type: 'VCV' as VoicebankType,
 
-  version: '1.0',
+  version: '1.0.1',
 
   /** 发行日期尚未提供，填入前下载区不渲染该行 */
   releasedAt: null as string | null,
@@ -66,19 +66,22 @@ export const voicebank = {
 
   /**
    * 由 character.yaml 的 subbanks 推导：
-   * 3 个音阶（B2 / G3 / F4）× 2 种音色（默认 / Soft）= 6 档
+   * 3 个音阶（B2 / G3 / F4）× 音色（默认 / Soft）+ Power 2 档 = 8 档。
+   * Power 只有 F4 与 PG3 两档，其中 PG3 覆盖低音域与中音域。
    */
   subbanks: [
-    { suffix: 'B2', color: null, toneRange: 'C1–D#3' },
+    { suffix: 'B2', color: null, toneRange: 'C2–D#3' },
     { suffix: 'G3', color: null, toneRange: 'E3–E4' },
-    { suffix: 'F4', color: null, toneRange: 'F4–B7' },
-    { suffix: 'SB2', color: 'Soft', toneRange: 'C1–D#3' },
+    { suffix: 'F4', color: null, toneRange: 'F4–B4' },
+    { suffix: 'SB2', color: 'Soft', toneRange: 'C2–D#3' },
     { suffix: 'SG3', color: 'Soft', toneRange: 'E3–E4' },
-    { suffix: 'SF4', color: 'Soft', toneRange: 'F4–B7' },
+    { suffix: 'SF4', color: 'Soft', toneRange: 'F4–B4' },
+    { suffix: 'PG3', color: 'Power', toneRange: 'C2–E4' },
+    { suffix: 'F4', color: 'Power', toneRange: 'F4–B4' },
   ] satisfies Subbank[],
 
   /** 覆盖全部 subbanks 的总音域 */
-  toneRange: 'C1–B7',
+  toneRange: 'C2–B4',
 
   /** 角色设定。体重在 readme-cn / readme-jp 写作 62kg，
    *  readme-en 与 character.txt 写作 64kg，此处采用后者并待作者确认。 */
@@ -97,23 +100,23 @@ export const voicebank = {
 /** 声库特征标签，用于 About 区的卡片墙 */
 export const highlights = [
   { key: 'vcv', value: 'VCV' },
-  { key: 'pitches', value: '3 + Soft' },
-  { key: 'tones', value: '6' },
-  { key: 'range', value: 'C1–B7' },
+  { key: 'pitches', value: '3 + Soft&Power' },
+  { key: 'tones', value: '8' },
+  { key: 'range', value: 'C2–B4' },
   { key: 'engines', value: 'UTAU / OpenUTAU' },
 ] as const
 
 /**
  * 各音阶的音域区间，用 MIDI 音高编号表示，供 About 区的音域条使用。
  *
- * MIDI 编号对照：C1 = 24、D#3 = 51、E3 = 52、E4 = 64、F4 = 65、B7 = 107。
- * 全部由 character.yaml 的 tone_ranges 换算而来。
+ * MIDI 编号对照：C2 = 36、D#3 = 51、E3 = 52、E4 = 64、F4 = 65、B4 = 71。
+ * 由 character.yaml 的 tone_ranges 换算，并按站点支持音域 C2–B4 裁剪。
  */
 export const pitchRanges = [
-  { id: 'B2', toneRange: 'C1–D#3', low: 24, high: 51, normal: 'B2', soft: 'SB2' },
-  { id: 'G3', toneRange: 'E3–E4', low: 52, high: 64, normal: 'G3', soft: 'SG3' },
-  { id: 'F4', toneRange: 'F4–B7', low: 65, high: 107, normal: 'F4', soft: 'SF4' },
+  { id: 'B2', toneRange: 'C2–D#3', low: 36, high: 51, normal: 'B2', soft: 'SB2', power: 'PG3' },
+  { id: 'G3', toneRange: 'E3–E4', low: 52, high: 64, normal: 'G3', soft: 'SG3', power: 'PG3' },
+  { id: 'F4', toneRange: 'F4–B4', low: 65, high: 71, normal: 'F4', soft: 'SF4', power: 'F4' },
 ] as const
 
 /** 音域条的两端，用于计算各音阶的相对宽度 */
-export const fullRange = { low: 24, high: 107 }
+export const fullRange = { low: 36, high: 71 }

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "羅行 / Ragyo — UTAU · OpenUTAU 音源",
-    "description": "羅行（Ragyo）是一款 VCV 连续音 UTAU / OpenUTAU 音源，收录 3 组音高与 Soft 音色，音域覆盖 C1–B7。试听、使用条款与下载方式详见本站。"
+    "description": "羅行（Ragyo）是一款 VCV 连续音 UTAU / OpenUTAU 音源，收录 3 组音高与 Soft&Power 音色，音域覆盖 C2–B4。试听、使用条款与下载方式详见本站。"
   },
   "common": {
     "langName": "简体中文",
@@ -31,15 +31,15 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 音源",
-    "tagline": "宛如墨色的蓝。伫立在麦克风前的狼之声。",
-    "facts": "VCV 连续音 · 3 组音高 + Soft · C1–B7",
+    "tagline": "墨色的蓝，一笔写下的憧憬之声。",
+    "facts": "VCV 连续音 · 3 组音高 + Soft&Power · C2–B4",
     "ctaPrimary": "下载",
     "ctaSecondary": "试听",
     "version": "版本 {version}"
   },
   "about": {
     "title": "声库介绍",
-    "lead": "「羅行」是一款采用 VCV 连续音录制的 UTAU 音源，3 组音高各含普通音色与 Soft 音色，音域覆盖 C1 至 B7。",
+    "lead": "「羅行」是一款采用 VCV 连续音录制的 UTAU 音源，3 组音高各含普通、Soft 与 Power 音色，音域覆盖 C2 至 B4。",
     "labels": {
       "type": "音源类型",
       "pitches": "录入音高",
@@ -51,16 +51,17 @@
     "values": {
       "type": "VCV（连续音）",
       "pitches": "3 组音高",
-      "tones": "6 个子音库",
+      "tones": "8 个子音库",
       "engines": "UTAU / OpenUTAU",
       "encoding": "Shift_JIS"
     },
     "subbanksTitle": "录入音高与音色",
-    "subbanksLead": "与 character.yaml 中的 subbanks 定义一致。同一音高下同时提供普通音色与 Soft 音色，可按情感表达需要选用。",
+    "subbanksLead": "与 character.yaml 中的 subbanks 定义一致。同一音高下提供普通、Soft 与 Power 音色，可按情感表达需要选用。",
     "toneDefault": "普通",
     "toneSoft": "Soft",
+    "tonePower": "Power",
     "enginesTitle": "关于支持的引擎",
-    "enginesNote": "OpenUTAU 会直接读取 character.yaml 中的 subbanks 定义，因此可在软件内切换音高与 Soft 音色。",
+    "enginesNote": "OpenUTAU 会直接读取 character.yaml 中的 subbanks 定义，因此可在软件内切换音高与 Soft、Power 音色。",
     "sourceNote": "※ 本页音源信息依据发行包中的 character.yaml 与 character.txt 整理。"
   },
   "samples": {
@@ -222,7 +223,7 @@
     "installSteps": [
       "通过「工具 → 安装歌手」安装音源，支持 rar、zip、uar 压缩包，也可以直接把压缩包拖入 OpenUTAU 窗口。",
       "安装界面可预览压缩包内的 wav 文件名与 oto.ini；若文字乱码，请在右上角选择正确的文本编码。",
-      "注意：非日文系统下请勿直接解压，务必用「安装歌手」导入。安装完成后歌手列表会出现「羅行」，3 组音高与 Soft 音色可直接选用。"
+      "注意：非日文系统下请勿直接解压，务必用「安装歌手」导入。安装完成后歌手列表会出现「羅行」，3 组音高与 Soft、Power 音色可直接选用。"
     ],
     "installTitleUtau": "在 UTAU 中安装",
     "installStepsUtau": [
@@ -235,6 +236,13 @@
     "lead": "音源更新内容汇总。",
     "datePending": "公开日期未定",
     "entries": [
+      {
+        "version": "1.0.1",
+        "date": "2026.10.01",
+        "notes": [
+          "更新了 character.txt 和 prefix.map，仅修正了 OpenUTAU 便捷切换表情音中「Power」缺失的问题（标准 UTAU 不受此问题影响）。"
+        ]
+      },
       {
         "version": "1.0",
         "date": null,

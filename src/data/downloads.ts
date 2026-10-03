@@ -88,7 +88,7 @@ export function orderMirrors(list: Mirror[], locale: string): Mirror[] {
 }
 
 export const downloadMeta = {
-  version: '1.0',
+  version: '1.0.1',
   /** 打包日期，待提供 */
   packagedAt: null as string | null,
   /** 压缩包体积，待提供 */

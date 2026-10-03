@@ -1,40 +1,49 @@
-singer_type: utau
+﻿singer_type: utau
 text_file_encoding: shift_jis
 portrait: portrait.png
 portrait_opacity: 0.67
 portrait_height: 0
 author: 羅威
 voice: 羅威
-version: https://linktr.ee/Ragyo
-version: 1.0
+version: "1.0"
 subbanks:
-  - color: ""
-    prefix: ""
-    suffix: F4
-    tone_ranges:
-      - F4-B7
-  - color: ""
-    prefix: ""
-    suffix: G3
-    tone_ranges:
-      - E3-E4
-  - color: ""
-    prefix: ""
-    suffix: B2
-    tone_ranges:
-      - C1-D#3
-  - color: Soft
-    prefix: ""
-    suffix: SF4
-    tone_ranges:
-      - F4-B7
-  - color: Soft
-    prefix: ""
-    suffix: SG3
-    tone_ranges:
-      - E3-E4
-  - color: Soft
-    prefix: ""
-    suffix: SB2
-    tone_ranges:
-      - C1-D#3
+- color: ""
+  prefix: ""
+  suffix: F4
+  tone_ranges:
+  - F4-B7
+- color: ""
+  prefix: ""
+  suffix: G3
+  tone_ranges:
+  - E3-E4
+- color: ""
+  prefix: ""
+  suffix: B2
+  tone_ranges:
+  - C1-D#3
+- color: Soft
+  prefix: ""
+  suffix: SF4
+  tone_ranges:
+  - F4-B7
+- color: Soft
+  prefix: ""
+  suffix: SG3
+  tone_ranges:
+  - E3-E4
+- color: Soft
+  prefix: ""
+  suffix: SB2
+  tone_ranges:
+  - C1-D#3
+- color: Power
+  prefix: ""
+  suffix: F4
+  tone_ranges:
+  - F4-B7
+- color: Power
+  prefix: ""
+  suffix: PG3
+  tone_ranges:
+  - C1-E4
