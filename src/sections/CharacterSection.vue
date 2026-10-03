@@ -104,6 +104,9 @@ const likes = () => tm('character.likes') as string[]
   gap: 14px;
   min-width: 0;
   min-height: 0;
+  /* 顶对齐而非随行垂直居中：网格行被 flex:1 撑满一屏，居中会在引导语与
+     第一张卡片之间留出大片空隙（约 67px），顶对齐后卡片紧跟引导语 */
+  align-self: start;
 }
 
 .card-title {
