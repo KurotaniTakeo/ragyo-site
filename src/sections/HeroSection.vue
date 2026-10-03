@@ -30,7 +30,8 @@ const { t, locale } = useI18n()
   <SectionShell id="hero" class="hero-shell" bleed :active="active">
     <div class="hero">
       <div class="hero-text">
-        <span class="hero-watermark" aria-hidden="true">羅</span>
+        <span class="hero-watermark hero-watermark-luo" aria-hidden="true">羅</span>
+        <span class="hero-watermark hero-watermark-xing" aria-hidden="true">行</span>
 
         <p class="hero-kicker md-label-large" data-reveal>
           <M3Icon name="graphic_eq" :size="16" />
@@ -103,6 +104,7 @@ const { t, locale } = useI18n()
             aria-hidden="true"
             sizes="(max-width: 860px) 70vw, 36vw"
             class="hero-backdrop"
+            draggable="false"
           />
         </div>
         <div class="hero-figure-glow" aria-hidden="true" />
@@ -113,6 +115,7 @@ const { t, locale } = useI18n()
             eager
             sizes="(max-width: 860px) 120vw, (min-width: 2200px) 1800px, 78vw"
             class="hero-image"
+            draggable="false"
           />
         </div>
       </div>
@@ -146,6 +149,15 @@ const { t, locale } = useI18n()
   );
   isolation: isolate;
   contain: paint;
+  /* 仅首屏禁止鼠标拖选文本（其余分屏不受影响） */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 首屏图片禁止拖拽：-webkit-user-drag 覆盖 Chromium / WebKit，
+   Firefox 则由模板上的 draggable="false" 覆盖。 */
+.hero-shell :deep(img) {
+  -webkit-user-drag: none;
 }
 
 /* 静态叠加层。顺序（自上而下）：
@@ -222,21 +234,37 @@ const { t, locale } = useI18n()
   column-gap: clamp(12px, 2.5vw, 56px);
 }
 
-/* 超大「羅」水印：描边空心字，位于文字块内、压在文字之下。
-   贴在文字块的左上方，只有右下角略微压到标题；随文字块一起移动。纯装饰，不进无障碍树。 */
+/* 超大「羅」「行」水印：描边空心字，位于文字块内、压在文字之下，
+   随文字块一起移动。纯装饰，不进无障碍树。 */
 .hero-watermark {
   position: absolute;
-  left: -0.16em;
-  top: 0;
-  translate: 0 -62%;
   z-index: -1;
   font-weight: 800;
   font-size: clamp(180px, 26vw, 420px);
   line-height: 0.8;
   color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
   pointer-events: none;
   user-select: none;
+}
+
+/* 「羅」贴在文字块左上方，只有右下角略微压到标题 */
+.hero-watermark-luo {
+  left: -0.16em;
+  top: 0;
+  translate: 0 -62%;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
+}
+
+/* 「行」放在文字块右下的空档里：比「羅」小一号并下沉到规格列表之下，
+   整字留在画面内、不与列表行线重叠、也不进入立绘区域。
+   尺寸随视口高度收缩，避免矮屏时被底边截断。
+   描边取自品牌主色 token，随调色板重新生成而同步。 */
+.hero-watermark-xing {
+  right: -0.04em;
+  bottom: 0;
+  translate: 0 60%;
+  font-size: clamp(120px, 16vh, 240px);
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
 }
 
 .hero-text,
@@ -529,9 +557,9 @@ const { t, locale } = useI18n()
    响应式
 ------------------------------------------------------------------ */
 
-/* 够宽时有空间把水印再往左推一点；窄桌面保持较浅的左移，避免贴着视口左缘 */
+/* 够宽时有空间把「羅」再往左推一点；窄桌面保持较浅的左移，避免贴着视口左缘 */
 @media (min-width: 1101px) {
-  .hero-watermark {
+  .hero-watermark-luo {
     left: -0.26em;
   }
 }
