@@ -9,8 +9,10 @@ import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
+import M3Button from '@/components/M3Button.vue'
 import ResponsiveImage from '@/components/ResponsiveImage.vue'
 import CharacterViewer from '@/components/CharacterViewer.vue'
+import { useScrollContext } from '@/composables/useScrollContext'
 import { SHEET_IMAGE } from '@/data/assets'
 import { voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
@@ -18,6 +20,7 @@ import { sections } from '@/data/sections'
 defineProps<{ active: boolean }>()
 
 const { t, tm } = useI18n()
+const { goToId } = useScrollContext()
 
 const designNotes = () => tm('character.designNotes') as string[]
 const likes = () => tm('character.likes') as string[]
@@ -75,29 +78,45 @@ const likes = () => tm('character.likes') as string[]
       </div>
 
       <figure class="character-figure" data-reveal style="--reveal-delay: 60ms">
-        <ResponsiveImage
-          :image-key="SHEET_IMAGE"
-          :alt="t('character.alt.sheet')"
-          sizes="(max-width: 860px) 90vw, 520px"
-          class="sheet-image"
-        />
+        <div class="character-media">
+          <span class="character-glow" aria-hidden="true" />
+          <span class="character-dots" aria-hidden="true" />
+          <ResponsiveImage
+            :image-key="SHEET_IMAGE"
+            :alt="t('character.alt.sheet')"
+            sizes="(max-width: 860px) 90vw, 520px"
+            class="sheet-image"
+          />
+        </div>
         <figcaption class="md-label-small">{{ t('character.galleryTitle') }}</figcaption>
-        <CharacterViewer />
+        <div class="character-actions">
+          <CharacterViewer />
+          <M3Button variant="tonal" icon="download" @click="goToId('download')">
+            {{ t('character.downloadIllust') }}
+          </M3Button>
+        </div>
       </figure>
     </div>
   </SectionShell>
 </template>
 
 <style scoped>
+/* 让品牌头不参与收缩：矮屏时收缩量全部由网格承担，标题不被压行 */
+:deep(.section-header) {
+  flex: none;
+}
+
 .character-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(14px, 2vw, 24px);
-  /* 居中而非拉伸：整行仍由 flex:1 撑满一屏，但信息卡与设定图各自按
-     内容高度在行内垂直居中，避免设计备忘卡被拉出大片空白 */
-  align-items: center;
+  /* 顶对齐：两栏内容各自贴顶，立绘列与卡片列齐平 */
+  align-items: start;
   min-height: 0;
-  flex: 1;
+  /* 不强制撑满面板（flex-grow: 0）：内容按自身高度排布，由 SectionShell 的
+     .section-inner 做垂直居中；同时允许收缩（flex-shrink: 1），矮屏时网格
+     连同立绘一起收进一屏，避免出现内部滚动 */
+  flex: 0 1 auto;
 }
 
 .character-info {
@@ -106,9 +125,9 @@ const likes = () => tm('character.likes') as string[]
   gap: 14px;
   min-width: 0;
   min-height: 0;
-  /* 顶对齐而非随行垂直居中：网格行被 flex:1 撑满一屏，居中会在引导语与
-     第一张卡片之间留出大片空隙（约 67px），顶对齐后卡片紧跟引导语 */
-  align-self: start;
+  /* 压在立绘光晕之上：光晕向卡片一侧扩散时会被不透明卡片挡住 */
+  position: relative;
+  z-index: 1;
 }
 
 .card-title {
@@ -202,38 +221,106 @@ const likes = () => tm('character.likes') as string[]
   align-items: center;
   gap: 8px;
   width: 100%;
+  /* 顶对齐的同时拉伸到整行高度：立绘列比卡片高，若不拉伸会向下溢出、
+     把图注与按钮挤出视口；拉伸后由 .character-media 收缩吸收高度 */
+  align-self: stretch;
   min-height: 0;
-  border-radius: var(--md-sys-shape-corner-large);
   /* 不加 overflow: hidden —— 透明底立绘无需在圆角处裁切，
      且它可能与 ResponsiveImage 内部 <picture> 的 display:contents 组合产生问题 */
-  /* 与首页主视觉同一套：立绘暗部与背景 #505678 近乎同色，用主色光晕拉开轮廓 */
-  background: radial-gradient(
-    closest-side at 50% 42%,
-    color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent),
-    color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent) 58%,
-    transparent 82%
+}
+
+/* 立绘与其身后的光晕同处一层，图注与按钮留在层外 */
+.character-media {
+  position: relative;
+  width: 100%;
+  /* 桌面为内容高度（basis auto 不会凭空拉伸）；横屏等受限高度时再随行高伸展 */
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* 立绘周围的背景：用独立绝对定位层复刻首页那套叠加效果（见 HeroSection.vue），
+   而不用给容器铺背景——所有渐变都以 transparent 收尾，四边不触边，
+   因此没有硬边或可见边框；离立绘较远处仍是纯色 surface。
+   层盒向四周（尤其左侧）外扩，效果铺得更开；压到卡片一侧的部分由
+   .character-info 的不透明卡片盖住。 */
+.character-glow {
+  position: absolute;
+  /* 底边只向下探 8%（小于图注+按钮所占高度），避免绝对定位层溢出滚动容器、
+     凭空撑出内部滚动；左右与顶部多扩以铺开效果 */
+  inset: -8% -16% -8% -18%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* 头部附近的暖光：取调色板的 tertiary（暖浅红），只作一点提亮 */
+    radial-gradient(
+      closest-side at 50% 16%,
+      color-mix(in srgb, var(--md-sys-color-tertiary) 22%, transparent),
+      color-mix(in srgb, var(--md-sys-color-tertiary) 7%, transparent) 48%,
+      transparent 78%
+    ),
+    /* 主色轮廓光晕：立绘暗部与背景近乎同色，用它拉开轮廓 */
+    radial-gradient(
+      closest-side at 48% 44%,
+      color-mix(in srgb, var(--md-sys-color-primary) 26%, transparent),
+      color-mix(in srgb, var(--md-sys-color-primary) 9%, transparent) 58%,
+      transparent 82%
+    ),
+    /* 首页式的浅色光团：偏 #baaebb，为画面加一层明暗纵深。
+       一并改用 closest-side，保证四周未到边缘就已透明，不留矩形硬边。 */
+    radial-gradient(
+      closest-side at 50% 62%,
+      color-mix(in srgb, var(--md-sys-color-surface) 45%, #baaebb) 0%,
+      color-mix(in srgb, var(--md-sys-color-surface) 80%, #baaebb) 45%,
+      transparent 80%
+    );
+}
+
+/* 点阵：首页同款，径向遮罩只让立绘附近显形，向外淡出（closest-side 保证不触边） */
+.character-dots {
+  position: absolute;
+  inset: -8% -16% -8% -18%;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent) 1.35px,
+    transparent 1.65px
   );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(closest-side at 50% 45%, #000, transparent 80%);
+  mask-image: radial-gradient(closest-side at 50% 45%, #000, transparent 80%);
 }
 
 /* ResponsiveImage 内部用 <picture>（display:contents）包裹，
    尺寸样式需穿透到真正的 <img> */
 :deep(.sheet-image) {
   /* 双列时填满立绘列：行高由左栏内容决定，避免设定图自身把整行拉高；
-     contain 保证宽/高任一先到极限都不变形。设定图上下有透明留白，
-     用 center 垂直居中比贴底更平衡。 */
+     contain 保证宽/高任一先到极限都不变形。
+     顶对齐：行高大于图片自然高度时，透明信箱只落在底部，立绘顶在
+     任意分辨率都贴齐 figure 顶，不会因垂直居中而随分辨率漂移。 */
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  object-position: center;
+  object-position: top center;
   background-size: contain;
-  background-position: center;
+  background-position: top center;
 }
 
 .character-figure figcaption {
   color: var(--md-sys-color-on-surface-variant);
   padding-bottom: 4px;
+}
+
+/* 「查看立绘」与「下载立绘」并排，换行时居中 */
+.character-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
 }
 
 /* 断点与 AppBar / NavigationRail / SectionShell 对齐（860px），
@@ -287,7 +374,7 @@ const likes = () => tm('character.likes') as string[]
     width: 100%;
     height: 100%;
     max-height: 100%;
-    object-position: center;
+    object-position: top center;
   }
 }
 
