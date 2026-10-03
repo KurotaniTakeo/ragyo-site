@@ -21,7 +21,7 @@ Prereqs: `gen:surprise` needs `ffmpeg`/`ffprobe` (H.264/libx264) on PATH. `gen:p
 
 The surface color `#505678` is hardcoded in both `gen-images.mjs` and `gen-surprise.mjs` to composite transparent art. If `gen:palette` changes `--md-sys-color-surface`, update both.
 
-Illustration sources (`assets/illustration/character/1.png`…) may be renamed; the only source of truth is `scripts/assets.manifest.json`. Note `3.png`, `5.png`, `6.png` are unused originals kept on purpose (not in the manifest). Reference images by semantic key via `src/data/assets.ts`, never by filename.
+Illustration sources under `assets/illustration/character/` use English filenames (e.g. `pockets-smile-costume-1.png`); the naming convention plus a mapping back to the original Chinese names live in `assets/illustration/character/README.md`. The only source of truth for filenames and derived rules is `scripts/assets.manifest.json`. Reference images by semantic key via `src/data/assets.ts`, never by filename.
 
 ## Architecture facts that are easy to miss
 - **SSG only**: one static route per locale (`/ja/`, `/zh/`, `/zh-Hant/`, `/en/`), deliberately not a dynamic `/:locale`, so each gets correct `<html lang>`, title, OGP and hreflang. Don't collapse it.

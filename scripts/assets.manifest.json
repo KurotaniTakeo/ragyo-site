@@ -1,29 +1,65 @@
 {
-  "$comment": "图像资产清单。scripts/gen-images.mjs 读取本文件生成 public/img/generated/* 与 src/data/assets.generated.ts。立绘原稿改名时只需修改此处的 source 字段。",
+  "$comment": "图像资产清单。scripts/gen-images.mjs 读取本文件生成 public/img/generated/* 与 src/data/assets.generated.ts。立绘原稿改名时只需修改此处的 source 字段；英文命名规范与中文原名对照见 assets/illustration/character/README.md。",
   "outputDir": "public/img/generated",
   "entries": [
     {
-      "key": "character.outfit-b",
-      "source": "illustration/character/4.png",
+      "key": "character.pockets-smile-costume-1",
+      "source": "illustration/character/pockets-smile-costume-1.png",
       "widths": [640, 1024, 1600, 2400, 3200],
-      "note": "服装 B・正面站姿・红色领带清晰。"
+      "note": "公式1（红领带）・手插兜・闭嘴微笑。"
     },
     {
-      "key": "character.outfit-b-bust",
-      "source": "illustration/character/4.png",
+      "key": "character.pockets-smile-costume-1-bust",
+      "source": "illustration/character/pockets-smile-costume-1.png",
       "crop": { "x": 0, "y": 0.02, "w": 1, "h": 0.72 },
       "widths": [640, 1024, 1600, 2400],
-      "note": "服装 B・半身像（头部至半腿）。保留整幅宽度以容纳完整的麦克风线回环，仅纵向裁剪。"
+      "note": "公式1・半身像（头部至半腿）。保留整幅宽度以容纳完整的麦克风线回环，仅纵向裁剪。"
     },
     {
-      "key": "character.outfit-a",
-      "source": "illustration/character/1.png",
+      "key": "character.pockets-smile-costume-2",
+      "source": "illustration/character/pockets-smile-costume-2.png",
       "widths": [640, 1024, 1600, 2400, 3200],
-      "note": "服装 A・正面站姿・夹克扣起。"
+      "note": "公式2（无领带黑衬衫）・手插兜・闭嘴微笑。"
     },
     {
-      "key": "character.sheet",
-      "source": "illustration/character/7.png",
+      "key": "character.pockets-open-mouth-costume-1",
+      "source": "illustration/character/pockets-open-mouth-costume-1.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式1・手插兜・张嘴。"
+    },
+    {
+      "key": "character.pockets-open-mouth-costume-2",
+      "source": "illustration/character/pockets-open-mouth-costume-2.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式2・手插兜・张嘴。"
+    },
+    {
+      "key": "character.smile-costume-1",
+      "source": "illustration/character/smile-costume-1.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式1・非插兜・闭嘴微笑。"
+    },
+    {
+      "key": "character.smile-costume-2",
+      "source": "illustration/character/smile-costume-2.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式2・非插兜・闭嘴微笑。"
+    },
+    {
+      "key": "character.open-mouth-costume-1",
+      "source": "illustration/character/open-mouth-costume-1.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式1・非插兜・张嘴。"
+    },
+    {
+      "key": "character.open-mouth-costume-2",
+      "source": "illustration/character/open-mouth-costume-2.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式2・非插兜・张嘴。"
+    },
+    {
+      "key": "character.front-back",
+      "source": "illustration/character/front-back.png",
       "widths": [640, 1024, 1600, 1924],
       "note": "设定图・正面与背面双视图・含耳麦与尾巴。"
     }

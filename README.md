@@ -79,7 +79,7 @@ assets/
 ```
 
 - `readme-jp.txt` 等日文原件为 **Shift-JIS 编码**，已通过 `.gitattributes` 的 `-text` 保持字节原样，请勿转码或让编辑器改写行尾。
-- 立绘文件名（`1.png`…）作者可能调整：**唯一事实来源是 `scripts/assets.manifest.json`**，业务代码一律经 `src/data/assets.ts` 的语义化键引用，不出现具体文件名。`3/5/6.png` 为有意保留但未进清单的原稿。
+- 立绘原稿使用英文文件名（如 `pockets-smile-costume-1.png`），命名规范与中文原名对照见 `assets/illustration/character/README.md`；**唯一事实来源是 `scripts/assets.manifest.json`**，业务代码一律经 `src/data/assets.ts` 的语义化键引用，不出现具体文件名。
 
 ## 内容维护约定
 
