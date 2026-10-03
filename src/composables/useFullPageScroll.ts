@@ -12,6 +12,11 @@ import { onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
  * 与「内容超过一屏」的 section 共存：
  *   若当前 section 内部的 [data-scrollable] 面板在滚动方向上还有余量，
  *   则不拦截滚轮，交给面板原生滚动；滚到底后再翻页。
+ *
+ * 横向多栏长文（使用条款）：
+ *   section 内部可有 [data-scrollable-x] 横向滚动区。Shift+滚轮或触控板横向手势
+ *   用来左右滚动它；只要存在横向余量就由这里接管，不会误触整屏翻页。
+ *   ←/→ 键同样左右滚动。
  */
 
 /** 翻页动画时长，与 --app-scroll-duration 保持一致 */
@@ -101,6 +106,17 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     return deltaY > 0 ? panel.scrollTop < max - 1 : panel.scrollTop > 1
   }
 
+  /** section 内的横向多栏滚动区（使用条款等） */
+  const xPanelOf = (sectionEl: HTMLElement | undefined) =>
+    sectionEl?.querySelector<HTMLElement>('[data-scrollable-x]') ?? null
+
+  /** 横向滚动区在此方向上是否还有余量 */
+  function panelCanScrollX(panel: HTMLElement, deltaX: number) {
+    const max = panel.scrollWidth - panel.clientWidth
+    if (max <= 1) return false
+    return deltaX > 0 ? panel.scrollLeft < max - 1 : panel.scrollLeft > 1
+  }
+
   function syncActiveFromScroll() {
     const container = scroller.value
     if (!container || sectionEls.length === 0) return
@@ -118,12 +134,33 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     const container = scroller.value
     if (!container || suspended?.value) return
 
+    const rawDeltaX = event.deltaX
     const delta = event.deltaY
-    if (delta === 0) return
 
     // 归一化：部分浏览器/设备会把一次滚动拆成大量小 delta
     const mode = event.deltaMode
     const normalized = mode === 1 ? delta * 16 : mode === 2 ? delta * container.clientHeight : delta
+
+    const currentEl = sectionEls[activeIndex.value]
+
+    // 横向优先：Shift+滚轮或触控板的横向手势 → 滚动 section 内的横向多栏区。
+    // 只要该区存在横向余量就完全接管（到边也不翻页），避免误触整屏切换。
+    const shiftWheel = event.shiftKey && rawDeltaX === 0
+    const horizontal = shiftWheel ? normalized : rawDeltaX
+    const horizontalIntent =
+      horizontal !== 0 && (shiftWheel || Math.abs(rawDeltaX) > Math.abs(delta))
+    const xPanel = xPanelOf(currentEl)
+    if (currentEl && horizontalIntent && xPanel && xPanel.scrollWidth - xPanel.clientWidth > 1) {
+      event.preventDefault()
+      if (panelCanScrollX(xPanel, horizontal)) {
+        xPanel.scrollLeft += horizontal
+      }
+      wheelAccum = 0
+      panelScrolling = false
+      return
+    }
+
+    if (delta === 0) return
 
     // 空闲即重置：只有紧跟在面板滚动之后的惯性才会被吃掉
     window.clearTimeout(wheelIdleTimer)
@@ -132,8 +169,6 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
       panelScrolling = false
       panelEdgeUntil = 0
     }, WHEEL_IDLE)
-
-    const currentEl = sectionEls[activeIndex.value]
 
     // 面板还能滚：交给原生滚动，且不计入翻页累积
     if (currentEl && panelCanScroll(currentEl, normalized)) {
@@ -188,6 +223,19 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     return true
   }
 
+  /** ←/→ 键滚动横向多栏区（约一屏的 90%） */
+  function scrollPanelXBy(sectionEl: HTMLElement | undefined, direction: 1 | -1) {
+    const panel = xPanelOf(sectionEl)
+    if (!panel) return false
+    const max = panel.scrollWidth - panel.clientWidth
+    if (max <= 1) return false
+    const step = panel.clientWidth * 0.9
+    const target = Math.max(0, Math.min(max, panel.scrollLeft + direction * step))
+    if (target === panel.scrollLeft) return false
+    panel.scrollTo({ left: target, behavior: reduceMotion ? 'auto' : 'smooth' })
+    return true
+  }
+
   function onKeydown(event: KeyboardEvent) {
     if (suspended?.value) return
 
@@ -212,6 +260,14 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
         if (locked) break
         lock()
         prev()
+        break
+      case 'ArrowRight':
+        event.preventDefault()
+        scrollPanelXBy(sectionEls[activeIndex.value], 1)
+        break
+      case 'ArrowLeft':
+        event.preventDefault()
+        scrollPanelXBy(sectionEls[activeIndex.value], -1)
         break
       case 'Home':
         event.preventDefault()

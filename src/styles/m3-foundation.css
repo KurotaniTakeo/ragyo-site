@@ -50,6 +50,8 @@
      分屏底部留白统一引用它，避免立绘/内容被底栏压住。 */
   --app-bottom-nav: calc(64px + env(safe-area-inset-bottom, 0px));
   --app-content-max: 1180px;
+  /* 长文分屏（如使用条款）放宽后的最大宽度：大屏上排 2~3 栏，避免被 1180 钉成窄条 */
+  --app-content-wide: 2200px;
   --app-gutter: clamp(20px, 5vw, 96px);
   /* 顶栏之外再留出的呼吸空间：随视口高度自适应，矮屏最小 16px，
      既让内容与固定顶栏拉开距离，又不会把 100dvh 分屏挤出可视区 */

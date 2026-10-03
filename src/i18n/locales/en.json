@@ -109,6 +109,9 @@
     "sourceNote": "This is the complete readme bundled with the release.",
     "contactTitle": "Contact",
     "copyrightTitle": "Copyright",
+    "scrollPrev": "Scroll left",
+    "scrollNext": "Scroll right",
+    "creditsLink": "For contact details, see Credits",
     "blocks": [
       {
         "heading": "Regarding the \u201cRagyo\u201d Voice Library",

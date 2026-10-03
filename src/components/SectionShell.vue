@@ -19,8 +19,10 @@ withDefaults(
     active?: boolean
     /** 内容通铺到视口边缘，不加最大宽度限制 */
     bleed?: boolean
+    /** 放宽最大宽度（长文分屏在大屏上排多栏时使用） */
+    wide?: boolean
   }>(),
-  { active: false, bleed: false },
+  { active: false, bleed: false, wide: false },
 )
 </script>
 
@@ -34,7 +36,7 @@ withDefaults(
   >
     <div class="section-body" :class="{ 'is-bleed': bleed }">
       <div class="section-panel" data-scrollable>
-        <div class="section-inner">
+        <div class="section-inner" :class="{ 'is-wide': wide }">
           <slot />
         </div>
       </div>
@@ -118,6 +120,11 @@ withDefaults(
      内容更高时 safe 会回落为顶对齐，避免顶部被裁 */
   justify-content: center;
   justify-content: safe center;
+}
+
+/* 放宽最大宽度：长文分屏在大屏上排多栏，不被 1180px 的栅格钉成窄条 */
+.section-inner.is-wide {
+  max-width: var(--app-content-wide);
 }
 
 /* 进入视口时的浮现：由 active 属性驱动，避免为每个元素挂 observer */

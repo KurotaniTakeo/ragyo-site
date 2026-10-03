@@ -109,6 +109,9 @@
     "sourceNote": "配布ファイルに同梱されている readme の全文を掲載しています。",
     "contactTitle": "連絡先",
     "copyrightTitle": "著作権",
+    "scrollPrev": "左へスクロール",
+    "scrollNext": "右へスクロール",
+    "creditsLink": "ご連絡先は「クレジット」をご覧ください",
     "blocks": [
       {
         "heading": "「羅行」ライブラリについて",

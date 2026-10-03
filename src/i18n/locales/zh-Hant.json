@@ -109,6 +109,9 @@
     "sourceNote": "此處收錄發行包中隨附的 readme 全文。",
     "contactTitle": "聯絡方式",
     "copyrightTitle": "著作權",
+    "scrollPrev": "向左捲動",
+    "scrollNext": "向右捲動",
+    "creditsLink": "聯絡方式見「製作名單」",
     "blocks": [
       {
         "heading": "關於「羅行」聲庫",
