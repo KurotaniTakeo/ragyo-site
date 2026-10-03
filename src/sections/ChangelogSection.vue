@@ -6,6 +6,10 @@
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
+import BrandIcon from '@/components/BrandIcon.vue'
+import M3Icon from '@/components/M3Icon.vue'
+import type { BrandIconName } from '@/components/brandIcons'
+import { changelogLinks, type ChangelogLink } from '@/data/changelog'
 import { sections } from '@/data/sections'
 
 defineProps<{ active: boolean }>()
@@ -19,6 +23,14 @@ interface ChangelogEntry {
 const { t, tm } = useI18n()
 
 const entries = () => tm('changelog.entries') as unknown as ChangelogEntry[]
+
+/** 平台 → 品牌图标 */
+const platformIcons: Record<ChangelogLink['platform'], BrandIconName> = {
+  Bilibili: 'bilibili',
+  X: 'x',
+}
+
+const linksFor = (version: string) => changelogLinks[version] ?? []
 </script>
 
 <template>
@@ -42,6 +54,24 @@ const entries = () => tm('changelog.entries') as unknown as ChangelogEntry[]
           </header>
           <ul class="timeline-notes">
             <li v-for="(note, i) in entry.notes" :key="i" class="md-body-medium">{{ note }}</li>
+          </ul>
+
+          <ul v-if="linksFor(entry.version).length" class="timeline-links">
+            <li v-for="link in linksFor(entry.version)" :key="link.platform">
+              <a
+                v-ripple
+                class="changelog-link md-state-layer md-label-medium"
+                :href="link.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                :title="link.platform"
+                :aria-label="link.platform"
+              >
+                <BrandIcon :name="platformIcons[link.platform]" :size="16" />
+                <span>{{ link.platform }}</span>
+                <M3Icon name="open_in_new" :size="14" />
+              </a>
+            </li>
           </ul>
         </div>
       </li>
@@ -117,5 +147,28 @@ const entries = () => tm('changelog.entries') as unknown as ChangelogEntry[]
   flex-direction: column;
   gap: 6px;
   color: var(--md-sys-color-on-surface-variant);
+}
+
+/* 配布链接：与笔记同一卡片内，胶囊样式与制作名单的社交链接一致 */
+.timeline-links {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.changelog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-primary);
+  transition:
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 }
 </style>

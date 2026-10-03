@@ -15,7 +15,7 @@ import M3Icon from '@/components/M3Icon.vue'
 import M3Button from '@/components/M3Button.vue'
 import BrandIcon from '@/components/BrandIcon.vue'
 import type { BrandIconName } from '@/components/brandIcons'
-import { credits, officialLinkHubs, type SocialLink } from '@/data/credits'
+import { credits, officialLinkHubs, authorCreditKey, type SocialLink } from '@/data/credits'
 import { voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
 import { useScrollContext } from '@/composables/useScrollContext'
@@ -76,6 +76,7 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
       >
         <M3Card
           class="credit-card"
+          :class="{ 'is-official': credit.key === authorCreditKey }"
           padding="md"
           :tone="index === 0 ? 'high' : 'base'"
           data-reveal
@@ -182,6 +183,11 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
   flex-direction: column;
   gap: 14px;
   height: 100%;
+}
+
+/* 作者卡与试听区的官方配布稿同样用主色描边，强调其官方身份 */
+.credit-card.is-official {
+  border: 2px solid var(--md-sys-color-primary);
 }
 
 /* 「联系作者」跳转后的短暂强调：主题色描边脉冲两下 */

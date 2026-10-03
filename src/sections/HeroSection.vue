@@ -14,8 +14,9 @@ import SectionShell from '@/components/SectionShell.vue'
 import M3Button from '@/components/M3Button.vue'
 import ResponsiveImage from '@/components/ResponsiveImage.vue'
 import M3Icon from '@/components/M3Icon.vue'
+import SpecPill from '@/components/SpecPill.vue'
 import { HERO_BACKDROP_IMAGE, HERO_IMAGE } from '@/data/assets'
-import { pitchRanges, voicebank } from '@/data/voicebank'
+import { pitchRanges, tones, voicebank } from '@/data/voicebank'
 import type { Locale } from '@/i18n'
 
 defineProps<{ active: boolean }>()
@@ -56,11 +57,21 @@ const { t, locale } = useI18n()
           </div>
           <div class="hero-spec-row">
             <dt>{{ t('hero.spec.labels.pitches') }}</dt>
-            <dd>{{ pitchRanges.length }}</dd>
+            <dd>
+              <span class="hero-spec-pills">
+                <SpecPill v-for="pitch in pitchRanges" :key="pitch.id">{{ pitch.id }}</SpecPill>
+              </span>
+            </dd>
           </div>
           <div class="hero-spec-row">
             <dt>{{ t('hero.spec.labels.tones') }}</dt>
-            <dd>{{ voicebank.subbanks.length }}</dd>
+            <dd>
+              <span class="hero-spec-pills">
+                <SpecPill v-for="tone in tones" :key="tone.key" :tone="tone.key">
+                  {{ tone.name }}
+                </SpecPill>
+              </span>
+            </dd>
           </div>
           <div class="hero-spec-row">
             <dt>{{ t('hero.spec.labels.range') }}</dt>
@@ -337,6 +348,15 @@ const { t, locale } = useI18n()
   font-variant-numeric: tabular-nums;
   font-size: 0.9rem;
   line-height: 1.1rem;
+}
+
+/* 音高 / 音色药丸：作为 dd 的内联内容右对齐，换行时末行也贴右 */
+.hero-spec-pills {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  vertical-align: middle;
 }
 
 .hero-actions {

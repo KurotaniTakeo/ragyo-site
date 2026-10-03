@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "羅行 / Ragyo — UTAU · OpenUTAU 音源",
-    "description": "羅行（Ragyo）是一款 VCV 连续音 UTAU / OpenUTAU 音源，收录 3 组音高与 Soft&Power 音色，音域覆盖 C2–B4。试听、使用条款与下载方式详见本站。"
+    "title": "羅行 / Ragyo — UTAU · OpenUTAU 声库",
+    "description": "羅行（Ragyo）是一款 VCV 连续音 UTAU / OpenUTAU 声库，收录 3 组音高与 Soft&Power 音色，音域覆盖 C2–B4。试听、使用条款与下载方式详见本站。"
   },
   "common": {
     "langName": "简体中文",
@@ -30,13 +30,13 @@
     "surprise": "彩蛋"
   },
   "hero": {
-    "kicker": "UTAU / OpenUTAU 音源",
+    "kicker": "UTAU / OpenUTAU 声库",
     "tagline": "墨色的蓝，一笔写下的憧憬之声。",
     "spec": {
       "labels": {
-        "type": "音源类型",
-        "pitches": "录入音高",
-        "tones": "音色数",
+        "type": "声库类型",
+        "pitches": "音高",
+        "tones": "音色",
         "range": "支持音域"
       }
     },
@@ -46,30 +46,24 @@
   },
   "about": {
     "title": "声库介绍",
-    "lead": "「羅行」是一款采用 VCV 连续音录制的 UTAU 音源，3 组音高各含普通、Soft 与 Power 音色，音域覆盖 C2 至 B4。",
+    "lead": "「羅行」是一款采用 VCV 连续音录制的 UTAU 声库，3 组音高各含普通、Soft 与 Power 音色，音域覆盖 C2 至 B4。",
     "labels": {
-      "type": "音源类型",
-      "pitches": "录入音高",
-      "tones": "音色数",
+      "type": "声库类型",
+      "pitches": "音高",
+      "tones": "音色",
       "range": "支持音域",
       "engines": "支持引擎",
       "encoding": "文本编码"
     },
     "values": {
       "type": "VCV（连续音）",
-      "pitches": "3 组音高",
-      "tones": "8 个子音库",
       "engines": "UTAU / OpenUTAU",
       "encoding": "Shift_JIS"
     },
     "subbanksTitle": "录入音高与音色",
     "subbanksLead": "与 character.yaml 中的 subbanks 定义一致。同一音高下提供普通、Soft 与 Power 音色，可按情感表达需要选用。",
-    "toneDefault": "普通",
-    "toneSoft": "Soft",
-    "tonePower": "Power",
-    "enginesTitle": "关于支持的引擎",
-    "enginesNote": "OpenUTAU 会直接读取 character.yaml 中的 subbanks 定义，因此可在软件内切换音高与 Soft、Power 音色。",
-    "sourceNote": "※ 本页音源信息依据发行包中的 character.yaml 与 character.txt 整理。"
+    "enginesNote": "OpenUTAU 会直接读取 character.yaml 中的 subbanks 定义，因此可通过 CLR 参数切换音色。",
+    "sourceNote": "本页信息依据发行包整理。"
   },
   "samples": {
     "title": "试听",
@@ -80,8 +74,8 @@
     "officialBadge": "官方配布",
     "demoLabel": "演示曲",
     "rawLabel": "原音样本",
-    "emptyTitle": "试听音源即将公开",
-    "emptyBody": "试听音源正在制作中，敬请期待。"
+    "emptyTitle": "试听声库即将公开",
+    "emptyBody": "试听声库正在制作中，敬请期待。"
   },
   "character": {
     "title": "角色",
@@ -111,7 +105,7 @@
   },
   "terms": {
     "title": "使用条款",
-    "lead": "使用本音源前，请务必确认以下全文。",
+    "lead": "使用本声库前，请务必确认以下全文。",
     "sourceNote": "此处收录发行包中附带的 readme 全文。",
     "contactTitle": "联系方式",
     "copyrightTitle": "著作权",
@@ -119,7 +113,7 @@
       {
         "heading": "关于「羅行」声库",
         "items": [
-          "本音源由羅威（形象、声音），LAN（立绘）和 Dailing（声库参数）共同创作。"
+          "本声库由羅威（形象、声音），LAN（立绘）和 Dailing（声库参数）共同创作。"
         ]
       },
       {
@@ -200,14 +194,14 @@
     "copyright": [
       "羅行声音及形象：羅威 ©2025 All Rights Reserved.",
       "羅行官方立绘：LAN ©2025 All Rights Reserved.",
-      "羅行音源制作：Dailing ©2026 All Rights Reserved."
+      "羅行声库制作：Dailing ©2026 All Rights Reserved."
     ]
   },
   "download": {
     "title": "下载",
-    "lead": "「羅行」的音源与立绘可通过以下网盘渠道下载。",
+    "lead": "「羅行」的声库与立绘可通过以下网盘渠道下载。",
     "groups": {
-      "voicebank": "音源",
+      "voicebank": "声库",
       "illustration": "立绘"
     },
     "platforms": {
@@ -228,7 +222,7 @@
     "feedbackAuthor": "作者",
     "installTitle": "在 OpenUTAU 中安装",
     "installSteps": [
-      "通过「工具 → 安装歌手」安装音源，支持 rar、zip、uar 压缩包，也可以直接把压缩包拖入 OpenUTAU 窗口。",
+      "通过「工具 → 安装歌手」安装声库，支持 rar、zip、uar 压缩包，也可以直接把压缩包拖入 OpenUTAU 窗口。",
       "安装界面可预览压缩包内的 wav 文件名与 oto.ini；若文字乱码，请在右上角选择正确的文本编码。",
       "注意：非日文系统下请勿直接解压，务必用「安装歌手」导入。安装完成后歌手列表会出现「羅行」，3 组音高与 Soft、Power 音色可直接选用。"
     ],
@@ -240,7 +234,7 @@
   },
   "changelog": {
     "title": "更新日志",
-    "lead": "音源更新内容汇总。",
+    "lead": "声库更新内容汇总。",
     "datePending": "公开日期未定",
     "entries": [
       {
@@ -252,7 +246,7 @@
       },
       {
         "version": "1.0",
-        "date": null,
+        "date": "2026.09.30",
         "notes": [
           "首次发布。收录 VCV 连续音、3 组音高（B2 / G3 / F4）与 Soft 音色。",
           "通过 character.yaml 支持 OpenUTAU 的 subbanks。"
@@ -289,6 +283,6 @@
     "error": "加载失败，请再试一次。"
   },
   "footer": {
-    "rights": "羅行声音及形象：羅威 2025 · 官方立绘：LAN 2025 · 音源制作：Dailing 2026"
+    "rights": "羅行声音及形象：羅威 2025 · 官方立绘：LAN 2025 · 声库制作：Dailing 2026"
   }
 }

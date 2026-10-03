@@ -35,8 +35,8 @@
     "spec": {
       "labels": {
         "type": "音源タイプ",
-        "pitches": "収録音階",
-        "tones": "音色数",
+        "pitches": "音高",
+        "tones": "音色",
         "range": "対応音域"
       }
     },
@@ -49,27 +49,21 @@
     "lead": "「羅行」は VCV 連続音で収録された UTAU 音源です。3 つの音階それぞれに通常・Soft・Power の音色を用意し、C2 から B4 までをカバーします。",
     "labels": {
       "type": "音源タイプ",
-      "pitches": "収録音階",
-      "tones": "音色数",
+      "pitches": "音高",
+      "tones": "音色",
       "range": "対応音域",
       "engines": "対応エンジン",
       "encoding": "テキスト文字コード"
     },
     "values": {
       "type": "VCV（連続音）",
-      "pitches": "3 音階",
-      "tones": "8 サブバンク",
       "engines": "UTAU / OpenUTAU",
       "encoding": "Shift_JIS"
     },
     "subbanksTitle": "収録音階と音色",
     "subbanksLead": "character.yaml の subbanks 定義に対応しています。同じ音階に通常・Soft・Power の音色があり、表現に応じて選べます。",
-    "toneDefault": "通常",
-    "toneSoft": "Soft",
-    "tonePower": "Power",
-    "enginesTitle": "対応エンジンについて",
-    "enginesNote": "OpenUTAU では character.yaml の subbanks 定義をそのまま読み込むため、音階と Soft / Power 音色をソフト上で切り替えられます。",
-    "sourceNote": "※ 本ページの音源情報は、配布ファイルに含まれる character.yaml および character.txt の記載に基づいています。"
+    "enginesNote": "OpenUTAU は character.yaml の subbanks 定義を直接読み込み、CLR パラメータで音色を切り替えられます。",
+    "sourceNote": "本ページの情報は配布ファイルに基づいています。"
   },
   "samples": {
     "title": "試聴",
@@ -251,7 +245,7 @@
       },
       {
         "version": "1.0",
-        "date": null,
+        "date": "2026.09.30",
         "notes": [
           "初回配布。VCV 連続音、3 音階（B2 / G3 / F4）＋ Soft 音色を収録。",
           "character.yaml により OpenUTAU の subbanks に対応。"

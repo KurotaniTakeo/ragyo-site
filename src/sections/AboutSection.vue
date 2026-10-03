@@ -12,7 +12,8 @@ import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
-import { fullRange, pitchRanges, voicebank } from '@/data/voicebank'
+import SpecPill from '@/components/SpecPill.vue'
+import { fullRange, pitchRanges, tones, voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
 
 defineProps<{ active: boolean }>()
@@ -31,10 +32,28 @@ const bars = computed(() =>
   })),
 )
 
-const specs = computed(() => [
+interface SpecRow {
+  key: string
+  label: string
+  /** 纯文本值；与 pills 二选一 */
+  value?: string
+  /** 有值时渲染成药丸列表，取代 value */
+  pills?: { text: string; tone?: 'soft' | 'normal' | 'power' }[]
+}
+
+const specs = computed<SpecRow[]>(() => [
   { key: 'type', label: t('about.labels.type'), value: t('about.values.type') },
-  { key: 'pitches', label: t('about.labels.pitches'), value: t('about.values.pitches') },
-  { key: 'tones', label: t('about.labels.tones'), value: t('about.values.tones') },
+  // 音高 / 音色不再显示数量，改为列出药丸，与右卡片的信息一致
+  {
+    key: 'pitches',
+    label: t('about.labels.pitches'),
+    pills: pitchRanges.map((pitch) => ({ text: pitch.id })),
+  },
+  {
+    key: 'tones',
+    label: t('about.labels.tones'),
+    pills: tones.map((tone) => ({ text: tone.name, tone: tone.key })),
+  },
   { key: 'range', label: t('about.labels.range'), value: voicebank.toneRange },
   { key: 'engines', label: t('about.labels.engines'), value: t('about.values.engines') },
   { key: 'encoding', label: t('about.labels.encoding'), value: voicebank.textEncoding },
@@ -55,7 +74,16 @@ const specs = computed(() => [
         <dl class="spec-list">
           <div v-for="spec in specs" :key="spec.key" class="spec-row">
             <dt class="md-label-medium">{{ spec.label }}</dt>
-            <dd class="md-title-small">{{ spec.value }}</dd>
+            <dd class="md-title-small">
+              <span v-if="spec.pills" class="spec-pills">
+                <SpecPill
+                  v-for="pill in spec.pills"
+                  :key="pill.text"
+                  :tone="pill.tone"
+                >{{ pill.text }}</SpecPill>
+              </span>
+              <template v-else>{{ spec.value }}</template>
+            </dd>
           </div>
         </dl>
       </M3Card>
@@ -75,24 +103,34 @@ const specs = computed(() => [
           </div>
         </div>
 
-        <ul class="subbank-list">
-          <li v-for="bar in bars" :key="bar.id" class="subbank-row">
-            <span class="subbank-tone md-title-small">{{ bar.toneRange }}</span>
-            <span class="subbank-files md-label-small">
-              <span class="subbank-tag">{{ t('about.toneDefault') }}&nbsp;{{ bar.normal }}</span>
-              <span class="subbank-tag is-soft">{{ t('about.toneSoft') }}&nbsp;{{ bar.soft }}</span>
-              <span class="subbank-tag is-power">{{ t('about.tonePower') }}&nbsp;{{ bar.power }}</span>
+        <div class="subbank-table" role="table" :aria-label="t('about.subbanksTitle')">
+          <div class="subbank-head" role="row">
+            <span class="subbank-th" role="columnheader">{{ t('about.labels.pitches') }}</span>
+            <span
+              v-for="tone in tones"
+              :key="tone.key"
+              class="subbank-th is-tone"
+              role="columnheader"
+            >{{ tone.name }}</span>
+          </div>
+          <div v-for="bar in bars" :key="bar.id" class="subbank-tr" role="row">
+            <span class="subbank-pitch" role="rowheader">
+              <span class="subbank-pitch-id">{{ bar.id }}</span>
+              <span class="subbank-pitch-range">{{ bar.toneRange }}</span>
             </span>
-          </li>
-        </ul>
+            <span
+              v-for="tone in tones"
+              :key="tone.key"
+              class="subbank-td"
+              role="cell"
+            >{{ bar[tone.key] }}</span>
+          </div>
+        </div>
       </M3Card>
     </div>
 
     <div class="about-notes" data-reveal style="--reveal-delay: 160ms">
-      <p class="note md-body-medium">
-        <strong>{{ t('about.enginesTitle') }}</strong>
-        {{ t('about.enginesNote') }}
-      </p>
+      <p class="note md-body-medium">{{ t('about.enginesNote') }}</p>
       <p class="source md-body-small">{{ t('about.sourceNote') }}</p>
     </div>
   </SectionShell>
@@ -133,6 +171,15 @@ const specs = computed(() => [
   margin: 0;
   text-align: right;
   color: var(--md-sys-color-on-surface);
+}
+
+/* 音高 / 音色药丸：作为 dd 的内联内容右对齐，换行时末行也贴右 */
+.spec-pills {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+  vertical-align: middle;
 }
 
 .card-title {
@@ -203,65 +250,76 @@ const specs = computed(() => [
   letter-spacing: 0.06em;
 }
 
-.subbank-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* 录入音高与音色：去药丸后改为对齐网格，行 = 音高，列 = 音色 */
+.subbank-table {
   display: flex;
   flex-direction: column;
 }
 
-.subbank-row {
-  display: flex;
+.subbank-head,
+.subbank-tr {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 8px 0;
+  gap: 8px;
 }
 
-.subbank-row + .subbank-row {
-  box-shadow: inset 0 1px 0 var(--md-sys-color-outline-variant);
+.subbank-head {
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.subbank-tone {
-  color: var(--md-sys-color-on-surface);
-  font-variant-numeric: tabular-nums;
-}
-
-.subbank-files {
-  display: inline-flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.subbank-tag {
-  padding: 3px 9px;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-surface-container-highest);
+.subbank-th {
   color: var(--md-sys-color-on-surface-variant);
-  /* 药丸含「普通 / 一般」等汉字，等宽体不一定覆盖 CJK，直接沿用正文无衬线体，
-     避免简体/英文下回退到宋体、Courier 等衬线字体 */
-  font-family: var(--app-font-sans);
+  font-size: var(--md-sys-typescale-label-small-size);
+  line-height: var(--md-sys-typescale-label-small-line);
+  font-weight: 500;
   letter-spacing: 0.04em;
 }
 
-.subbank-tag.is-soft {
-  background-color: color-mix(
-    in srgb,
-    var(--md-sys-color-primary) 22%,
-    var(--md-sys-color-surface-container-highest)
-  );
-  color: var(--md-sys-color-primary);
+.subbank-th.is-tone,
+.subbank-td {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
-.subbank-tag.is-power {
-  background-color: color-mix(
-    in srgb,
-    var(--md-sys-color-tertiary) 22%,
-    var(--md-sys-color-surface-container-highest)
-  );
-  color: var(--md-sys-color-tertiary);
+.subbank-tr {
+  padding: 9px 0;
+}
+
+.subbank-tr + .subbank-tr {
+  box-shadow: inset 0 1px 0 var(--md-sys-color-outline-variant);
+}
+
+.subbank-pitch {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  color: var(--md-sys-color-on-surface);
+}
+
+.subbank-pitch-id {
+  font-size: var(--md-sys-typescale-title-small-size);
+  line-height: var(--md-sys-typescale-title-small-line);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.subbank-pitch-range {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.subbank-td {
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--app-font-sans);
+  font-size: var(--md-sys-typescale-title-small-size);
+  line-height: var(--md-sys-typescale-title-small-line);
+  letter-spacing: 0.04em;
 }
 
 .about-notes {
@@ -275,12 +333,6 @@ const specs = computed(() => [
   margin: 0;
   color: var(--md-sys-color-on-surface-variant);
   max-width: 92ch;
-}
-
-.note strong {
-  color: var(--md-sys-color-on-surface);
-  font-weight: 600;
-  margin-right: 6px;
 }
 
 .source {
@@ -309,7 +361,7 @@ const specs = computed(() => [
     margin-bottom: 12px;
   }
 
-  .subbank-row {
+  .subbank-tr {
     padding: 6px 0;
   }
 

@@ -120,3 +120,17 @@ export const pitchRanges = [
 
 /** 音域条的两端，用于计算各音阶的相对宽度 */
 export const fullRange = { low: 36, high: 71 }
+
+/**
+ * 音色的展示定义。顺序即界面上的药丸 / 表列顺序。
+ *
+ * key 同时是 pitchRanges 项的字段名与药丸色调；名称为固定音乐术语（Soft / Normal /
+ * Power），四种语言一致，故按约定放在这里而不进 i18n。
+ */
+export const tones = [
+  { key: 'soft', name: 'Soft' },
+  { key: 'normal', name: 'Normal' },
+  { key: 'power', name: 'Power' },
+] as const
+
+export type ToneKey = (typeof tones)[number]['key']

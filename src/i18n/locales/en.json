@@ -57,19 +57,13 @@
     },
     "values": {
       "type": "VCV",
-      "pitches": "3 pitches",
-      "tones": "8 subbanks",
       "engines": "UTAU / OpenUTAU",
       "encoding": "Shift_JIS"
     },
     "subbanksTitle": "Pitches and tones",
     "subbanksLead": "These correspond to the subbanks defined in character.yaml. Each pitch is offered in normal, Soft and Power tones so you can pick per phrase.",
-    "toneDefault": "Normal",
-    "toneSoft": "Soft",
-    "tonePower": "Power",
-    "enginesTitle": "About engine support",
-    "enginesNote": "OpenUTAU reads the subbanks declared in character.yaml directly, so pitches and the Soft / Power tones can be switched from inside the software.",
-    "sourceNote": "※ Library details on this page are taken from the character.yaml and character.txt files bundled with the release."
+    "enginesNote": "OpenUTAU reads the subbanks declared in character.yaml directly, so tones can be switched through the CLR parameter.",
+    "sourceNote": "Details on this page are compiled from the release package."
   },
   "samples": {
     "title": "Samples",
@@ -252,7 +246,7 @@
       },
       {
         "version": "1.0",
-        "date": null,
+        "date": "2026.09.30",
         "notes": [
           "Initial release. VCV with three pitches (B2 / G3 / F4) plus a Soft tone.",
           "OpenUTAU subbanks are declared through character.yaml."
