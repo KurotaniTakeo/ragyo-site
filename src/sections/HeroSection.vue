@@ -403,12 +403,16 @@ const { t, locale } = useI18n()
   min-height: 0;
 }
 
-/* 背影立绘的裁剪容器：与主立绘同法——放大后从底部硬裁，只留上半身。
-   它是纯装饰（aria-hidden），不进无障碍树，也不参与栅格。 */
+/* 背影立绘的裁剪容器：与主立绘同法从底部硬裁，只留上半身。
+   只裁竖直方向（overflow-y: clip），水平方向放行，让背影能一直铺到视口右缘；
+   否则 2K/4K 下会被立绘列右缘提前切掉、背影几乎不可见。
+   这样 backdrop 的 left:50% 仍以立绘列中心为准。
+   纯装饰（aria-hidden），不进无障碍树，也不参与栅格。 */
 .hero-backdrop-clip {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow-x: visible;
+  overflow-y: clip;
   z-index: 0;
   pointer-events: none;
 }
@@ -416,14 +420,14 @@ const { t, locale } = useI18n()
 :deep(.hero-backdrop) {
   position: absolute;
   /* 以主立绘圆心（= 列中心）为基准，用相对自身宽度的位移做固定右移：
-     背影与主立绘都按高度缩放，因此两者的相对几何在各窗口下保持一致，
-     不会出现被主立绘完全遮挡、或离得过远的情况。 */
+     背影与主立绘都按高度缩放，因此两者的相对几何在各窗口下保持一致。
+     位移越小可见部分越多；这里取头部刚好落在主立绘头部右侧、且在视口内。 */
   left: 50%;
   top: 12%;
   height: 190%;
   width: auto;
   max-width: none;
-  translate: 23% 0;
+  translate: 6% 0;
   object-fit: contain;
   object-position: top center;
   opacity: 0.32;
@@ -495,6 +499,13 @@ const { t, locale } = useI18n()
 /* ------------------------------------------------------------------
    响应式
 ------------------------------------------------------------------ */
+
+/* 够宽时有空间把水印再往左推一点；窄桌面保持较浅的左移，避免贴着视口左缘 */
+@media (min-width: 1101px) {
+  .hero-watermark {
+    left: -0.26em;
+  }
+}
 
 /* 够宽且较扁的视口：角色内容比列宽，向两侧放开裁剪框才不会被切；
    这类视口下角色左缘不会越过文字块，因此不会遮挡文字。 */
