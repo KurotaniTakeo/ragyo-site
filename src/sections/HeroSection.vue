@@ -4,7 +4,7 @@
  *
  * 立绘是透明底 PNG，因此可以让它直接立在背景上，不需要卡片或遮罩。
  * 左侧文字与右侧立绘并排；立绘拉伸占满内容高度、贴到视口底部，
- * 文字块贴底并略向画面中部靠拢，底部中央保留原来的滚动提示胶囊。
+ * 文字块上下居中并略向画面中部靠拢，底部中央保留原来的滚动提示胶囊。
  *
  * 背景在原有暗→浅的线性渐变之上，再叠静态径向光晕、点阵与一层左下可读性遮罩
  * （伪元素，只绘制一次）；超大「羅」水印用描边字压在标题之后。全部零新增资源。
@@ -28,9 +28,9 @@ const { t, locale } = useI18n()
 <template>
   <SectionShell id="hero" class="hero-shell" bleed :active="active">
     <div class="hero">
-      <span class="hero-watermark" aria-hidden="true">羅</span>
-
       <div class="hero-text">
+        <span class="hero-watermark" aria-hidden="true">羅</span>
+
         <p class="hero-kicker md-label-large" data-reveal>
           <M3Icon name="graphic_eq" :size="16" />
           {{ t('hero.kicker') }}
@@ -85,13 +85,15 @@ const { t, locale } = useI18n()
       </div>
 
       <div class="hero-figure" data-reveal style="--reveal-delay: 80ms">
-        <ResponsiveImage
-          :image-key="HERO_BACKDROP_IMAGE"
-          alt=""
-          aria-hidden="true"
-          sizes="(max-width: 860px) 70vw, 36vw"
-          class="hero-backdrop"
-        />
+        <div class="hero-backdrop-clip" aria-hidden="true">
+          <ResponsiveImage
+            :image-key="HERO_BACKDROP_IMAGE"
+            alt=""
+            aria-hidden="true"
+            sizes="(max-width: 860px) 70vw, 36vw"
+            class="hero-backdrop"
+          />
+        </div>
         <div class="hero-figure-glow" aria-hidden="true" />
         <div class="hero-clip">
           <ResponsiveImage
@@ -136,8 +138,8 @@ const { t, locale } = useI18n()
 }
 
 /* 静态叠加层。顺序（自上而下）：
-   1. 左下可读性遮罩 —— 文字贴底后正落在渐变的浅色段（#baaebb），
-      用一层由 surface 派生的暗色径向把左下压回去，约 55% 宽度处渐隐，不影响立绘；
+   1. 左侧可读性遮罩 —— 文字整体偏左下，正落在渐变的浅色段（#baaebb），
+      用一层由 surface 派生的暗色径向把左侧压回去，约 55% 宽度处渐隐，不影响立绘；
    2. 右上 / 左下两团光晕 —— 给纯色渐变加纵深。
    色调全部由 token 派生，随调色板重新生成而同步。 */
 .hero-shell::before {
@@ -148,11 +150,11 @@ const { t, locale } = useI18n()
   pointer-events: none;
   background:
     radial-gradient(
-      108% 112% at -16% 100%,
-      color-mix(in srgb, var(--md-sys-color-surface) 94%, transparent) 0%,
-      color-mix(in srgb, var(--md-sys-color-surface) 80%, transparent) 30%,
-      color-mix(in srgb, var(--md-sys-color-surface) 42%, transparent) 50%,
-      transparent 68%
+      120% 100% at -14% 58%,
+      color-mix(in srgb, var(--md-sys-color-surface) 92%, transparent) 0%,
+      color-mix(in srgb, var(--md-sys-color-surface) 78%, transparent) 30%,
+      color-mix(in srgb, var(--md-sys-color-surface) 40%, transparent) 52%,
+      transparent 70%
     ),
     radial-gradient(
       120% 80% at 88% 18%,
@@ -204,18 +206,19 @@ const { t, locale } = useI18n()
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
   /* 单行占满高度：立绘列拿到确定高度，才能拉伸到视口底部 */
   grid-template-rows: minmax(0, 1fr);
-  align-items: end;
+  /* 文字块上下居中；立绘靠 align-self: stretch 继续铺满整行、贴到视口底部。 */
+  align-items: center;
   column-gap: clamp(12px, 2.5vw, 56px);
 }
 
-/* 超大「羅」水印：描边空心字，压在标题之后偏左，把标题与左侧空白缝起来。
-   纯装饰，不参与无障碍树。 */
+/* 超大「羅」水印：描边空心字，位于文字块内、压在文字之下。
+   随文字块一起上下居中与左右平移，因此不再贴视口左缘。纯装饰，不进无障碍树。 */
 .hero-watermark {
   position: absolute;
-  left: -0.04em;
+  left: -0.06em;
   top: 50%;
   translate: 0 -50%;
-  z-index: 0;
+  z-index: -1;
   font-weight: 800;
   font-size: clamp(180px, 26vw, 420px);
   line-height: 0.8;
@@ -237,6 +240,9 @@ const { t, locale } = useI18n()
   flex-direction: column;
   gap: 16px;
   min-width: 0;
+  /* 水印是文字块内的绝对定位负 z-index 元素，用 isolation 把它锁在
+     文字块自己的层叠上下文里（压在文字下、背景上）。 */
+  isolation: isolate;
 }
 
 /* 桌面端：整块在中栏内居中后再略微右移，向画面中部靠拢；
@@ -244,9 +250,7 @@ const { t, locale } = useI18n()
 @media (min-width: 861px) {
   .hero-text {
     justify-self: center;
-    translate: clamp(8px, 1.2vw, 28px) 0;
-    /* 文字贴底，但给底部留出呼吸空间，避免版本号紧贴视口下缘 */
-    padding-bottom: clamp(36px, 6vh, 64px);
+    translate: clamp(20px, 2.6vw, 56px) 0;
   }
 }
 
@@ -399,23 +403,27 @@ const { t, locale } = useI18n()
   min-height: 0;
 }
 
-/* 背景里的背面立绘：绝对定位到主视觉右后方，压暗成半透明剪影。
-   底部用 mask 渐隐，避免在浅色渐变上裁出一条生硬的底边。
-   它是纯装饰（aria-hidden），因此不进无障碍树，也不参与栅格。 */
+/* 背影立绘的裁剪容器：与主立绘同法——放大后从底部硬裁，只留上半身。
+   它是纯装饰（aria-hidden），不进无障碍树，也不参与栅格。 */
+.hero-backdrop-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
 :deep(.hero-backdrop) {
   position: absolute;
   right: 0;
-  bottom: 0;
-  height: 110%;
+  /* 顶部下移，使背影的头顶略低于主立绘；放大后由容器从底部裁掉 */
+  top: 12%;
+  height: 190%;
   width: auto;
   max-width: none;
   object-fit: contain;
-  object-position: bottom right;
+  object-position: top right;
   opacity: 0.32;
-  z-index: 0;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
 }
 
 /* 立绘身后的光晕：用主色做一层径向渐变，把人像从同色系背景里托出来。
@@ -437,7 +445,9 @@ const { t, locale } = useI18n()
 
 /* 主立绘的裁剪容器：overflow:hidden 会把放大的立绘真正裁掉，
    这样溢出的下半身才不会被算进父级的可滚动高度、把首屏撑长。
-   （不能用 clip-path：它只影响绘制，不影响可滚动溢出区域。） */
+   （不能用 clip-path：它只影响绘制，不影响可滚动溢出区域。）
+   默认裁到列宽；仅在够宽且较扁的视口上向两侧放开（见下方媒体查询），
+   因为角色内容比列宽、放开后才不会被切，但窄屏/高屏上放开会撞到文字。 */
 .hero-clip {
   position: absolute;
   inset: 0;
@@ -467,6 +477,16 @@ const { t, locale } = useI18n()
 /* ------------------------------------------------------------------
    响应式
 ------------------------------------------------------------------ */
+
+/* 够宽且较扁的视口：角色内容比列宽，向两侧放开裁剪框才不会被切；
+   这类视口下角色左缘不会越过文字块，因此不会遮挡文字。 */
+@media (min-width: 1360px) and (min-aspect-ratio: 3 / 2) {
+  .hero-clip {
+    left: -18%;
+    right: -18%;
+  }
+}
+
 @media (max-width: 860px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
