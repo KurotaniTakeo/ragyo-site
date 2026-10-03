@@ -68,7 +68,7 @@
   "samples": {
     "title": "試聽",
     "lead": "站內原音試聽，以及 Bilibili / YouTube 稿件。",
-    "bilibiliTitle": "Bilibili 已發布稿件",
+    "bilibiliTitle": "BiliBili稿件",
     "youtubeTitle": "YouTube 稿件",
     "onlineTitle": "線上試聽",
     "views": "{count} 次播放",
