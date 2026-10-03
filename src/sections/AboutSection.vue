@@ -4,15 +4,17 @@
  *
  * 重点是把 character.yaml 里的 subbanks 结构翻译成一眼能看懂的形态：
  *   1. 关键规格一览
- *   2. 音域条 —— 三个音阶在 C2–B4 上的实际占位与重叠
+ *   2. 音域条 —— 三个音阶在 C2–B4 上的实际占位与重叠，
+ *      悬停时光标指向哪就显示哪个音高（见 usePitchHover）
  *   3. 每个音阶的通常 / Soft / Power 音色文件后缀
  */
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
 import SpecPill from '@/components/SpecPill.vue'
+import { usePitchHover } from '@/composables/usePitchHover'
 import { fullRange, pitchRanges, tones, voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
 
@@ -22,6 +24,18 @@ const { t } = useI18n()
 
 const total = sections.length
 const span = fullRange.high - fullRange.low + 1
+
+/** 音域条悬停：跟手显示音名，参考线做缓动 */
+const rangeBar = ref<HTMLElement | null>(null)
+const {
+  active: hoverActive,
+  x: hoverX,
+  note: hoverNote,
+  index: hoverIndex,
+  onPointerEnter: onRangeEnter,
+  onPointerMove: onRangeMove,
+  onPointerLeave: onRangeLeave,
+} = usePitchHover(rangeBar, { low: fullRange.low, high: fullRange.high })
 
 /** 各音阶在总音域上的相对宽度，用 flex 分配，间隙自动吸收 */
 const bars = computed(() =>
@@ -92,15 +106,41 @@ const specs = computed<SpecRow[]>(() => [
         <h3 class="card-title md-title-medium">{{ t('about.subbanksTitle') }}</h3>
         <p class="card-lead md-body-small">{{ t('about.subbanksLead') }}</p>
 
-        <div class="range-bar" role="img" :aria-label="`${fullRange.low} – ${fullRange.high}`">
+        <div
+          ref="rangeBar"
+          class="range-bar"
+          role="img"
+          :aria-label="`${fullRange.low} – ${fullRange.high}`"
+          @pointerenter="onRangeEnter"
+          @pointermove="onRangeMove"
+          @pointerleave="onRangeLeave"
+        >
           <div
-            v-for="bar in bars"
+            v-for="(bar, i) in bars"
             :key="bar.id"
             class="range-segment"
+            :class="{ 'is-hovered': hoverActive && hoverIndex === i }"
             :style="{ flex: bar.flex }"
+            :data-range-segment="''"
+            :data-low="bar.low"
+            :data-high="bar.high"
           >
             <span class="range-label md-label-small">{{ bar.id }}</span>
           </div>
+
+          <!-- 跟手浮标：竖线用缓动位置，气泡读数始终对准真实光标；对辅助技术隐藏 -->
+          <div
+            class="range-line"
+            :class="{ 'is-visible': hoverActive }"
+            :style="{ transform: `translateX(${hoverX}px)` }"
+            aria-hidden="true"
+          />
+          <div
+            class="range-note md-label-small"
+            :class="{ 'is-visible': hoverActive }"
+            :style="{ left: `clamp(22px, ${hoverX}px, calc(100% - 22px))` }"
+            aria-hidden="true"
+          >{{ hoverNote }}</div>
         </div>
 
         <div class="subbank-table" role="table" :aria-label="t('about.subbanksTitle')">
@@ -194,9 +234,11 @@ const specs = computed<SpecRow[]>(() => [
 
 /* 音域条：宽度按半音数分配，B2 档覆盖范围最广，与各档真实音域一致 */
 .range-bar {
+  position: relative;
   display: flex;
   gap: 4px;
   margin-bottom: 18px;
+  cursor: crosshair;
 }
 
 /* 音域条：三段统一为品牌紫的明度阶（越高音越亮）。
@@ -215,7 +257,9 @@ const specs = computed<SpecRow[]>(() => [
   align-items: center;
   justify-content: center;
   min-width: 44px;
-  transition: background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+  transition:
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 }
 
 .range-segment:nth-child(2) {
@@ -248,6 +292,50 @@ const specs = computed<SpecRow[]>(() => [
 .range-label {
   font-weight: 700;
   letter-spacing: 0.06em;
+}
+
+/* 指针所在音阶：叠一道描边，不改底色以保留三段本身的明度递进 */
+.range-segment.is-hovered {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--md-sys-color-primary) 72%, transparent);
+}
+
+/* 悬停浮标：竖线对位到光标 x（由 JS 缓动），顶部气泡显示音名 */
+.range-line,
+.range-note {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.range-line.is-visible,
+.range-note.is-visible {
+  opacity: 1;
+}
+
+.range-line {
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 34px;
+  margin-left: -1px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--md-sys-color-surface-container) 55%, transparent);
+  will-change: transform;
+}
+
+.range-note {
+  bottom: calc(100% + 2px);
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* 录入音高与音色：去药丸后改为对齐网格，行 = 音高，列 = 音色 */
