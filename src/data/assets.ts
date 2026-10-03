@@ -12,8 +12,11 @@ import { images, type GeneratedImage, type ImageKey } from './assets.generated'
 export { images }
 export type { GeneratedImage, ImageKey }
 
-/** Hero 主视觉：公式1・半身像・红色领带清晰（放大展示） */
-export const HERO_IMAGE = 'character.pockets-smile-costume-1-bust' satisfies ImageKey
+/** Hero 主视觉：公式2・半透明描边的完整立绘（下半身由前端裁剪隐藏，不裁素材） */
+export const HERO_IMAGE = 'character.smile-costume-2-outline-translucent' satisfies ImageKey
+
+/** Hero 背景：背面立绘，半透明叠在主视觉右后方 */
+export const HERO_BACKDROP_IMAGE = 'character.back-view' satisfies ImageKey
 
 /** 公式1（红领带）・手插兜・闭嘴微笑 */
 export const COSTUME_1_IMAGE = 'character.pockets-smile-costume-1' satisfies ImageKey

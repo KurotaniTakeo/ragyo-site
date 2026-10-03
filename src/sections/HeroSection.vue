@@ -2,15 +2,16 @@
 /**
  * 首屏。
  *
- * 立绘是透明底 PNG，因此可以让它直接立在暗色背景上，
- * 不需要卡片或遮罩。左侧文字、右侧人像，窄屏改为上下堆叠。
+ * 立绘是透明底 PNG，因此可以让它直接立在背景上，不需要卡片或遮罩。
+ * 背景自暗色 surface 渐变到下方的 #baaebb，白色的半透明描边立绘
+ * 叠在一层半透明的背面立绘之前；左侧文字、右侧人像，窄屏改为上下堆叠。
  */
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import M3Button from '@/components/M3Button.vue'
 import ResponsiveImage from '@/components/ResponsiveImage.vue'
 import M3Icon from '@/components/M3Icon.vue'
-import { HERO_IMAGE } from '@/data/assets'
+import { HERO_BACKDROP_IMAGE, HERO_IMAGE } from '@/data/assets'
 import { voicebank } from '@/data/voicebank'
 import type { Locale } from '@/i18n'
 
@@ -22,7 +23,7 @@ const { t, locale } = useI18n()
 </script>
 
 <template>
-  <SectionShell id="hero" bleed :active="active">
+  <SectionShell id="hero" class="hero-shell" bleed :active="active">
     <div class="hero">
       <div class="hero-text">
         <p class="hero-kicker md-label-large" data-reveal>
@@ -64,25 +65,48 @@ const { t, locale } = useI18n()
       </div>
 
       <div class="hero-figure" data-reveal style="--reveal-delay: 80ms">
-        <div class="hero-figure-glow" aria-hidden="true" />
         <ResponsiveImage
-          :image-key="HERO_IMAGE"
-          :alt="t('character.alt.outfitB')"
-          eager
-          sizes="(max-width: 860px) 100vw, (min-width: 2200px) 1260px, (min-width: 1920px) 1080px, 62vw"
-          class="hero-image"
+          :image-key="HERO_BACKDROP_IMAGE"
+          alt=""
+          aria-hidden="true"
+          sizes="(max-width: 860px) 70vw, 36vw"
+          class="hero-backdrop"
         />
+        <div class="hero-figure-glow" aria-hidden="true" />
+        <div class="hero-clip">
+          <ResponsiveImage
+            :image-key="HERO_IMAGE"
+            :alt="t('character.alt.outfitB')"
+            eager
+            sizes="(max-width: 860px) 120vw, (min-width: 2200px) 1800px, 78vw"
+            class="hero-image"
+          />
+        </div>
       </div>
 
-      <p class="hero-scroll md-label-small" aria-hidden="true">
-        <M3Icon name="arrow_upward" :size="14" class="hero-scroll-icon" />
-        {{ t('common.scrollHint') }}
-      </p>
+      <div class="hero-scroll" aria-hidden="true">
+        <M3Icon name="arrow_upward" :size="18" class="hero-scroll-icon" />
+        <span class="hero-scroll-label md-label-large">{{ t('common.scrollHint') }}</span>
+      </div>
     </div>
   </SectionShell>
 </template>
 
 <style scoped>
+/* 背景渐变挂在分屏根节点上（而非 .hero）：
+   .hero 有 1920px 的宽度上限，超宽屏下两侧会露出纯色；挂到分屏则始终铺满。
+   顶部维持暗色 surface，向下过渡到委托人指定的 #baaebb。 */
+.hero-shell {
+  background: linear-gradient(
+    180deg,
+    var(--md-sys-color-surface) 0%,
+    var(--md-sys-color-surface) 48%,
+    color-mix(in srgb, var(--md-sys-color-surface) 62%, #baaebb) 68%,
+    color-mix(in srgb, var(--md-sys-color-surface) 12%, #baaebb) 86%,
+    #baaebb 100%
+  );
+}
+
 .hero {
   position: relative;
   flex: 1;
@@ -122,16 +146,17 @@ const { t, locale } = useI18n()
 .hero-text {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
   min-width: 0;
 }
 
-/* 桌面端：文字块在左栏内水平居中，避免贴住视口最左侧。
-   用 justify-self 收缩为内容宽度再居中，不会溢出栏宽；
+/* 桌面端：文字块在左栏内居中后再整体右移、上移。
+   右移让它更靠近画面中部；上移让它落在整页（含顶栏）中心偏上的位置。
    窄屏是单列（文字本就要占满宽度），所以只在 ≥861px 生效。 */
 @media (min-width: 861px) {
   .hero-text {
     justify-self: center;
+    translate: clamp(40px, 5vw, 96px) -5vh;
   }
 }
 
@@ -141,6 +166,8 @@ const { t, locale } = useI18n()
   gap: 8px;
   color: var(--md-sys-color-tertiary);
   letter-spacing: 0.06em;
+  font-size: 0.95rem;
+  line-height: 1.35rem;
 }
 
 .hero-name {
@@ -155,12 +182,17 @@ const { t, locale } = useI18n()
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--md-sys-color-on-surface);
+  /* 比 md-display-large 略大，填补首屏偏空的感觉 */
+  font-size: 3.875rem;
+  line-height: 4.35rem;
 }
 
 .hero-name-reading {
   color: var(--md-sys-color-primary);
   /* 与左侧大字底部对齐：抵消两种字号行盒的内部行距差 */
   padding-bottom: 2px;
+  font-size: 1.5rem;
+  line-height: 1.9rem;
 }
 
 .hero-tagline {
@@ -169,11 +201,15 @@ const { t, locale } = useI18n()
   /* 首页文案使用衬线体，营造「书写」的质感；正文仍用无衬线体 */
   font-family: var(--app-font-serif);
   font-weight: 500;
+  font-size: 1.65rem;
+  line-height: 2.2rem;
 }
 
 .hero-facts {
   color: var(--md-sys-color-on-surface-variant);
   font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  line-height: 1.4rem;
 }
 
 .hero-actions {
@@ -186,6 +222,8 @@ const { t, locale } = useI18n()
 .hero-version {
   color: var(--md-sys-color-on-surface-variant);
   letter-spacing: 0.04em;
+  font-size: 0.82rem;
+  line-height: 1.1rem;
 }
 
 .hero-version-sep {
@@ -203,6 +241,25 @@ const { t, locale } = useI18n()
   min-height: 0;
 }
 
+/* 背景里的背面立绘：绝对定位到主视觉右后方，压暗成半透明剪影。
+   底部用 mask 渐隐，避免在浅色渐变上裁出一条生硬的底边。
+   它是纯装饰（aria-hidden），因此不进无障碍树，也不参与栅格。 */
+:deep(.hero-backdrop) {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 110%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  object-position: bottom right;
+  opacity: 0.32;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 62%, transparent 100%);
+}
+
 /* 立绘身后的光晕：用主色做一层径向渐变，把人像从同色系背景里托出来。
    立绘身上有 #545873 一类与背景 #505678 近乎同色的暗部，只靠底色无法拉开轮廓，
    需要这层明暗落差；同时它仍是柔和暖光，保持「纯色简约」。 */
@@ -212,54 +269,75 @@ const { t, locale } = useI18n()
   inset: -4% 0 0;
   background: radial-gradient(
     closest-side at 48% 46%,
-    color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent),
-    color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent) 58%,
+    color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent),
+    color-mix(in srgb, var(--md-sys-color-primary) 6%, transparent) 58%,
     transparent 82%
   );
   pointer-events: none;
+  z-index: 0;
+}
+
+/* 主立绘的裁剪容器：overflow:hidden 会把放大的立绘真正裁掉，
+   这样溢出的下半身才不会被算进父级的可滚动高度、把首屏撑长。
+   （不能用 clip-path：它只影响绘制，不影响可滚动溢出区域。） */
+.hero-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
 }
 
 /* ResponsiveImage 内部用 <picture>（display:contents）包裹，
    尺寸样式需穿透到真正的 <img> */
 :deep(.hero-image) {
-  position: relative;
-  /* 填满立绘列：列宽与行高任一先到极限，contain 都会等比缩放，
-     因此不会变形，也不会再依赖 width:auto + 父级高度才能算对 */
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  /* 放大到裁剪容器高的 190% 并顶端对齐：容器可见的高度 = 1/1.9 ≈ 52.6%，
+     正好裁到胯部。数值按「至少到胯部」对照参考图调整。 */
+  height: 190%;
+  width: auto;
+  max-width: none;
+  max-height: none;
   object-fit: contain;
-  object-position: bottom center;
+  object-position: top center;
   background-size: contain;
-  background-position: bottom center;
+  background-position: top center;
 }
 
 .hero-scroll {
   position: absolute;
   left: 50%;
-  bottom: 18px;
+  bottom: clamp(16px, 3vh, 28px);
   translate: -50% 0;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: var(--md-sys-color-on-surface-variant);
-  letter-spacing: 0.1em;
+  gap: 10px;
+  padding: 8px 18px 8px 14px;
+  border-radius: var(--md-sys-shape-corner-full);
+  /* 用浅色胶囊 + 深色文字（M3 的 inverse 配色）：
+     桌面端落在浅色渐变上、窄屏又常压在深色立绘上，这组配色在两种底色上都清晰 */
+  color: var(--md-sys-color-inverse-on-surface);
+  background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 84%, transparent);
+  backdrop-filter: blur(3px);
+  letter-spacing: 0.12em;
+  z-index: 2;
 }
 
 .hero-scroll-icon {
   rotate: 180deg;
-  animation: hero-scroll-bounce 2.4s var(--md-sys-motion-easing-standard) infinite;
+  animation: hero-scroll-bounce 1.8s var(--md-sys-motion-easing-standard) infinite;
 }
 
 @keyframes hero-scroll-bounce {
   0%,
   100% {
-    translate: 0 0;
-    opacity: 0.5;
+    translate: 0 -1px;
+    opacity: 0.45;
   }
   50% {
-    translate: 0 4px;
+    translate: 0 3px;
     opacity: 1;
   }
 }
@@ -290,17 +368,6 @@ const { t, locale } = useI18n()
     /* 给立绘一个下限：文字行长时也不会把立绘行压到 0；
        超出部分交给 SectionShell 的面板内滚，而不是裁掉立绘 */
     min-height: min(40dvh, 64vw);
-  }
-
-  :deep(.hero-image) {
-    /* 行高由 minmax(0,1fr) 提供，height:100% 会把它填满；
-       不再用 44dvh 硬切，避免高屏出现大片空洞、矮屏把立绘压扁 */
-    height: 100%;
-    max-height: 100%;
-  }
-
-  .hero-scroll {
-    display: none;
   }
 }
 
@@ -335,13 +402,6 @@ const { t, locale } = useI18n()
 
   .hero-figure {
     min-height: 0;
-  }
-}
-
-/* 竖屏 / 窄高视口：立绘列窄而行高高，居中可以避免上半屏大片空白 */
-@media (min-width: 861px) and (max-aspect-ratio: 4 / 5) {
-  :deep(.hero-image) {
-    object-position: center;
   }
 }
 

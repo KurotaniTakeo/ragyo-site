@@ -87,6 +87,24 @@ if (!full && existing === null) {
   )
 }
 
+/* ----------------------------------------------- 清理已删除的条目 */
+
+// 非全量时以清单为唯一事实来源：把「生成物里有、清单里已删除」的旧键连同其产物一并清掉。
+// 这样删除条目不必再跑一次全量（全量会重编码所有立绘，很慢）。
+if (!full) {
+  const manifestKeys = new Set(manifest.entries.map((e) => e.key))
+  const staleKeys = Object.keys(existing).filter((key) => !manifestKeys.has(key))
+  if (staleKeys.length) {
+    for (const key of staleKeys) {
+      for (const file of readdirSync(outDir).filter((f) => outputRe(slugify(key)).test(f))) {
+        rmSync(join(outDir, file), { force: true })
+      }
+      delete existing[key]
+    }
+    console.log(`→ 已清理 ${staleKeys.length} 个清单中不存在的旧条目：${staleKeys.join(', ')}`)
+  }
+}
+
 /* ------------------------------------------------------------- 选取条目 */
 
 let selected = manifest.entries
@@ -107,8 +125,8 @@ if (changedOnly) {
     return statSync(join(ASSETS, entry.source)).mtimeMs > newest
   })
   if (selected.length === 0) {
+    // 不提前退出：即使本次没有要重编的条目，也要把上面清理过的映射写回生成文件。
     console.log('✔ 没有需要重新生成的条目（全部为最新）。')
-    process.exit(0)
   }
 }
 
