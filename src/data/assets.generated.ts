@@ -140,6 +140,42 @@ export const images = {
     "height": 4745,
     "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQBACdASoUAB4APu1sqk6ppiOiMBgIATAdiWUAwcwQ78R4gXSMfCGzRUwAAP5t1edEY0R2kuYsS4QOa5LqlzYWLaFyZ1OE3YbNYSoF49EdxtYV4QEc387yiu19e2GooGoBlwAA",
     "note": "公式2・非插兜・闭嘴・发光版本（柔和发光取代硬描边，用于首页主视觉）。"
+  },
+  "sample.BV1RSaj6REic": {
+    "src": "/img/generated/sample-BV1RSaj6REic-640.webp",
+    "srcset": "/img/generated/sample-BV1RSaj6REic-320.webp 320w, /img/generated/sample-BV1RSaj6REic-640.webp 640w",
+    "avifSrcset": "/img/generated/sample-BV1RSaj6REic-320.avif 320w, /img/generated/sample-BV1RSaj6REic-640.avif 640w",
+    "width": 640,
+    "height": 360,
+    "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAABQBACdASoUAAsAPu1iqU2ppaOiMAgBMB2JbACdGurD0OGDfQk1owcCSaQAAPweEUNN2f8hMBzgINEyExg6i/lO9LS+jA2lM6BfrpGg5JOV61PzYcA719hfQDbvQNwY2MLv81neK+fgp47DJDdAB6cvlcI2yvpKg7Ndn1Et6yMjCjltT3FIwc2X0KZT06svPfSWY9DTtoN+HPjnEgCwY44ePgDGnDqJjTh10qquTppNQwh4AAA=",
+    "note": "Bilibili 官方配布稿封面（自托管）。"
+  },
+  "sample.BV1nyT86gEuA": {
+    "src": "/img/generated/sample-BV1nyT86gEuA-640.webp",
+    "srcset": "/img/generated/sample-BV1nyT86gEuA-320.webp 320w, /img/generated/sample-BV1nyT86gEuA-640.webp 640w",
+    "avifSrcset": "/img/generated/sample-BV1nyT86gEuA-320.avif 320w, /img/generated/sample-BV1nyT86gEuA-640.avif 640w",
+    "width": 640,
+    "height": 360,
+    "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAABQAwCdASoUAAsAPu1iqU2ppaQiMAgBMB2JYwAAOEPOJ4x8kAD+0CMjJdtkXA37uNW6FZX90csbY/cnWZz9UkrBT3uisQAA",
+    "note": "Bilibili 翻调稿件封面（自托管）。"
+  },
+  "sample.BV1zMQxBeExX": {
+    "src": "/img/generated/sample-BV1zMQxBeExX-640.webp",
+    "srcset": "/img/generated/sample-BV1zMQxBeExX-320.webp 320w, /img/generated/sample-BV1zMQxBeExX-640.webp 640w",
+    "avifSrcset": "/img/generated/sample-BV1zMQxBeExX-320.avif 320w, /img/generated/sample-BV1zMQxBeExX-640.avif 640w",
+    "width": 640,
+    "height": 360,
+    "lqip": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAABQAwCdASoUAAsAPu1iqU2ppaOiMAgBMB2JaQAAQy17rhxXAAD+jOfmiXlmTj+J39UDlO6TinX2zL1QbKd2CPAPwfr8tnXYAAA=",
+    "note": "Bilibili 翻调稿件封面（自托管）。"
+  },
+  "sample.p4dppVWwOYU": {
+    "src": "/img/generated/sample-p4dppVWwOYU-640.webp",
+    "srcset": "/img/generated/sample-p4dppVWwOYU-320.webp 320w, /img/generated/sample-p4dppVWwOYU-640.webp 640w",
+    "avifSrcset": "/img/generated/sample-p4dppVWwOYU-320.avif 320w, /img/generated/sample-p4dppVWwOYU-640.avif 640w",
+    "width": 640,
+    "height": 360,
+    "lqip": "data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAABQBACdASoUAAsAPu1iqU2ppaOiMAgBMB2JbACsGurD0XFfZX4gTUKDOUlgAPweEUiQwbyDn9ZZtNxCL1OZ4rBeRdxlKaO1GQi/H/O7qk4DvmVhHwlFhP20dCxwFfylx835RTDGmH8yG200NgUq+yuEbZX0lQdmuz6iW8G8fCjlydmo2VpaarF94I4yQWMYZ9nFgEetYnPjA4Jv67fVYMRfdVOXYeKnM926qr35LyoEkAAA",
+    "note": "YouTube 官方配布稿封面（自托管）。"
   }
 } as const satisfies Record<string, GeneratedImage>
 

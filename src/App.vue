@@ -33,6 +33,7 @@ import {
   type Locale,
 } from '@/i18n'
 import { OG_IMAGE_DIR, SITE_URL } from '@/config'
+import { FONT_STYLESHEET } from '@/styles/fonts'
 
 const route = useRoute()
 const router = useRouter()
@@ -103,6 +104,8 @@ watch(activeIndex, (index) => {
   if (import.meta.env.SSR) return
   const id = sections[index]?.id
   if (!id) return
+  // 已经是这个 hash 就不重复写：避免同一屏被反推多次时地址栏闪动
+  if (window.location.hash === `#${id}`) return
   const url = `${window.location.pathname}${window.location.search}#${id}`
   window.history.replaceState(null, '', url)
 })
@@ -139,6 +142,8 @@ useHead(() => {
       { name: 'twitter:card', content: 'summary_large_image' },
     ],
     link: [
+      // 当前语言的字族样式表：按路由注入，避免把 6 套 CJK 字族全打进主包
+      { rel: 'stylesheet', href: FONT_STYLESHEET[currentLocale.value] },
       { rel: 'canonical', href: `${origin}/${currentLocale.value}/` },
       ...SUPPORTED_LOCALES.map((item) => ({
         rel: 'alternate',

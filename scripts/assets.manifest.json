@@ -1,5 +1,5 @@
 {
-  "$comment": "图像资产清单。scripts/gen-images.mjs 读取本文件生成 public/img/generated/* 与 src/data/assets.generated.ts。立绘原稿改名时只需修改此处的 source 字段；英文命名规范与中文原名对照见 assets/illustration/character/README.md。",
+  "$comment": "图像资产清单。scripts/gen-images.mjs 读取本文件生成 public/img/generated/* 与 src/data/assets.generated.ts。立绘原稿改名时只需修改此处的 source 字段；英文命名规范与中文原名对照见 assets/illustration/character/README.md。除立绘外，稿件封面（sample.* 条目，源图在 assets/samples/）也走同一条派生管线，避免自托管原图以 1920×1080 直出。",
   "outputDir": "public/img/generated",
   "entries": [
     {
@@ -86,6 +86,30 @@
       "source": "illustration/character/back-view.png",
       "widths": [640, 1024],
       "note": "背面立绘・单视图（透明底）。"
+    },
+    {
+      "key": "sample.BV1RSaj6REic",
+      "source": "samples/BV1RSaj6REic.jpg",
+      "widths": [320, 640],
+      "note": "Bilibili 官方配布稿封面（自托管）。"
+    },
+    {
+      "key": "sample.BV1nyT86gEuA",
+      "source": "samples/BV1nyT86gEuA.jpg",
+      "widths": [320, 640],
+      "note": "Bilibili 翻调稿件封面（自托管）。"
+    },
+    {
+      "key": "sample.BV1zMQxBeExX",
+      "source": "samples/BV1zMQxBeExX.jpg",
+      "widths": [320, 640],
+      "note": "Bilibili 翻调稿件封面（自托管）。"
+    },
+    {
+      "key": "sample.p4dppVWwOYU",
+      "source": "samples/p4dppVWwOYU.jpg",
+      "widths": [320, 640],
+      "note": "YouTube 官方配布稿封面（自托管）。"
     }
   ]
 }

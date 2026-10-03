@@ -57,6 +57,9 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
   let panelScrolling = false
   /** 面板刚触边后的冷却截止时间（performance.now()） */
   let panelEdgeUntil = 0
+  /** 程序化平滑滚动进行中：期间不由滚动位置反推 activeIndex */
+  let animating = false
+  let animTimer = 0
 
   const querySections = () =>
     Array.from(scroller.value?.querySelectorAll<HTMLElement>('[data-section]') ?? [])
@@ -75,11 +78,22 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     const container = scroller.value
     if (!el || !container) return
 
+    const animated = smooth && !reduceMotion
     container.scrollTo({
       top: offsetOf(el),
-      behavior: smooth && !reduceMotion ? 'smooth' : 'auto',
+      behavior: animated ? 'smooth' : 'auto',
     })
     activeIndex.value = target
+    // 平滑滚动期间禁止 syncActiveFromScroll 反推：否则滚动起点会先把 activeIndex
+    // 拍回上一屏、再随滚动改回目标，URL 与分屏高亮/入场动画会来回抖动。动画
+    // 结束后再交还给滚动事件。定时器时长与滚动动画 + 惯性宽限保持一致。
+    animating = animated
+    window.clearTimeout(animTimer)
+    if (animated) {
+      animTimer = window.setTimeout(() => {
+        animating = false
+      }, SCROLL_DURATION + LOCK_GRACE)
+    }
     // 切屏时清掉面板滚动的临时状态，避免把上一屏的惯性算到新屏上
     panelScrolling = false
     panelEdgeUntil = 0
@@ -118,6 +132,7 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
   }
 
   function syncActiveFromScroll() {
+    if (animating) return
     const container = scroller.value
     if (!container || sectionEls.length === 0) return
     const probe = container.scrollTop + container.clientHeight / 2
@@ -330,6 +345,7 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     window.removeEventListener('hashchange', onHashChange)
     window.clearTimeout(lockTimer)
     window.clearTimeout(wheelIdleTimer)
+    window.clearTimeout(animTimer)
   }
 
   /** 移动端断点变化时重新判定是否接管 */

@@ -7,15 +7,16 @@ Promotional site for the "Ragyo" UTAU/OpenUTAU voicebank: a single static, pre-r
 - `pnpm typecheck` — `vue-tsc --noEmit`. This is the **only** automated check; there is no linter, test suite, or CI.
 - `pnpm build` — `vite-ssg build`, pre-renders `/ja/ /zh/ /zh-Hant/ /en/` into static HTML in `dist/`.
 - `pnpm preview` — serve the built `dist/`.
-- Generators: `pnpm gen:palette`; `pnpm gen:images [<key-substring>...] [--changed]`; `pnpm gen:surprise [--gpu]`.
+- Generators: `pnpm gen:palette`; `pnpm gen:fonts`; `pnpm gen:images [<key-substring>...] [--changed]`; `pnpm gen:surprise [--gpu]`.
 
 ## Generated files — never hand-edit
 Anything headed "自动生成，请勿手动编辑" is an output; change the script/input and re-run:
 - `src/styles/m3-tokens.css` ← `scripts/gen-palette.mjs` (seed colors at top of the script)
 - `src/data/assets.generated.ts` + `public/img/generated/*` ← `scripts/gen-images.mjs` + `scripts/assets.manifest.json`
 - `src/data/surprise.generated.ts` + `public/surprise/generated/*` ← `scripts/gen-surprise.mjs`
+- `public/fonts/<locale>.css` + `public/fonts/files/*.woff2` ← `scripts/gen-fonts.mjs` (per-locale @fontsource CJK families)
 
-`*.generated.ts` are committed, but the image output dirs are gitignored. After a fresh clone, run `pnpm gen:images` and `pnpm gen:surprise` before `build`/`preview`, or images 404 (only the inline LQIP shows). To avoid re-encoding everything while iterating, `gen:images` also accepts key substrings and `--changed` (only entries whose source is newer than their output); partial runs merge into `assets.generated.ts` instead of wiping it. Likewise `gen:surprise --gpu` uses NVENC when available, though on this project's small 500×500 GIFs the CPU filter chain dominates (CPU is usually faster and smaller).
+`*.generated.ts` are committed, but the image output dirs are gitignored. After a fresh clone, run `pnpm gen:images`, `pnpm gen:surprise` and `pnpm gen:fonts` before `build`/`preview`, or images 404 (only the inline LQIP shows) and pages fall back to system fonts. To avoid re-encoding everything while iterating, `gen:images` also accepts key substrings and `--changed` (only entries whose source is newer than their output); partial runs merge into `assets.generated.ts` instead of wiping it. Likewise `gen:surprise --gpu` uses NVENC when available, though on this project's small 500×500 GIFs the CPU filter chain dominates (CPU is usually faster and smaller).
 
 Prereqs: `gen:surprise` needs `ffmpeg`/`ffprobe` (H.264/libx264) on PATH; `gen:surprise --gpu` additionally needs a working `h264_nvenc` (NVIDIA), otherwise it falls back to libx264. `gen:palette` relies on `scripts/esm-ext-hook.mjs` because `@material/material-color-utilities` ships extensionless relative imports that Node's ESM resolver rejects.
 

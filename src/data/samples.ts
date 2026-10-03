@@ -9,6 +9,7 @@
  *   - demo：完整的演示曲
  *   - raw ：单一音阶的原音样本，用于展示各音域音色差异
  */
+import type { ImageKey } from './assets'
 import type { Localized } from './voicebank'
 
 export interface Sample {
@@ -33,7 +34,8 @@ export const samplesPending = samples.length === 0
  *
  * 标题为稿件原文，不参与翻译；播放数是抓取当时的快照
  * （Bilibili 来自 api.bilibili.com/x/web-interface/view），会随时间变化。
- * 封面已下载到 public/samples/ 自托管，避免依赖平台 CDN / 防盗链。
+ * 封面已下载到 assets/samples/ 自托管，并走 scripts/gen-images.mjs 派生为多档
+ * WebP/AVIF（避免 1920×1080 原图直出）；业务侧用语义 key 引用，见 data/assets.ts。
  */
 export interface VideoWork {
   /** 视频 ID（Bilibili BVID / YouTube videoId），用于 key */
@@ -44,8 +46,8 @@ export interface VideoWork {
   url: string
   /** 播放数快照；YouTube 暂不提供，缺省则不渲染该行 */
   views?: number
-  /** 自托管封面路径 */
-  cover: string
+  /** 封面语义 key（派生自 assets/samples/ 下的原稿），由展示组件解析为 srcset */
+  coverKey: ImageKey
   /** 官方配布投稿，UI 会着重高亮 */
   official?: boolean
 }
@@ -56,7 +58,7 @@ export const bilibiliVideos: VideoWork[] = [
     title: '★“让一切终于梁柯一梦。”丨羅行UTAU音源配布丨命辛辛',
     url: 'https://www.bilibili.com/video/BV1RSaj6REic/',
     views: 1435,
-    cover: '/samples/BV1RSaj6REic.jpg',
+    coverKey: 'sample.BV1RSaj6REic',
     official: true,
   },
   {
@@ -64,14 +66,14 @@ export const bilibiliVideos: VideoWork[] = [
     title: '【羅行·狼音アロ】かなしばりに遭ったら/若是遇到噩梦【OPENUTAU COVER】',
     url: 'https://www.bilibili.com/video/BV1nyT86gEuA/',
     views: 2779,
-    cover: '/samples/BV1nyT86gEuA.jpg',
+    coverKey: 'sample.BV1nyT86gEuA',
   },
   {
     id: 'BV1zMQxBeExX',
     title: '【羅行/狼音アロ】春難色 / 春色未浓【OpenUTAU Cover】',
     url: 'https://www.bilibili.com/video/BV1zMQxBeExX/',
     views: 1672,
-    cover: '/samples/BV1zMQxBeExX.jpg',
+    coverKey: 'sample.BV1zMQxBeExX',
   },
 ]
 
@@ -80,7 +82,7 @@ export const youtubeVideos: VideoWork[] = [
     id: 'p4dppVWwOYU',
     title: '★『羅行Ragyo』UTAU Voicebank Release｜ For dear life',
     url: 'https://www.youtube.com/watch?v=p4dppVWwOYU',
-    cover: '/samples/p4dppVWwOYU.jpg',
+    coverKey: 'sample.p4dppVWwOYU',
     official: true,
   },
 ]

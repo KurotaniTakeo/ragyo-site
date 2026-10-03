@@ -8,9 +8,10 @@ dist-ssr
 .env.*
 !.env.example
 
-# 生成产物（可用 pnpm gen:images / gen:surprise 重新生成）
+# 生成产物（可用 pnpm gen:images / gen:surprise / gen:fonts 重新生成）
 public/img/generated
 public/surprise/generated
+public/fonts
 
 # OpenChamber 工作目录（截图等临时产物）
 .openchamber

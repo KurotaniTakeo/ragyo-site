@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "gen:palette": "node scripts/gen-palette.mjs",
+    "gen:fonts": "node scripts/gen-fonts.mjs",
     "gen:images": "node scripts/gen-images.mjs",
     "gen:surprise": "node scripts/gen-surprise.mjs"
   },

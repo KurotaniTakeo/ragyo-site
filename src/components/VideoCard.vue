@@ -8,6 +8,7 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import M3Icon from './M3Icon.vue'
+import ResponsiveImage from './ResponsiveImage.vue'
 import type { VideoWork } from '@/data/samples'
 
 const props = defineProps<{ video: VideoWork }>()
@@ -29,14 +30,11 @@ const viewCount = computed(() =>
     rel="noopener noreferrer"
   >
     <span class="video-thumb">
-      <img
-        class="video-cover"
-        :src="video.cover"
+      <ResponsiveImage
+        :image-key="video.coverKey"
         alt=""
-        loading="lazy"
-        decoding="async"
-        width="1920"
-        height="1080"
+        sizes="(max-width: 980px) 62vw, 260px"
+        fit="cover"
       />
       <span class="video-play" aria-hidden="true">
         <M3Icon name="play_arrow" :size="26" />
@@ -79,12 +77,6 @@ const viewCount = computed(() =>
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background-color: var(--md-sys-color-surface-container-highest);
-}
-
-.video-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* 播放图标：居中叠在封面上 */

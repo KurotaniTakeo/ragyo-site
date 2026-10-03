@@ -8,7 +8,7 @@
  * 交互上直接在本页内联展示当前片段（不再弹出二级弹窗）：
  * 进入即随机取一个，点「再来一个」换下一个。
  */
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -18,7 +18,7 @@ import M3Icon from '@/components/M3Icon.vue'
 import { surpriseClips } from '@/data/surprise.generated'
 import { sections } from '@/data/sections'
 
-defineProps<{ active: boolean }>()
+const props = defineProps<{ active: boolean }>()
 
 const { t } = useI18n()
 
@@ -54,11 +54,20 @@ function onError() {
   failed.value = true
 }
 
-onMounted(() => {
-  if (surpriseClips.length === 0) return
-  loading.value = true
-  pickRandom()
-})
+// 彩蛋是最后一屏：首屏挂载时不必预取。首次真正进入该屏才抽一个片段并加载
+// 元数据，避免用户从没滚到底部就白白请求一段视频（见文件头说明）。
+// 用 ref 而非普通变量：模板 v-if 依赖它，必须能触发重渲染。
+const started = ref(false)
+watch(
+  () => props.active,
+  (active) => {
+    if (!active || started.value || surpriseClips.length === 0) return
+    started.value = true
+    loading.value = true
+    pickRandom()
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -78,7 +87,7 @@ onMounted(() => {
       <M3Card class="clip-card" padding="none" data-reveal style="--reveal-delay: 60ms">
         <div class="clip-frame">
           <video
-            v-if="!failed"
+            v-if="started && !failed"
             class="clip-video"
             :src="current.video"
             :poster="current.poster"
