@@ -524,6 +524,23 @@ const specs = computed<SpecRow[]>(() => [
   color: var(--md-sys-color-primary);
 }
 
+/* 命中区外扩：单元格的可视盒不含行的纵向内边距，表头同理。
+   用透明伪元素把命中区补到整行 / 表头分隔线，指针落在行间分隔线上时
+   也能命中所在音色列，从而联动高亮。伪元素无背景，只影响命中测试。 */
+.subbank-td::after {
+  content: '';
+  position: absolute;
+  inset-block: -9px;
+  inset-inline: 0;
+}
+
+.subbank-th.is-tone::after {
+  content: '';
+  position: absolute;
+  inset-block: 0 -7px;
+  inset-inline: 0;
+}
+
 /* 音色列色带：整列一条连续色带，位置由 --tone-col 按表格栅格算出。
    栅格列为 1.6fr + 3×1fr、间隙 8px（共 3 个间隙 = 24px），
    故单列宽 =(100% - 24px) / 4.6，第 i 列左缘 = 1.6u + 8px + i×(u + 8px)。 */
