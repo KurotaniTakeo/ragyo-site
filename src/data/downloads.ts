@@ -2,7 +2,7 @@
  * 下载渠道数据。
  *
  * 重要前提：本项目**不自建文件托管**，下载包只通过网盘分发
- * （Google Drive / 百度網盤 / 夸克網盤）。
+ * （Google Drive / 夸克網盤 / 百度網盤）。
  * 因此站点为纯静态，不涉及对象存储与带宽成本。
  *
  * 也因此无法提供 SHA-256 校验与断点续传，改为展示版本号与打包日期。
@@ -23,7 +23,12 @@ export interface Mirror {
   mainlandOnly: boolean
 }
 
-/** 音源本体 */
+/**
+ * 音源本体。
+ *
+ * 夸克在前、百度殿后：按原作者的意愿，百度網盤仅作为备用渠道。
+ * 立绘渠道顺序同理，见下方 illustrationMirrors。
+ */
 export const mirrors: Mirror[] = [
   {
     platform: 'gdrive',
@@ -33,16 +38,16 @@ export const mirrors: Mirror[] = [
     mainlandOnly: false,
   },
   {
-    platform: 'baidu',
-    url: 'https://pan.baidu.com/s/17CJLRh6XVqmh4ZJ8gMJy-w?pwd=ragy',
-    code: 'ragy',
+    platform: 'quark',
+    url: 'https://pan.quark.cn/s/5744225af407',
+    code: null,
     status: 'live',
     mainlandOnly: true,
   },
   {
-    platform: 'quark',
-    url: 'https://pan.quark.cn/s/5744225af407',
-    code: null,
+    platform: 'baidu',
+    url: 'https://pan.baidu.com/s/17CJLRh6XVqmh4ZJ8gMJy-w?pwd=ragy',
+    code: 'ragy',
     status: 'live',
     mainlandOnly: true,
   },

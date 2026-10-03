@@ -214,7 +214,7 @@
     "metaPackagedAt": "Packaged",
     "metaSize": "File size",
     "overseasHint": "{platform} primarily serves mainland China. Outside mainland China, please use Google Drive.",
-    "gdriveHint": "Google Drive can be unreliable to access from mainland China; users in mainland China should prefer Baidu Netdisk or Quark Drive.",
+    "gdriveHint": "Google Drive can be unreliable to access from mainland China; users in mainland China should prefer Quark Drive or Baidu Netdisk.",
     "pendingTitle": "Download links coming soon",
     "pendingBody": "The download links are being prepared. Please check back once the release is public.",
     "feedback": "If a link does not open, please contact {author}.",

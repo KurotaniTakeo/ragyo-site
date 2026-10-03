@@ -214,7 +214,7 @@
     "metaPackagedAt": "打包日期",
     "metaSize": "文件大小",
     "overseasHint": "{platform}主要面向中国大陆用户，海外用户请使用 Google 云端硬盘。",
-    "gdriveHint": "Google 云端硬盘在中国大陆访问不便，大陆用户请优先使用百度网盘或夸克网盘。",
+    "gdriveHint": "Google 云端硬盘在中国大陆访问不便，大陆用户请优先使用夸克网盘或百度网盘。",
     "pendingTitle": "下载链接准备中",
     "pendingBody": "下载链接正在准备中，敬请期待。",
     "feedback": "若链接无法打开，请联系{author}。",
