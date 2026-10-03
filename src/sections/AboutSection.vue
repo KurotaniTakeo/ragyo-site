@@ -16,7 +16,7 @@ import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
 import SpecPill from '@/components/SpecPill.vue'
 import { usePitchHover } from '@/composables/usePitchHover'
-import { fullRange, pitchRanges, tones, voicebank } from '@/data/voicebank'
+import { fullRange, pitchRanges, tones, voicebank, type ToneKey } from '@/data/voicebank'
 import { sections } from '@/data/sections'
 
 defineProps<{ active: boolean }>()
@@ -55,6 +55,18 @@ function onRowEnter(index: number, event: PointerEvent) {
 
 function onRowLeave() {
   hoveredRow.value = -1
+}
+
+/** 音色药丸与表格音色列的双向联动高亮（同上，触摸不参与） */
+const hoveredTone = ref<ToneKey | null>(null)
+
+function onToneEnter(tone: ToneKey, event: PointerEvent) {
+  if (event.pointerType === 'touch') return
+  hoveredTone.value = tone
+}
+
+function onToneLeave() {
+  hoveredTone.value = null
 }
 
 /** 各音阶在总音域上的相对宽度，用 flex 分配，间隙自动吸收 */
@@ -114,6 +126,9 @@ const specs = computed<SpecRow[]>(() => [
                   v-for="pill in spec.pills"
                   :key="pill.text"
                   :tone="pill.tone"
+                  :class="{ 'is-hovered': !!pill.tone && hoveredTone === pill.tone }"
+                  @pointerenter="pill.tone && onToneEnter(pill.tone, $event)"
+                  @pointerleave="onToneLeave"
                 >{{ pill.text }}</SpecPill>
               </span>
               <template v-else>{{ spec.value }}</template>
@@ -170,7 +185,10 @@ const specs = computed<SpecRow[]>(() => [
               v-for="tone in tones"
               :key="tone.key"
               class="subbank-th is-tone"
+              :class="{ 'is-hovered': hoveredTone === tone.key }"
               role="columnheader"
+              @pointerenter="onToneEnter(tone.key, $event)"
+              @pointerleave="onToneLeave"
             >{{ tone.name }}</span>
           </div>
           <div
@@ -190,7 +208,10 @@ const specs = computed<SpecRow[]>(() => [
               v-for="tone in tones"
               :key="tone.key"
               class="subbank-td"
+              :class="{ 'is-hovered': hoveredTone === tone.key }"
               role="cell"
+              @pointerenter="onToneEnter(tone.key, $event)"
+              @pointerleave="onToneLeave"
             >{{ bar[tone.key] }}</span>
           </div>
         </div>
@@ -248,6 +269,15 @@ const specs = computed<SpecRow[]>(() => [
   gap: 6px;
   justify-content: flex-end;
   vertical-align: middle;
+}
+
+/* 音色药丸：自身悬停、或对应表格列联动时描边（主色与列高亮一致） */
+.spec-pills :deep(.spec-pill) {
+  transition: box-shadow var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.spec-pills :deep(.spec-pill.is-hovered) {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--md-sys-color-primary) 80%, transparent);
 }
 
 .card-title {
@@ -461,6 +491,21 @@ const specs = computed<SpecRow[]>(() => [
   font-size: var(--md-sys-typescale-title-small-size);
   line-height: var(--md-sys-typescale-title-small-line);
   letter-spacing: 0.04em;
+}
+
+/* 音色列：与音色药丸联动，整列（表头 + 各单元格）点亮 */
+.subbank-th,
+.subbank-td {
+  transition:
+    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.subbank-th.is-hovered,
+.subbank-td.is-hovered {
+  border-radius: var(--md-sys-shape-corner-small);
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
+  color: var(--md-sys-color-primary);
 }
 
 .about-notes {
