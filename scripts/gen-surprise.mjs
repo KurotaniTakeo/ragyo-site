@@ -6,7 +6,7 @@
  * 直接放上页面会严重拖慢加载，因此统一转码：
  *   - H.264 + yuv420p：iOS / macOS / Android / Chrome / Firefox / Safari 全兼容
  *     （WebM/VP9 在旧版 Safari 上不可用，故以 MP4 为准）
- *   - 原 GIF 带透明通道（pix_fmt bgra），先合成到站点 surface 色 #131316 上，
+ *   - 原 GIF 带透明通道（pix_fmt bgra），先合成到站点 surface 色 #505678 上，
  *     否则透明区域会在播放时变成黑块或白块
  *   - 实测 1.62MB → 68KB，约 1/24
  *
@@ -25,7 +25,7 @@ const OUT_REL = 'public/surprise/generated'
 const OUT = join(ROOT, OUT_REL)
 
 /** 与 m3-tokens.css 的 surface 保持一致 */
-const SURFACE = '0x131316'
+const SURFACE = '0x505678'
 /** public/ 下的站点绝对路径前缀；必须以单个 "/" 开头，否则浏览器会当成协议相对 URL */
 const PUBLIC_PREFIX = `/${OUT_REL.replace(/^public\/?/, '')}`
 const MAX_FPS = 30

@@ -1,4 +1,4 @@
-# Ragyo Dist Page
+# Ragyo Site
 
 「羅行（Ragyo）」UTAU / OpenUTAU 声库的宣传站：**单页、静态预渲染**，构建产物直接部署即可。
 Vue 3 + Vite + vite-ssg + Tailwind v4 + vue-i18n，TypeScript 严格模式。
@@ -45,7 +45,7 @@ pnpm build           # 或 pnpm dev
 | `src/data/assets.generated.ts` + `public/img/generated/*` | `scripts/gen-images.mjs` + `scripts/assets.manifest.json` |
 | `src/data/surprise.generated.ts` + `public/surprise/generated/*` | `scripts/gen-surprise.mjs` |
 
-注意：surface 色 `#131316` 同时硬编码在 `gen-images.mjs` 与 `gen-surprise.mjs` 中用于合成透明素材；
+注意：surface 色 `#505678` 同时硬编码在 `gen-images.mjs` 与 `gen-surprise.mjs` 中用于合成透明素材；
 若 `gen:palette` 改动了 `--md-sys-color-surface`，需同步更新这两个脚本。
 
 ## 目录结构
@@ -88,7 +88,17 @@ assets/
 - 声库版本号等信息在 `src/data/voicebank.ts`、`src/data/downloads.ts` 与各语 changelog 中重复出现，改动时需一并更新。
 - 代码注释使用中文。
 
+## 授权 / Licensing
+
+本仓库**代码与素材的授权状态不同**，请勿一概而论：
+
+- **源码**（`src/`、`scripts/`、配置等）以 **MIT** 授权，见 [`LICENSE`](./LICENSE)。
+- **素材**（`assets/`、`public/samples/` 下的立绘、彩蛋 GIF、声库设定与规约、视频封面等）**不在 MIT 范围内**，著作权归原权利人所有（All Rights Reserved）。详见 [`NOTICE`](./NOTICE)。
+
+换句话说：欢迎借鉴站点代码搭建你自己的声库宣传页，但立绘与音源素材不可据 MIT 使用；素材的使用一律以 `assets/voicebank/readme-{jp,cn,en}.txt` 的**使用规约**为准。
+
 ## 已知待办
 
 - `src/config.ts` 的 `SITE_URL` 为 `null`，canonical / hreflang / OGP 目前退化为相对路径；确定域名后填写即可自动切换为绝对地址。
 - `config.ts` 指向 `/og/<locale>.png` 与 `scripts/gen-og.mjs`，但该脚本与 `public/og/` 尚未创建，OGP 图片当前 404。
+- `public/samples/*.jpg` 三张视频封面的版权来源与署名待确认（见 `NOTICE`）。

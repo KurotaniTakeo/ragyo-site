@@ -21,7 +21,7 @@ export const images = {
     "avifSrcset": "/img/generated/character-outfit-b-640.avif 640w, /img/generated/character-outfit-b-1024.avif 1024w, /img/generated/character-outfit-b-1600.avif 1600w, /img/generated/character-outfit-b-2400.avif 2400w, /img/generated/character-outfit-b-3200.avif 3200w",
     "width": 3200,
     "height": 4745,
-    "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABwBACdASoUAB4APuVepU2pJSOiMAwBIByJZwAAW4befedfPgCi9PpxnEZfAAD+8MlQd46vNUX+BM6GjdPweimq9fEyjd/zEFgfgZPwlt9OsWOgz8t9JONyAZ6vQLHWBPksbJMUppRlmvYjBeH0eqesotdViAdGLCAAAA==",
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQBACdASoUAB4APu1mq02ppaQiMAgBMB2JZQC/7CHfiQY+6P1lFpgcAAD+bdWfaIVUgS88s0xgFNvC+3V2qToPux7fo7fytuEYtlq8ubl6l3qZduII2AAA",
     "note": "服装 B・正面站姿・红色领带清晰。"
   },
   "character.outfit-b-bust": {
@@ -30,7 +30,7 @@ export const images = {
     "avifSrcset": "/img/generated/character-outfit-b-bust-640.avif 640w, /img/generated/character-outfit-b-bust-1024.avif 1024w, /img/generated/character-outfit-b-bust-1600.avif 1600w, /img/generated/character-outfit-b-bust-2400.avif 2400w",
     "width": 2400,
     "height": 2562,
-    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwBACdASoUABUAPulcp02pJKOiN/VYASAdCWcAAC32YqHqokE7AQ78wwAA/vDLlRLJxBwdnVPmsWoYlqYPfq0BSdiyGXKVR72YfbEHZuvhhDF6AhRs9pSwqMAVNjrmz+1EGBZNspYAAA==",
+    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQBACdASoUABUAPu1oq08ppiOiMBgIATAdiWcAv+wQ7+/F5cpxLyNywAD+bdXIt6Hsn/QUQzQc+n4Ivcer9ME3YbASotsj6L0mO7906igoAplNFoNeAA==",
     "note": "服装 B・半身像（头部至半腿）。保留整幅宽度以容纳完整的麦克风线回环，仅纵向裁剪。"
   },
   "character.outfit-a": {
@@ -39,7 +39,7 @@ export const images = {
     "avifSrcset": "/img/generated/character-outfit-a-640.avif 640w, /img/generated/character-outfit-a-1024.avif 1024w, /img/generated/character-outfit-a-1600.avif 1600w, /img/generated/character-outfit-a-2400.avif 2400w, /img/generated/character-outfit-a-3200.avif 3200w",
     "width": 3200,
     "height": 4745,
-    "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABQBACdASoUAB4APuVepU2pJSOiMAwBIByJZwAAW4NTo5vqN64Z9D0Ak2AAAP7wyVB3jq81RmOCmyetPBoh/s9sANQIMlb1/DUX1bKMi5hxsRWkwB5vCfzRGbflAbadv+VPqUg88kDTnRiGiY1NFMW0sXCUGBAA",
+    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwBACdASoUAB4APu1mqk2ppaQiMAgBMB2JZQDImCHgDcCbvqRGeAnYkJgA/m3V48ksDuNxKrT7FFGpzj6BS+OYhKVFFHbS5dy0iDMt67Ho45ozFTZI9O8QgcAAAA==",
     "note": "服装 A・正面站姿・夹克扣起。"
   },
   "character.sheet": {
@@ -48,7 +48,7 @@ export const images = {
     "avifSrcset": "/img/generated/character-sheet-640.avif 640w, /img/generated/character-sheet-1024.avif 1024w, /img/generated/character-sheet-1600.avif 1600w, /img/generated/character-sheet-1924.avif 1924w",
     "width": 1924,
     "height": 2480,
-    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACQBACdASoUABoAPu1qrVEppaQiqAqpMB2JQAB8qCE8oAM59Gut71KRqkay4iwA/u9jTs0moAJ53DIIaTHkZ4rF7SgY41eumpM+WIaeVEV032iPvkPxWmWkE1E2x2XBjPVoVLeFcMSrRKdbNxhFjODeGnxdmcP9GrE00PpjbMbd5fwxnE1HM8aWKAj+mvEMI1K4AA==",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwAwCdASoUABoAPu1ur1IppiQiqAgBMB2JYwC06BEcM5FO5UAA/m6UdfAYWRjNKmVr/OiJFRNacWQ3eTgcEnu6QYeFQEz7Ib2roL/Q5sYFEABfGSX8G9OmM36oZLJxq4Ach2l/byoNFeVepXji23AA",
     "note": "设定图・正面与背面双视图・含耳麦与尾巴。"
   }
 } as const satisfies Record<string, GeneratedImage>

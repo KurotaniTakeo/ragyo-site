@@ -92,14 +92,14 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
 }
 
 .is-selected {
-  color: var(--md-sys-color-on-secondary-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 .segment-indicator {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-color: var(--md-sys-color-secondary-container);
+  background-color: var(--md-sys-color-surface-container);
   z-index: 0;
 }
 

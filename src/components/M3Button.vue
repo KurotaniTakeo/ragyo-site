@@ -4,7 +4,7 @@
  *
  * 五种变体对应 M3 规范：
  *   filled    主要动作（每屏最多一个）
- *   tonal     次要动作，用 secondary-container 容器色
+ *   tonal     次要动作，用 surface-container 容器色
  *   outlined  低强调动作
  *   text      最低强调，常用于卡片内
  *   elevated  需要从背景中浮起时
@@ -97,8 +97,8 @@ const isLink = () => props.href !== undefined
 }
 
 .is-tonal {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
 }
 
 .is-elevated {

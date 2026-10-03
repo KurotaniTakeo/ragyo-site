@@ -152,12 +152,18 @@ const specs = computed(() => [
   margin-bottom: 18px;
 }
 
+/* 音域条：三段统一为品牌紫的明度阶（越高音越亮）。
+   原先用 primary/secondary/tertiary 容器色，在紫底上会串出暖棕与赤红，故弃用。 */
 .range-segment {
   position: relative;
   height: 34px;
   border-radius: var(--md-sys-shape-corner-small);
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-bright) 32%,
+    var(--md-sys-color-surface-container)
+  );
+  color: var(--md-sys-color-on-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,13 +172,19 @@ const specs = computed(() => [
 }
 
 .range-segment:nth-child(2) {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-bright) 58%,
+    var(--md-sys-color-surface-container)
+  );
 }
 
 .range-segment:nth-child(3) {
-  background-color: var(--md-sys-color-tertiary-container);
-  color: var(--md-sys-color-on-tertiary-container);
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-surface-bright) 84%,
+    var(--md-sys-color-surface-container)
+  );
 }
 
 /* Material 连接件规范：相邻两侧的内角收小，外角保持 */

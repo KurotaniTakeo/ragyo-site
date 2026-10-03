@@ -148,8 +148,8 @@ const likes = () => tm('character.likes') as string[]
 .like-tag {
   padding: 3px 10px;
   border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
 }
 
 .notes-card {
@@ -201,10 +201,12 @@ const likes = () => tm('character.likes') as string[]
   border-radius: var(--md-sys-shape-corner-large);
   /* 不加 overflow: hidden —— 透明底立绘无需在圆角处裁切，
      且它可能与 ResponsiveImage 内部 <picture> 的 display:contents 组合产生问题 */
+  /* 与首页主视觉同一套：立绘暗部与背景 #505678 近乎同色，用主色光晕拉开轮廓 */
   background: radial-gradient(
     closest-side at 50% 42%,
-    color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent),
-    transparent
+    color-mix(in srgb, var(--md-sys-color-primary) 40%, transparent),
+    color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent) 58%,
+    transparent 82%
   );
 }
 
