@@ -212,12 +212,12 @@ const { t, locale } = useI18n()
 }
 
 /* 超大「羅」水印：描边空心字，位于文字块内、压在文字之下。
-   随文字块一起上下居中与左右平移，因此不再贴视口左缘。纯装饰，不进无障碍树。 */
+   贴在文字块的左上方，只有右下角略微压到标题；随文字块一起移动。纯装饰，不进无障碍树。 */
 .hero-watermark {
   position: absolute;
-  left: -0.06em;
-  top: 50%;
-  translate: 0 -50%;
+  left: -0.16em;
+  top: 0;
+  translate: 0 -62%;
   z-index: -1;
   font-weight: 800;
   font-size: clamp(180px, 26vw, 420px);
@@ -415,14 +415,17 @@ const { t, locale } = useI18n()
 
 :deep(.hero-backdrop) {
   position: absolute;
-  right: 0;
-  /* 顶部下移，使背影的头顶略低于主立绘；放大后由容器从底部裁掉 */
+  /* 以主立绘圆心（= 列中心）为基准，用相对自身宽度的位移做固定右移：
+     背影与主立绘都按高度缩放，因此两者的相对几何在各窗口下保持一致，
+     不会出现被主立绘完全遮挡、或离得过远的情况。 */
+  left: 50%;
   top: 12%;
   height: 190%;
   width: auto;
   max-width: none;
+  translate: 23% 0;
   object-fit: contain;
-  object-position: top right;
+  object-position: top center;
   opacity: 0.32;
 }
 
@@ -446,13 +449,28 @@ const { t, locale } = useI18n()
 /* 主立绘的裁剪容器：overflow:hidden 会把放大的立绘真正裁掉，
    这样溢出的下半身才不会被算进父级的可滚动高度、把首屏撑长。
    （不能用 clip-path：它只影响绘制，不影响可滚动溢出区域。）
-   默认裁到列宽；仅在够宽且较扁的视口上向两侧放开（见下方媒体查询），
-   因为角色内容比列宽、放开后才不会被切，但窄屏/高屏上放开会撞到文字。 */
+   左右边缘再叠一层水平渐隐遮罩：够宽的视口下立绘会被完整放开、离边缘较远
+   因而不受影响；窄屏/高屏上被裁切的位置则变成柔和淡出，而不是一刀切。
+   默认裁到列宽；仅在够宽且较扁的视口上向两侧放开（见下方媒体查询）。 */
 .hero-clip {
   position: absolute;
   inset: 0;
   overflow: hidden;
   z-index: 1;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 40px,
+    #000 calc(100% - 40px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 40px,
+    #000 calc(100% - 40px),
+    transparent 100%
+  );
 }
 
 /* ResponsiveImage 内部用 <picture>（display:contents）包裹，
@@ -521,6 +539,16 @@ const { t, locale } = useI18n()
 
   .hero-tagline {
     max-width: 100%;
+  }
+}
+
+/* 单列（竖屏）时主立绘只占一列，背影若仍按列中心右移会大半跑到视口外；
+   这里改回贴右缘，让背影收在主立绘右侧。 */
+@media (max-width: 860px) and (orientation: portrait) {
+  :deep(.hero-backdrop) {
+    left: auto;
+    right: 0;
+    translate: none;
   }
 }
 
