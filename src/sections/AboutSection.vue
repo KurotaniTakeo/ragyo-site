@@ -69,6 +69,15 @@ function onToneLeave() {
   hoveredTone.value = null
 }
 
+/**
+ * 音色列色带的列下标。列宽由表格栅格（1.6fr + 3×1fr，间隙 8px）推出，
+ * 交给 CSS calc 定位；下标随 hoveredTone 变化，-1 时不显示。
+ */
+const toneColStyle = computed<Record<string, string> | null>(() => {
+  const index = hoveredTone.value ? tones.findIndex((tone) => tone.key === hoveredTone.value) : -1
+  return index < 0 ? null : { '--tone-col': String(index) }
+})
+
 /** 各音阶在总音域上的相对宽度，用 flex 分配，间隙自动吸收 */
 const bars = computed(() =>
   pitchRanges.map((range) => ({
@@ -214,6 +223,14 @@ const specs = computed<SpecRow[]>(() => [
               @pointerleave="onToneLeave"
             >{{ bar[tone.key] }}</span>
           </div>
+
+          <!-- 音色列高亮：整列一条连续色带，压在行背景之上、文字之下 -->
+          <div
+            class="tone-col-highlight"
+            :class="{ 'is-visible': hoveredTone !== null }"
+            :style="toneColStyle"
+            aria-hidden="true"
+          />
         </div>
       </M3Card>
     </div>
@@ -398,6 +415,7 @@ const specs = computed<SpecRow[]>(() => [
 
 /* 录入音高与音色：去药丸后改为对齐网格，行 = 音高，列 = 音色 */
 .subbank-table {
+  position: relative;
   display: flex;
   flex-direction: column;
 }
@@ -493,19 +511,39 @@ const specs = computed<SpecRow[]>(() => [
   letter-spacing: 0.04em;
 }
 
-/* 音色列：与音色药丸联动，整列（表头 + 各单元格）点亮 */
+/* 音色列：与音色药丸联动。文字层置顶，色带（.tone-col-highlight）压在行背景之上 */
 .subbank-th,
 .subbank-td {
-  transition:
-    background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
-    color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  position: relative;
+  z-index: 1;
+  transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 }
 
 .subbank-th.is-hovered,
 .subbank-td.is-hovered {
+  color: var(--md-sys-color-primary);
+}
+
+/* 音色列色带：整列一条连续色带，位置由 --tone-col 按表格栅格算出。
+   栅格列为 1.6fr + 3×1fr、间隙 8px（共 3 个间隙 = 24px），
+   故单列宽 =(100% - 24px) / 4.6，第 i 列左缘 = 1.6u + 8px + i×(u + 8px)。 */
+.tone-col-highlight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(
+    (100% - 24px) / 4.6 * 1.6 + 8px + var(--tone-col, 0) * ((100% - 24px) / 4.6 + 8px)
+  );
+  width: calc((100% - 24px) / 4.6);
   border-radius: var(--md-sys-shape-corner-small);
   background-color: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
-  color: var(--md-sys-color-primary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.tone-col-highlight.is-visible {
+  opacity: 1;
 }
 
 .about-notes {
