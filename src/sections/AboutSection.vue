@@ -5,7 +5,8 @@
  * 重点是把 character.yaml 里的 subbanks 结构翻译成一眼能看懂的形态：
  *   1. 关键规格一览
  *   2. 音域条 —— 三个音阶在 C2–B4 上的实际占位与重叠，
- *      悬停时光标指向哪就显示哪个音高（见 usePitchHover）
+ *      悬停时光标指向哪就显示哪个音高（见 usePitchHover），
+ *      并与下方表格行双向联动高亮
  *   3. 每个音阶的通常 / Soft / Power 音色文件后缀
  */
 import { computed, ref } from 'vue'
@@ -36,6 +37,25 @@ const {
   onPointerMove: onRangeMove,
   onPointerLeave: onRangeLeave,
 } = usePitchHover(rangeBar, { low: fullRange.low, high: fullRange.high })
+
+/**
+ * 音域条与表格行的联动高亮。
+ *
+ * 两者一一对应（同为 bars 的顺序），所以只维护一个「当前高亮行」：
+ * 指针在音域条上时取光标所在音阶，表格行悬停时取该行，都不在则 -1。
+ */
+const hoveredRow = ref(-1)
+const activeRow = computed(() => (hoverActive.value ? hoverIndex.value : hoveredRow.value))
+
+function onRowEnter(index: number, event: PointerEvent) {
+  // 触摸不参与，避免高亮在触屏上残留
+  if (event.pointerType === 'touch') return
+  hoveredRow.value = index
+}
+
+function onRowLeave() {
+  hoveredRow.value = -1
+}
 
 /** 各音阶在总音域上的相对宽度，用 flex 分配，间隙自动吸收 */
 const bars = computed(() =>
@@ -119,7 +139,7 @@ const specs = computed<SpecRow[]>(() => [
             v-for="(bar, i) in bars"
             :key="bar.id"
             class="range-segment"
-            :class="{ 'is-hovered': hoverActive && hoverIndex === i }"
+            :class="{ 'is-hovered': activeRow === i }"
             :style="{ flex: bar.flex }"
             :data-range-segment="''"
             :data-low="bar.low"
@@ -153,7 +173,15 @@ const specs = computed<SpecRow[]>(() => [
               role="columnheader"
             >{{ tone.name }}</span>
           </div>
-          <div v-for="bar in bars" :key="bar.id" class="subbank-tr" role="row">
+          <div
+            v-for="(bar, i) in bars"
+            :key="bar.id"
+            class="subbank-tr"
+            :class="{ 'is-hovered': activeRow === i }"
+            role="row"
+            @pointerenter="onRowEnter(i, $event)"
+            @pointerleave="onRowLeave"
+          >
             <span class="subbank-pitch" role="rowheader">
               <span class="subbank-pitch-id">{{ bar.id }}</span>
               <span class="subbank-pitch-range">{{ bar.toneRange }}</span>
@@ -371,8 +399,18 @@ const specs = computed<SpecRow[]>(() => [
   font-variant-numeric: tabular-nums;
 }
 
+/* 行：负外边距 + 等量内边距，让高亮块向卡片内边距方向外扩，
+   内容栅格宽度不变，与表头列保持对齐 */
 .subbank-tr {
-  padding: 9px 0;
+  margin-inline: -8px;
+  padding: 9px 8px;
+  border-radius: var(--md-sys-shape-corner-small);
+  transition: background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+/* 与音域条联动：指针在音域条或本行上时点亮 */
+.subbank-tr.is-hovered {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
 }
 
 .subbank-tr + .subbank-tr {
@@ -392,6 +430,11 @@ const specs = computed<SpecRow[]>(() => [
   line-height: var(--md-sys-typescale-title-small-line);
   font-weight: 500;
   letter-spacing: 0.02em;
+  transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.subbank-tr.is-hovered .subbank-pitch-id {
+  color: var(--md-sys-color-primary);
 }
 
 .subbank-pitch-range {
@@ -450,7 +493,7 @@ const specs = computed<SpecRow[]>(() => [
   }
 
   .subbank-tr {
-    padding: 6px 0;
+    padding: 6px 8px;
   }
 
   .about-notes {
