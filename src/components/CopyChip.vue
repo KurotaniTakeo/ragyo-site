@@ -18,10 +18,12 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const copied = ref(false)
+/** 作为通知的锚点：复制后的 Snackbar 显示在本按钮正上方 */
+const chipEl = ref<HTMLButtonElement | null>(null)
 
 async function onCopy() {
   const ok = await copyText(props.value)
-  showSnackbar(ok ? t('common.copied') : t('common.copyFailed'))
+  showSnackbar(ok ? t('common.copied') : t('common.copyFailed'), { anchor: chipEl.value })
 
   if (!ok) return
   copied.value = true
@@ -34,6 +36,7 @@ async function onCopy() {
 <template>
   <button
     v-ripple
+    ref="chipEl"
     class="assist-chip md-state-layer"
     type="button"
     :aria-label="`${label} ${value} — ${t('common.copy')}`"

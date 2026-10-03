@@ -108,6 +108,11 @@
 .md-ripple-host {
   position: relative;
   overflow: hidden;
+  /* 强制独立裁剪/合成上下文：部分 Chromium 在涟漪 scale 动画进入合成层后
+     会忽略宿主的圆角裁切，导致涟漪溢出到按钮圆角之外；contain: paint 配合
+     isolation 让裁切始终按宿主圆角生效。 */
+  contain: paint;
+  isolation: isolate;
 }
 
 .md-ripple {

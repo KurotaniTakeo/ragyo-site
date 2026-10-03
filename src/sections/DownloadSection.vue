@@ -80,6 +80,10 @@ const steps = (key: string) => tm(key) as unknown as string[]
           {{ t('download.groups.voicebank') }}
         </h3>
 
+        <p class="group-note md-body-small" data-reveal>
+          {{ t('download.voicebankNote') }}
+        </p>
+
         <DownloadCard
           :mirrors="orderedMirrors"
           :is-chinese="locale === 'zh'"
@@ -178,6 +182,12 @@ const steps = (key: string) => tm(key) as unknown as string[]
 .group-title {
   margin: 0;
   color: var(--md-sys-color-on-surface);
+}
+
+/* 声库分组的小字说明：紧贴标题下方，与卡片之间仍保留原有间距 */
+.group-note {
+  margin: -8px 0 0;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .pending-note {

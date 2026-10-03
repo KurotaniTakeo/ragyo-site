@@ -2,13 +2,13 @@
 /**
  * 彩蛋区。
  *
- * 19 个 GIF 转码片段合计 1.5MB，全部预加载仍不划算，因此只加载当前一个，
- * 并在浏览器空闲时预热一个随机片段。
+ * 19 个 GIF 转码片段合计 1.5MB，全部预加载与自动播放都不划算：只加载当前一个，
+ * 且默认停在封面帧，由用户点击播放（preload="metadata" 不会提前下载视频本体）。
  *
  * 交互上直接在本页内联展示当前片段（不再弹出二级弹窗）：
  * 进入即随机取一个，点「再来一个」换下一个。
  */
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -25,7 +25,6 @@ const { t } = useI18n()
 const loading = ref(false)
 const failed = ref(false)
 const currentIndex = ref(0)
-const videoEl = ref<HTMLVideoElement | null>(null)
 
 const current = computed(() => surpriseClips[currentIndex.value])
 const clipCount = computed(() => surpriseClips.length)
@@ -45,11 +44,9 @@ function pickRandom() {
   loading.value = true
 }
 
+/** 元数据就绪即可撤下加载提示，视频本体等到用户点击播放才下载 */
 function onLoaded() {
   loading.value = false
-  videoEl.value?.play().catch(() => {
-    /* 自动播放被策略拦截时保留首帧即可 */
-  })
 }
 
 function onError() {
@@ -57,37 +54,10 @@ function onError() {
   failed.value = true
 }
 
-// requestIdleCallback 返回 number；Node 环境下 setTimeout 返回 Timeout，故用 ReturnType 兼容两侧类型
-let idleHandle: number | undefined
-let idleTimer: ReturnType<typeof setTimeout> | undefined
-
 onMounted(() => {
   if (surpriseClips.length === 0) return
-
   loading.value = true
   pickRandom()
-
-  // 空闲时预热一个随机片段，减小切换时的等待
-  const prefetch = () => {
-    const clip = surpriseClips[Math.floor(Math.random() * surpriseClips.length)]
-    const link = document.createElement('link')
-    link.rel = 'prefetch'
-    link.as = 'video'
-    link.href = clip.video
-    document.head.appendChild(link)
-  }
-
-  if ('requestIdleCallback' in window) {
-    idleHandle = window.requestIdleCallback(prefetch, { timeout: 5000 })
-  } else {
-    // 用全局 setTimeout：上面的 `in` 收窄会把 window 推断成 never
-    idleTimer = setTimeout(prefetch, 2500)
-  }
-})
-
-onBeforeUnmount(() => {
-  if (idleHandle && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleHandle)
-  if (idleTimer) window.clearTimeout(idleTimer)
 })
 </script>
 
@@ -109,17 +79,17 @@ onBeforeUnmount(() => {
         <div class="clip-frame">
           <video
             v-if="!failed"
-            ref="videoEl"
             class="clip-video"
             :src="current.video"
             :poster="current.poster"
             :width="current.width"
             :height="current.height"
-            autoplay
+            controls
+            preload="metadata"
             loop
             muted
             playsinline
-            @loadeddata="onLoaded"
+            @loadedmetadata="onLoaded"
             @error="onError"
           />
 
@@ -196,6 +166,8 @@ onBeforeUnmount(() => {
   place-items: center;
   color: var(--md-sys-color-on-surface-variant);
   background-color: color-mix(in srgb, var(--md-sys-color-surface) 62%, transparent);
+  /* 加载层不拦截点击，避免挡住在下方等待用户操作的播放控件 */
+  pointer-events: none;
 }
 
 .clip-error {

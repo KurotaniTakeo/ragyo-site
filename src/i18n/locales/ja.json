@@ -206,6 +206,7 @@
   "download": {
     "title": "ダウンロード",
     "lead": "「羅行」の音源と立ち絵は以下のクラウドストレージからダウンロードできます。",
+    "voicebankNote": "音源パッケージに立ち絵ファイルも含まれているため、別途ダウンロードする必要はありません。",
     "groups": {
       "voicebank": "音源",
       "illustration": "立ち絵"
@@ -247,7 +248,7 @@
         "version": "1.0.1",
         "date": "2026.10.01",
         "notes": [
-          "character.txt と prefix.map を更新。OpenUTAU の表情音切り替えで「Power」が欠落する問題のみを修正（標準 UTAU には影響ありません）。"
+          "character.txt と prefix.map を更新。OpenUTAU の表情音切り替えで「Power」が欠落する問題のみを修正（オリジナル UTAU には影響ありません）。"
         ]
       },
       {

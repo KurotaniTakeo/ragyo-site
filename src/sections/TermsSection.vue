@@ -171,6 +171,7 @@ watch(locale, async () => {
 
         <button
           v-show="hasOverflowX"
+          v-ripple
           type="button"
           class="terms-arrow is-prev"
           :disabled="atStart"
@@ -181,6 +182,7 @@ watch(locale, async () => {
         </button>
         <button
           v-show="hasOverflowX"
+          v-ripple
           type="button"
           class="terms-arrow is-next"
           :disabled="atEnd"
@@ -200,6 +202,7 @@ watch(locale, async () => {
         </div>
 
         <button
+          v-ripple
           type="button"
           class="terms-credits md-label-large md-state-layer"
           @click="goToCredits"

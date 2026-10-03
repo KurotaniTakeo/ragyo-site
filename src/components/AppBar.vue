@@ -30,7 +30,7 @@ const localeOptions = SUPPORTED_LOCALES.map((value) => ({
 
 <template>
   <header class="app-bar" :class="{ 'is-scrolled': scrolled }">
-    <a class="brand" :href="`#hero`" @click.prevent="emit('select-hero')">
+    <a v-ripple class="brand" :href="`#hero`" @click.prevent="emit('select-hero')">
       <span class="brand-mark" aria-hidden="true" />
       <span class="brand-text">
         <span class="brand-name md-title-medium">{{ voicebank.name[locale as Locale] }}</span>
@@ -78,6 +78,10 @@ const localeOptions = SUPPORTED_LOCALES.map((value) => ({
   align-items: center;
   gap: 10px;
   min-width: 0;
+  /* 内边距配合负外边距撑出涟漪/状态层的点击范围，视觉位置保持不变 */
+  padding: 4px 10px;
+  margin-left: -10px;
+  border-radius: var(--md-sys-shape-corner-full);
 }
 
 /* 品牌标记：取自立绘的墨蓝毛色与领带赤，是本站唯一出现双色的图形元素 */

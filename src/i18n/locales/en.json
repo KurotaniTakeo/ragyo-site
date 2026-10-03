@@ -207,6 +207,7 @@
   "download": {
     "title": "Download",
     "lead": "Ragyo's voicebank and illustrations are distributed through the cloud storage services below.",
+    "voicebankNote": "The voicebank package already includes the illustration files, so there is no need to download them separately.",
     "groups": {
       "voicebank": "Voicebank",
       "illustration": "Illustration"
@@ -248,7 +249,7 @@
         "version": "1.0.1",
         "date": "2026.10.01",
         "notes": [
-          "Updated \"character.txt\" and \"prefix.map\". Fixed missing Power when switching expression phonemes in OpenUTAU. (Standard UTAU unaffected.)"
+          "Updated \"character.txt\" and \"prefix.map\". Fixed missing Power when switching expression phonemes in OpenUTAU. (UTAU Classic unaffected.)"
         ]
       },
       {

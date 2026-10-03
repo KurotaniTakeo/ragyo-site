@@ -157,7 +157,9 @@ const { t } = useI18n()
   /* 与胶囊之间留出一段距离，而不是紧贴 */
   margin-top: 4px;
   font-size: 0.625rem;
-  line-height: 1.2;
+  /* 行高必须容纳字形的升部与降部：1.2 时内容框只有 12px，而字形需要 14px，
+     配合 overflow: hidden 会把英文字母（g / y / p）的下缘切掉。 */
+  line-height: 1.5;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;

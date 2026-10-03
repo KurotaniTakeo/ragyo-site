@@ -207,6 +207,7 @@
   "download": {
     "title": "下载",
     "lead": "「羅行」的声库与立绘可通过以下网盘渠道下载。",
+    "voicebankNote": "声库包内已包含立绘文件，无需单独下载。",
     "groups": {
       "voicebank": "声库",
       "illustration": "立绘"
@@ -248,7 +249,7 @@
         "version": "1.0.1",
         "date": "2026.10.01",
         "notes": [
-          "更新了 character.txt 和 prefix.map，仅修正了 OpenUTAU 便捷切换表情音中「Power」缺失的问题（标准 UTAU 不受此问题影响）。"
+          "更新了 character.txt 和 prefix.map，仅修正了 OpenUTAU 便捷切换表情音中「Power」缺失的问题（原版 UTAU 不受此问题影响）。"
         ]
       },
       {
