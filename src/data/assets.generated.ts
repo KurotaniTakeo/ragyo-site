@@ -40,7 +40,7 @@ export const images = {
     "width": 3200,
     "height": 4745,
     "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwBACdASoUAB4APu1mqk2ppaQiMAgBMB2JZQDImCHgDcCbvqRGeAnYkJgA/m3V48ksDuNxKrT7FFGpzj6BS+OYhKVFFHbS5dy0iDMt67Ho45ozFTZI9O8QgcAAAA==",
-    "note": "公式2（无领带黑衬衫）・手插兜・闭嘴微笑。"
+    "note": "公式2（无领带黑毛衣）・手插兜・闭嘴微笑。"
   },
   "character.pockets-open-mouth-costume-1": {
     "src": "/img/generated/character-pockets-open-mouth-costume-1-3200.webp",

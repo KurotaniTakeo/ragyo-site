@@ -9,7 +9,7 @@
 
 - **姿势**：`pockets`（插袋，手插兜）／省略（非插袋）。
 - **表情**：`smile`（微笑，闭嘴）／`open-mouth`（张嘴）。
-- **造型**：`costume-1`（公式1，红领带）／`costume-2`（公式2，无领带黑衬衫）。
+- **造型**：`costume-1`（公式1，红领带）／`costume-2`（公式2，无领带黑毛衣）。
 - **描边**：省略（普通）／`outline-opaque`（不透明描边）／`outline-translucent`（半透明描边）／`glow`（发光，取代硬描边）。
 - 常规立绘尺寸为 9927×14720；`front-back.png` 为 1924×2480 的正/背设定图，`back-view.png` 为 1163×2480 的背面单视图。
 
@@ -18,16 +18,16 @@
 | 英文文件名 | 中文名 / 描述 | 到达时数字名 | 内容 |
 | --- | --- | --- | --- |
 | `pockets-smile-costume-1.png` | 插袋微笑-公式1 | `4.png` | 红领带・手插兜・闭嘴微笑 |
-| `pockets-smile-costume-2.png` | 插袋微笑-公式2 | `1.png` | 无领带黑衬衫・手插兜・闭嘴微笑 |
+| `pockets-smile-costume-2.png` | 插袋微笑-公式2 | `1.png` | 无领带黑毛衣・手插兜・闭嘴微笑 |
 | `pockets-open-mouth-costume-1.png` | 插袋张嘴-公式1 | `5.png` | 红领带・手插兜・张嘴 |
-| `pockets-open-mouth-costume-2.png` | 插袋张嘴-公式2 | `3.png` | 无领带黑衬衫・手插兜・张嘴 |
+| `pockets-open-mouth-costume-2.png` | 插袋张嘴-公式2 | `3.png` | 无领带黑毛衣・手插兜・张嘴 |
 | `smile-costume-1.png` | 微笑-公式1 | — | 红领带・非插兜・闭嘴微笑 |
-| `smile-costume-2.png` | 微笑-公式2 | — | 无领带黑衬衫・非插兜・闭嘴微笑 |
-| `smile-costume-2-outline-opaque.png` | 闭嘴不插兜・不透明描边版本 | `1.png` | 无领带黑衬衫・非插兜・闭嘴・不透明描边 |
-| `smile-costume-2-outline-translucent.png` | 闭嘴不插兜・半透明描边版本 | `2.png` | 无领带黑衬衫・非插兜・闭嘴・半透明描边 |
-| `smile-costume-2-glow.png` | 闭嘴不插兜・发光版本 | `5.png`（后补） | 无领带黑衬衫・非插兜・闭嘴・柔和发光（取代硬描边） |
+| `smile-costume-2.png` | 微笑-公式2 | — | 无领带黑毛衣・非插兜・闭嘴微笑 |
+| `smile-costume-2-outline-opaque.png` | 闭嘴不插兜・不透明描边版本 | `1.png` | 无领带黑毛衣・非插兜・闭嘴・不透明描边 |
+| `smile-costume-2-outline-translucent.png` | 闭嘴不插兜・半透明描边版本 | `2.png` | 无领带黑毛衣・非插兜・闭嘴・半透明描边 |
+| `smile-costume-2-glow.png` | 闭嘴不插兜・发光版本 | `5.png`（后补） | 无领带黑毛衣・非插兜・闭嘴・柔和发光（取代硬描边） |
 | `open-mouth-costume-1.png` | 张嘴-公式1 | — | 红领带・非插兜・张嘴 |
-| `open-mouth-costume-2.png` | 张嘴-公式2 | — | 无领带黑衬衫・非插兜・张嘴 |
+| `open-mouth-costume-2.png` | 张嘴-公式2 | — | 无领带黑毛衣・非插兜・张嘴 |
 | `front-back.png` | 正反面 | `7.png` | 设定图・正面与背面双视图 |
 | `back-view.png` | 背面立绘 | `3.png` | 背面单视图（透明底） |
 

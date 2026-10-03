@@ -21,7 +21,7 @@ export const HERO_BACKDROP_IMAGE = 'character.back-view' satisfies ImageKey
 /** 公式1（红领带）・手插兜・闭嘴微笑 */
 export const COSTUME_1_IMAGE = 'character.pockets-smile-costume-1' satisfies ImageKey
 
-/** 公式2（无领带黑衬衫）・手插兜・闭嘴微笑 */
+/** 公式2（无领带黑毛衣）・手插兜・闭嘴微笑 */
 export const COSTUME_2_IMAGE = 'character.pockets-smile-costume-2' satisfies ImageKey
 
 /** 设定图：正面 + 背面双视图 */
@@ -63,7 +63,7 @@ export const getImage = (key: ImageKey): GeneratedImage => images[key]
  * 上述变体，故由展示器单独切换（见 VIEWER_BACK_IMAGE）。
  * ------------------------------------------------------------------ */
 
-/** 造型：公式1（红领带）/ 公式2（黑衬衫·无领带） */
+/** 造型：公式1（红领带）/ 公式2（黑毛衣·无领带） */
 export type CostumeId = 'costume-1' | 'costume-2'
 
 /** 姿势：pockets 插兜 / natural 自然（非插兜） */

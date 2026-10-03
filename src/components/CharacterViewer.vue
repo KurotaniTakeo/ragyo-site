@@ -97,12 +97,11 @@ const transformStyle = computed(() => ({
   transform: `translate3d(${x.value}px, ${y.value}px, 0) scale(${scale.value})`,
 }))
 
-// 换图后回到适应视图，避免上一张的缩放/位移带过来
-watch(imageKey, reset)
-
+// 换选项 / 切正面背面都保留当前的缩放与平移，只做交叉淡入；
+// 每次打开弹窗时才回到适应视图。
 watch(open, (value) => {
   suspended.value = value
-  if (!value) reset()
+  if (value) reset()
 })
 
 onBeforeUnmount(() => {
@@ -125,6 +124,16 @@ onBeforeUnmount(() => {
       <h3 class="viewer-title md-title-medium">{{ t('character.viewer.title') }}</h3>
 
       <div class="viewer-controls">
+        <div class="control">
+          <span class="control-label md-label-medium">{{ t('character.viewer.facingLabel') }}</span>
+          <SegmentedButton
+            :options="facingOptions"
+            :model-value="facing"
+            :aria-label="t('character.viewer.facingLabel')"
+            @update:model-value="setFacing"
+          />
+        </div>
+
         <div class="control">
           <span class="control-label md-label-medium">{{ t('character.viewer.costumeLabel') }}</span>
           <SegmentedButton
@@ -157,16 +166,6 @@ onBeforeUnmount(() => {
             :disabled="isBack"
             :aria-label="t('character.viewer.expressionLabel')"
             @update:model-value="setExpression"
-          />
-        </div>
-
-        <div class="control">
-          <span class="control-label md-label-medium">{{ t('character.viewer.facingLabel') }}</span>
-          <SegmentedButton
-            :options="facingOptions"
-            :model-value="facing"
-            :aria-label="t('character.viewer.facingLabel')"
-            @update:model-value="setFacing"
           />
         </div>
       </div>
@@ -248,17 +247,21 @@ onBeforeUnmount(() => {
   color: var(--md-sys-color-on-surface);
 }
 
+/* 四组都是「2 个选项」的短选择器，按内容宽度紧凑左对齐、窄屏换行即可，
+   不再用会把选择器拉满列宽的等分网格 */
 .viewer-controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px 20px;
 }
 
 .control {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 0;
+  /* 关键：阻止 .segmented 被拉伸到容器宽度，只占两个选项的宽度 */
+  align-items: flex-start;
 }
 
 .control-label {
@@ -276,16 +279,63 @@ onBeforeUnmount(() => {
   min-height: 0;
   overflow: hidden;
   border-radius: var(--md-sys-shape-corner-large);
-  /* 与角色页设定图同一套：用主色光晕拉开透明底立绘的轮廓 */
-  background: radial-gradient(
-    closest-side at 50% 45%,
-    color-mix(in srgb, var(--md-sys-color-primary) 36%, transparent),
-    color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent) 60%,
-    transparent 84%
+  /* 沿用首页那套背景（见 HeroSection.vue）：暗→浅(#baaebb)线性渐变 +
+     主色/第三色径向光晕 + 点阵。立绘暗部与背景近乎同色，靠光晕拉开轮廓。 */
+  background: linear-gradient(
+    180deg,
+    var(--md-sys-color-surface) 0%,
+    var(--md-sys-color-surface) 48%,
+    color-mix(in srgb, var(--md-sys-color-surface) 62%, #baaebb) 68%,
+    color-mix(in srgb, var(--md-sys-color-surface) 12%, #baaebb) 86%,
+    #baaebb 100%
   );
+  isolation: isolate;
   cursor: grab;
   touch-action: none;
   user-select: none;
+}
+
+/* 光晕层：中央主色把人像从暗色顶部托出，右上/左下两团给纯色渐变加纵深 */
+.viewer-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      closest-side at 50% 44%,
+      color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent),
+      color-mix(in srgb, var(--md-sys-color-primary) 7%, transparent) 58%,
+      transparent 82%
+    ),
+    radial-gradient(
+      120% 80% at 88% 16%,
+      color-mix(in srgb, var(--md-sys-color-primary) 24%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 70% at 8% 90%,
+      color-mix(in srgb, var(--md-sys-color-tertiary) 20%, transparent),
+      transparent 65%
+    );
+}
+
+/* 点阵层：径向遮罩只让中部显形 */
+.viewer-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent) 1.35px,
+    transparent 1.65px
+  );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(75% 65% at 50% 42%, #000, transparent 78%);
+  mask-image: radial-gradient(75% 65% at 50% 42%, #000, transparent 78%);
 }
 
 .viewer-stage.is-dragging {
@@ -295,6 +345,8 @@ onBeforeUnmount(() => {
 .viewer-layer {
   position: absolute;
   inset: 0;
+  /* 压在光晕与点阵之上 */
+  z-index: 1;
   transform-origin: center;
   will-change: transform;
 }
