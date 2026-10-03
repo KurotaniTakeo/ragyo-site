@@ -10,6 +10,7 @@ import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
 import ResponsiveImage from '@/components/ResponsiveImage.vue'
+import CharacterViewer from '@/components/CharacterViewer.vue'
 import { SHEET_IMAGE } from '@/data/assets'
 import { voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
@@ -81,6 +82,7 @@ const likes = () => tm('character.likes') as string[]
           class="sheet-image"
         />
         <figcaption class="md-label-small">{{ t('character.galleryTitle') }}</figcaption>
+        <CharacterViewer />
       </figure>
     </div>
   </SectionShell>

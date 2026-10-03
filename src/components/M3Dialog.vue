@@ -12,11 +12,16 @@ import { nextTick, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import M3Icon from './M3Icon.vue'
 
-const props = defineProps<{
-  open: boolean
-  /** 无障碍标题 */
-  label: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    open: boolean
+    /** 无障碍标题 */
+    label: string
+    /** 尺寸：default 为窄卡片；full 为近全屏容器（立绘展示器等） */
+    size?: 'default' | 'full'
+  }>(),
+  { size: 'default' },
+)
 
 const emit = defineEmits<{ close: [] }>()
 
@@ -49,6 +54,7 @@ watch(
         <div
           ref="panel"
           class="dialog-surface"
+          :class="`size-${props.size}`"
           role="dialog"
           aria-modal="true"
           :aria-label="label"
@@ -102,6 +108,27 @@ watch(
 
 .dialog-surface:focus {
   outline: none;
+}
+
+/* 近全屏容器：内容自行管理内边距与滚动（立绘展示器） */
+.dialog-surface.size-full {
+  width: min(1120px, 100%);
+  height: min(92dvh, 100%);
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 600px) {
+  .dialog-layer {
+    padding: 8px;
+  }
+
+  .dialog-surface.size-full {
+    max-height: calc(100dvh - 16px);
+  }
 }
 
 .dialog-close {
