@@ -131,6 +131,15 @@ export const images = {
     "height": 2184,
     "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQBACdASoUACsAPu1qrE+ppiQiKrgMATAdiWcAvVgLNrp1lQiH4JN0fEf0kn5/YAD+bcXvBYXaZoAlxt9VkOgnxKaeySbriY0xdQWYFJrebJKHsIK6dE5xcwUNSM+6bTxq2VmkoooAbYAA",
     "note": "背面立绘・单视图（透明底）。"
+  },
+  "character.smile-costume-2-glow": {
+    "src": "/img/generated/character-smile-costume-2-glow-3200.webp",
+    "srcset": "/img/generated/character-smile-costume-2-glow-640.webp 640w, /img/generated/character-smile-costume-2-glow-1024.webp 1024w, /img/generated/character-smile-costume-2-glow-1600.webp 1600w, /img/generated/character-smile-costume-2-glow-2400.webp 2400w, /img/generated/character-smile-costume-2-glow-3200.webp 3200w",
+    "avifSrcset": "/img/generated/character-smile-costume-2-glow-640.avif 640w, /img/generated/character-smile-costume-2-glow-1024.avif 1024w, /img/generated/character-smile-costume-2-glow-1600.avif 1600w, /img/generated/character-smile-costume-2-glow-2400.avif 2400w, /img/generated/character-smile-costume-2-glow-3200.avif 3200w",
+    "width": 3200,
+    "height": 4745,
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQBACdASoUAB4APu1sqk6ppiOiMBgIATAdiWUAwcwQ78R4gXSMfCGzRUwAAP5t1edEY0R2kuYsS4QOa5LqlzYWLaFyZ1OE3YbNYSoF49EdxtYV4QEc387yiu19e2GooGoBlwAA",
+    "note": "公式2・非插兜・闭嘴・发光版本（柔和发光取代硬描边，用于首页主视觉）。"
   }
 } as const satisfies Record<string, GeneratedImage>
 

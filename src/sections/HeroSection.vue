@@ -177,8 +177,8 @@ const { t, locale } = useI18n()
   pointer-events: none;
   background-image: radial-gradient(
     circle at 1px 1px,
-    color-mix(in srgb, var(--md-sys-color-on-surface) 9%, transparent) 1.2px,
-    transparent 1.5px
+    color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent) 1.35px,
+    transparent 1.65px
   );
   background-size: 22px 22px;
   -webkit-mask-image: radial-gradient(75% 65% at 62% 42%, #000, transparent 78%);
@@ -223,7 +223,7 @@ const { t, locale } = useI18n()
   font-size: clamp(180px, 26vw, 420px);
   line-height: 0.8;
   color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
   pointer-events: none;
   user-select: none;
 }
@@ -298,6 +298,11 @@ const { t, locale } = useI18n()
   font-size: 1.65rem;
   line-height: 2.2rem;
   text-wrap: balance;
+  /* CJK 无词间空格，balance 会在任意两字之间断开（如「写下」被拆行）。
+     keep-all 禁止 CJK 字间换行、只保留标点等断点，于是中日文自然断在逗号/顿号后；
+     拉丁文不受影响、仍按空格断行。overflow-wrap 仅在极窄视口兜底防溢出。 */
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 /* 规格表：把一行 facts 拆成多行键值，每行一条发丝分割线。 */
@@ -404,9 +409,8 @@ const { t, locale } = useI18n()
 }
 
 /* 背影立绘的裁剪容器：与主立绘同法从底部硬裁，只留上半身。
-   只裁竖直方向（overflow-y: clip），水平方向放行，让背影能一直铺到视口右缘；
-   否则 2K/4K 下会被立绘列右缘提前切掉、背影几乎不可见。
-   这样 backdrop 的 left:50% 仍以立绘列中心为准。
+   只裁竖直方向（overflow-y: clip），水平方向放行，允许背影越出立绘列右缘；
+   这样 backdrop 的位移不会被列宽提前截断。
    纯装饰（aria-hidden），不进无障碍树，也不参与栅格。 */
 .hero-backdrop-clip {
   position: absolute;
@@ -419,15 +423,20 @@ const { t, locale } = useI18n()
 
 :deep(.hero-backdrop) {
   position: absolute;
-  /* 以主立绘圆心（= 列中心）为基准，用相对自身宽度的位移做固定右移：
-     背影与主立绘都按高度缩放，因此两者的相对几何在各窗口下保持一致。
-     位移越小可见部分越多；这里取头部刚好落在主立绘头部右侧、且在视口内。 */
+  /* 以主立绘圆心（= 列中心）为基准，用相对自身宽度的位移把背影挪到
+     主立绘右后方，呈现「背靠背」的并列关系。
+     两图的角色占画布高度不同（主立绘 ~87%、背面 ~93%），若都取 190%
+     背影角色反而会高约 7%；这里取 165% 让背影角色略小于主立绘，
+     作为后景不与主视觉抢视线。
+     top 取 7% 让两者头顶齐平（背面角色在画布内更靠上）。
+     translate 取 -20% 让背影的背贴住主立绘右肩、轻微重叠，
+     同时整幅背影留在视口内、不贴右缘。 */
   left: 50%;
-  top: 12%;
-  height: 190%;
+  top: 7%;
+  height: 165%;
   width: auto;
   max-width: none;
-  translate: 6% 0;
+  translate: -20% 0;
   object-fit: contain;
   object-position: top center;
   opacity: 0.32;
@@ -550,16 +559,6 @@ const { t, locale } = useI18n()
 
   .hero-tagline {
     max-width: 100%;
-  }
-}
-
-/* 单列（竖屏）时主立绘只占一列，背影若仍按列中心右移会大半跑到视口外；
-   这里改回贴右缘，让背影收在主立绘右侧。 */
-@media (max-width: 860px) and (orientation: portrait) {
-  :deep(.hero-backdrop) {
-    left: auto;
-    right: 0;
-    translate: none;
   }
 }
 
