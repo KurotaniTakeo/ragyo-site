@@ -91,7 +91,7 @@ const steps = (key: string) => tm(key) as unknown as string[]
           {{ t('download.pendingBody') }}
         </p>
         <p v-else class="pending-note md-body-small" data-reveal>
-          <i18n-t keypath="download.feedback">
+          <i18n-t keypath="download.feedback" scope="global">
             <template #author>
               <a class="feedback-link" href="#credits" @click.prevent="onContactAuthor">
                 {{ t('download.feedbackAuthor') }}
