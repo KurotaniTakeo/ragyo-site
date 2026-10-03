@@ -27,7 +27,7 @@
     "download": "下載",
     "changelog": "更新日誌",
     "credits": "製作名單",
-    "surprise": "彩蛋"
+    "surprise": "貼圖"
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 聲庫",
@@ -306,12 +306,14 @@
     }
   },
   "surprise": {
-    "title": "彩蛋",
-    "lead": "從發行包的「Surprise」中隨機展示一個。",
-    "button": "隨機來一個",
+    "title": "貼圖",
+    "lead": "所有貼圖都在這裡，點一個播放。",
     "another": "再來一個",
-    "dialogLabel": "彩蛋動畫",
-    "loading": "載入中…",
+    "all": "全部貼圖",
+    "prev": "上一個",
+    "next": "下一個",
+    "play": "播放",
+    "pause": "暫停",
     "error": "載入失敗，請再試一次。"
   },
   "footer": {

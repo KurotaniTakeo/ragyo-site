@@ -24,7 +24,8 @@ export const sections: SectionDef[] = [
   { id: 'download', icon: 'download' },
   { id: 'changelog', icon: 'history', scrollable: true },
   { id: 'credits', icon: 'favorite', scrollable: true },
-  { id: 'surprise', icon: 'auto_awesome' },
+  // 海报网格可能超出一屏，需要在面板内滚动
+  { id: 'surprise', icon: 'auto_awesome', scrollable: true },
 ]
 
 export type SectionId = (typeof sections)[number]['id']

@@ -27,7 +27,7 @@
     "download": "下载",
     "changelog": "更新日志",
     "credits": "制作名单",
-    "surprise": "彩蛋"
+    "surprise": "表情包"
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 声库",
@@ -306,12 +306,14 @@
     }
   },
   "surprise": {
-    "title": "彩蛋",
-    "lead": "从发行包的「Surprise」中随机展示一个。",
-    "button": "随机来一个",
+    "title": "表情包",
+    "lead": "所有表情包都在这儿，点一个播放。",
     "another": "再来一个",
-    "dialogLabel": "彩蛋动画",
-    "loading": "加载中…",
+    "all": "全部表情包",
+    "prev": "上一个",
+    "next": "下一个",
+    "play": "播放",
+    "pause": "暂停",
     "error": "加载失败，请再试一次。"
   },
   "footer": {

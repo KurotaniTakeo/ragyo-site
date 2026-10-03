@@ -27,7 +27,7 @@
     "download": "Download",
     "changelog": "Changelog",
     "credits": "Credits",
-    "surprise": "Extras"
+    "surprise": "Stickers"
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU Voice Library",
@@ -306,12 +306,14 @@
     }
   },
   "surprise": {
-    "title": "Extras",
-    "lead": "Shows one random clip from the \u201cSurprise\u201d folder bundled with the release.",
-    "button": "Show me a random one",
+    "title": "Stickers",
+    "lead": "All the stickers live here — tap one to play it.",
     "another": "One more",
-    "dialogLabel": "Bonus animation",
-    "loading": "Loading…",
+    "all": "All stickers",
+    "prev": "Previous",
+    "next": "Next",
+    "play": "Play",
+    "pause": "Pause",
     "error": "Could not load. Please try again."
   },
   "footer": {

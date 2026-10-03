@@ -27,7 +27,7 @@
     "download": "ダウンロード",
     "changelog": "更新履歴",
     "credits": "クレジット",
-    "surprise": "おまけ"
+    "surprise": "スタンプ"
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 音源",
@@ -305,12 +305,14 @@
     }
   },
   "surprise": {
-    "title": "おまけ",
-    "lead": "配布ファイルに収録されている「Surprise」から、ランダムで 1 つ表示します。",
-    "button": "ランダムで 1 つ見る",
+    "title": "スタンプ",
+    "lead": "スタンプはここに全部あります。クリックして再生。",
     "another": "もう一度",
-    "dialogLabel": "おまけのアニメーション",
-    "loading": "読み込み中…",
+    "all": "すべてのスタンプ",
+    "prev": "前へ",
+    "next": "次へ",
+    "play": "再生",
+    "pause": "一時停止",
     "error": "読み込めませんでした。もう一度お試しください。"
   },
   "footer": {
