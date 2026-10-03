@@ -9,16 +9,26 @@
  * 条目可选 `crop: { x, y, w, h }`（相对原图的比例）先做局部裁剪，
  * 例如首页主视觉用的「半身像」就是从全身立绘裁出上半身。
  *
- * 用法：pnpm gen:images
+ * 用法：
+ *   pnpm gen:images                 全量：清空输出目录并重写整份 assets.generated.ts
+ *   pnpm gen:images <关键词...>      只处理 key 命中关键词的条目（大小写不敏感，任一命中即可）
+ *   pnpm gen:images --changed       只处理「源图比自身产物新，或产物/生成文件里缺该键」的条目
+ *   pnpm gen:images --changed <关键词...>
+ *                                   先按关键词取候选，再在其中只挑变动的
+ *
+ * 部分生成不会清空输出目录，只删除被选中条目自己的旧产物；assets.generated.ts 采用
+ * 合并写入（保留未处理条目的键），因此可以安全地只重编一张图。
+ *
  * 输出：public/img/generated/*.webp|*.avif、src/data/assets.generated.ts
  */
-import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const ASSETS = join(ROOT, 'assets')
+const TS_FILE = join(ROOT, 'src/data/assets.generated.ts')
 const manifest = JSON.parse(readFileSync(join(ROOT, 'scripts/assets.manifest.json'), 'utf8'))
 const outDir = join(ROOT, manifest.outputDir)
 
@@ -34,18 +44,93 @@ const SURFACE = '#505678'
  */
 const PUBLIC_PREFIX = `/${manifest.outputDir.replace(/^public\/?/, '')}`
 
-rmSync(outDir, { recursive: true, force: true })
-mkdirSync(outDir, { recursive: true })
+/* ----------------------------------------------------------- 命令行解析 */
+
+/** 非选项参数视作 key 关键词过滤；--changed 只挑变动条目 */
+const args = process.argv.slice(2)
+const changedOnly = args.includes('--changed')
+const filters = args.filter((a) => !a.startsWith('-')).map((a) => a.toLowerCase())
+const full = filters.length === 0 && !changedOnly
 
 const slugify = (key) => key.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '')
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-const generated = {}
+/** 只匹配「本条目自身」的产物：<slug>-<数字>.(webp|avif)。
+    不能只用 startsWith(slug)，否则会误伤前缀相同的条目（如 …-costume-1 与 …-costume-1-bust）。 */
+const outputRe = (slug) => new RegExp(`^${escapeRe(slug)}-\\d+\\.(?:webp|avif)$`)
+
+/** 读取现有生成文件里的 images 映射（那段是合法 JSON），用于部分生成时合并保留其它键 */
+const readExistingImages = () => {
+  if (!existsSync(TS_FILE)) return null
+  const text = readFileSync(TS_FILE, 'utf8')
+  const start = text.indexOf('export const images = ')
+  const end = text.indexOf(' as const satisfies Record<string, GeneratedImage>')
+  if (start === -1 || end === -1 || end < start) return null
+  try {
+    return JSON.parse(text.slice(start + 'export const images = '.length, end))
+  } catch {
+    return null
+  }
+}
+
+// 全量才清空输出目录（顺手清掉清单里已删除条目的旧产物）；
+// 部分生成保留其它条目的产物，只在该条目内删除自己的旧档位。
+if (full) {
+  rmSync(outDir, { recursive: true, force: true })
+}
+mkdirSync(outDir, { recursive: true })
+
+const existing = full ? {} : readExistingImages()
+if (!full && existing === null) {
+  throw new Error(
+    '无法解析 src/data/assets.generated.ts，部分生成需要先跑一次全量：pnpm gen:images',
+  )
+}
+
+/* ------------------------------------------------------------- 选取条目 */
+
+let selected = manifest.entries
+if (filters.length) {
+  selected = selected.filter((e) => filters.some((f) => e.key.toLowerCase().includes(f)))
+  if (selected.length === 0) {
+    throw new Error(`没有 key 命中关键词：${filters.join(', ')}`)
+  }
+}
+
+if (changedOnly) {
+  const dirFiles = readdirSync(outDir)
+  selected = selected.filter((entry) => {
+    if (!(entry.key in existing)) return true
+    const files = dirFiles.filter((f) => outputRe(slugify(entry.key)).test(f))
+    if (files.length === 0) return true
+    const newest = Math.max(...files.map((f) => statSync(join(outDir, f)).mtimeMs))
+    return statSync(join(ASSETS, entry.source)).mtimeMs > newest
+  })
+  if (selected.length === 0) {
+    console.log('✔ 没有需要重新生成的条目（全部为最新）。')
+    process.exit(0)
+  }
+}
+
+const scopeNote = full ? '全量' : `部分 ${selected.length}/${manifest.entries.length} 条`
+console.log(`→ ${scopeNote}生成`)
+
+/* --------------------------------------------------------------- 派生 */
+
+const produced = {}
 let totalBytes = 0
 
-for (const entry of manifest.entries) {
+for (const entry of selected) {
   const sourcePath = join(ASSETS, entry.source)
   const meta = await sharp(sourcePath, { limitInputPixels: false }).metadata()
   const slug = slugify(entry.key)
+
+  // 只重编本条目时，先清掉它自己的旧产物，避免改动 widths 后残留旧的档位。
+  if (!full) {
+    for (const f of readdirSync(outDir).filter((f) => outputRe(slug).test(f))) {
+      rmSync(join(outDir, f), { force: true })
+    }
+  }
 
   // 可选裁剪：把比例换算成像素矩形，后续的档位与尺寸都以裁剪后的图像为准。
   const crop = entry.crop
@@ -109,7 +194,7 @@ for (const entry of manifest.entries) {
     .toBuffer()
 
   const largest = variants[variants.length - 1]
-  generated[entry.key] = {
+  produced[entry.key] = {
     src: largest.url,
     srcset: variants.map((v) => `${v.url} ${v.width}w`).join(', '),
     avifSrcset: variants.map((v) => `${v.avifUrl} ${v.width}w`).join(', '),
@@ -121,10 +206,13 @@ for (const entry of manifest.entries) {
 
   const cropNote = crop ? ` [裁 ${crop.width}×${crop.height}]` : ''
   console.log(
-    `✔ ${entry.key.padEnd(24)} ${meta.width}×${meta.height}${cropNote} → ${variants.length} 档 ` +
+    `✔ ${entry.key.padEnd(36)} ${meta.width}×${meta.height}${cropNote} → ${variants.length} 档 ` +
       `(${variants.map((v) => v.width).join('/')}) · webp+avif`,
   )
 }
+
+// 全量直接采用本次结果；部分生成则与现有映射合并（未处理的键原样保留）。
+const generated = full ? produced : { ...existing, ...produced }
 
 const ts = `/* 此文件由 scripts/gen-images.mjs 自动生成，请勿手动编辑。 */
 
@@ -148,7 +236,7 @@ export type ImageKey = keyof typeof images
 `
 
 mkdirSync(join(ROOT, 'src/data'), { recursive: true })
-writeFileSync(join(ROOT, 'src/data/assets.generated.ts'), ts, 'utf8')
+writeFileSync(TS_FILE, ts, 'utf8')
 
-console.log(`\n✔ 派生图像总计 ${(totalBytes / 1048576).toFixed(2)} MB`)
+console.log(`\n✔ ${scopeNote}：本次派生图像 ${(totalBytes / 1048576).toFixed(2)} MB`)
 console.log(`✔ 已写入 ${join(manifest.outputDir)} 与 src/data/assets.generated.ts`)

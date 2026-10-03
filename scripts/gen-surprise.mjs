@@ -10,7 +10,11 @@
  *     否则透明区域会在播放时变成黑块或白块
  *   - 实测 1.62MB → 68KB，约 1/24
  *
- * 用法：pnpm gen:surprise
+ * 用法：pnpm gen:surprise [--gpu]
+ *   --gpu  用 NVIDIA NVENC（h264_nvenc）硬件编码；默认走 CPU（libx264）。
+ *          当瓶颈在滤镜/解码而非编码时（如本项目 500×500 的小 GIF，实测 GPU 反而更慢、
+ *          产物更大），CPU 更合适；--gpu 留给编码确实成为瓶颈的场景。
+ *          检测不到可用 NVENC 时自动回退 libx264（无 N 卡 / 驱动不支持）。
  * 输出：public/surprise/generated/*.mp4、*-poster.webp、src/data/surprise.generated.ts
  */
 import { readdirSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
@@ -30,6 +34,41 @@ const SURFACE = '0x505678'
 const PUBLIC_PREFIX = `/${OUT_REL.replace(/^public\/?/, '')}`
 const MAX_FPS = 30
 const CRF = 26
+
+/** --gpu：改用 NVENC 硬件编码（默认 CPU libx264）。 */
+const useGpu = process.argv.includes('--gpu')
+
+/**
+ * 探测 h264_nvenc 是否真的可用。
+ * 不能只查 `ffmpeg -encoders`：NVENC 编码器在编译进来后即使硬件不支持也会列出
+ * （例如本机 av1_nvenc 会列出但报 "Codec not supported"），因此用一次极小试跑来判定。
+ */
+const hasNvenc = () => {
+  try {
+    execFileSync(
+      'ffmpeg',
+      [
+        '-hide_banner', '-loglevel', 'error',
+        '-f', 'lavfi', '-i', 'color=black:s=320x240:d=0.1',
+        '-c:v', 'h264_nvenc', '-f', 'null', '-',
+      ],
+      { stdio: 'ignore' },
+    )
+    return true
+  } catch {
+    return false
+  }
+}
+
+const gpu = useGpu && hasNvenc()
+if (useGpu && !gpu) {
+  console.warn('⚠ 未检测到可用的 h264_nvenc，回退到 libx264（CPU）。')
+}
+
+/** 视频编码参数：GPU 用 NVENC 恒定质量 VBR，CPU 用 libx264 CRF。 */
+const videoEncoderArgs = gpu
+  ? ['-c:v', 'h264_nvenc', '-preset', 'p5', '-rc', 'vbr', '-cq', String(CRF), '-b:v', '0', '-profile:v', 'high']
+  : ['-c:v', 'libx264', '-profile:v', 'high', '-crf', String(CRF)]
 
 const ff = (args) => {
   try {
@@ -82,9 +121,7 @@ for (const gif of gifs) {
       `color=c=${SURFACE}:s=${stream.width}x${stream.height}[bg];` +
       `[bg][fg]overlay=shortest=1,format=yuv420p[v]`,
     '-map', '[v]',
-    '-c:v', 'libx264',
-    '-profile:v', 'high',
-    '-crf', String(CRF),
+    ...videoEncoderArgs,
     '-r', String(fps),
     '-movflags', '+faststart',
     '-an',
@@ -140,3 +177,4 @@ console.log(
   `\n✔ ${items.length} 个片段：${(gifBytes / 1048576).toFixed(1)}MB → ${(mp4Bytes / 1048576).toFixed(2)}MB ` +
     `(压缩至 ${((mp4Bytes / gifBytes) * 100).toFixed(1)}%)`,
 )
+console.log(`✔ 视频编码器：${gpu ? 'h264_nvenc（GPU）' : 'libx264（CPU）'}`)

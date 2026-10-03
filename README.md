@@ -7,7 +7,7 @@ Vue 3 + Vite + vite-ssg + Tailwind v4 + vue-i18n，TypeScript 严格模式。
 
 - Node.js（开发使用 v26）
 - **pnpm**（仓库含 `pnpm-lock.yaml`，请勿使用 npm / yarn）
-- `ffmpeg` / `ffprobe`（含 H.264 / libx264）——仅 `gen:surprise` 需要
+- `ffmpeg` / `ffprobe`（含 H.264 / libx264）——仅 `gen:surprise` 需要；`--gpu` 另需可用的 `h264_nvenc`（NVIDIA），但小图 GIF 未必更快
 
 ## 常用命令
 
@@ -18,8 +18,8 @@ Vue 3 + Vite + vite-ssg + Tailwind v4 + vue-i18n，TypeScript 严格模式。
 | `pnpm preview` | 本地预览构建产物 |
 | `pnpm typecheck` | `vue-tsc --noEmit`，**唯一的自动化检查**（无 linter / 测试 / CI） |
 | `pnpm gen:palette` | 由种子色重新生成 `src/styles/m3-tokens.css` |
-| `pnpm gen:images` | 派生立绘多档 WebP/AVIF 与 `src/data/assets.generated.ts` |
-| `pnpm gen:surprise` | 将彩蛋 GIF 转码为 MP4/WebP 与 `src/data/surprise.generated.ts` |
+| `pnpm gen:images [<关键词>...] [--changed]` | 派生立绘多档 WebP/AVIF 与 `src/data/assets.generated.ts`；可只重编命中关键词或源图有变动的条目 |
+| `pnpm gen:surprise [--gpu]` | 将彩蛋 GIF 转码为 MP4/WebP 与 `src/data/surprise.generated.ts`；`--gpu` 用 NVENC，但在本项目的 500×500 小 GIF 上实测更慢且更大，一般不必开 |
 
 ## 全新克隆后请先跑生成脚本
 
