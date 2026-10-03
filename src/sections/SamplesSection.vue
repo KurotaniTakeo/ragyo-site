@@ -18,8 +18,7 @@ import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
 import M3Icon from '@/components/M3Icon.vue'
 import AudioSample from '@/components/AudioSample.vue'
-import VideoCard from '@/components/VideoCard.vue'
-import MorePendingCard from '@/components/MorePendingCard.vue'
+import VideoQueue from '@/components/VideoQueue.vue'
 import { bilibiliVideos, samples, samplesPending, youtubeVideos } from '@/data/samples'
 import { sections } from '@/data/sections'
 
@@ -66,24 +65,14 @@ const videoGroups = computed(() => {
         </ul>
       </section>
 
-      <section
+      <VideoQueue
         v-for="(group, i) in videoGroups"
         :key="group.id"
-        class="samples-queue"
+        :title="group.title"
+        :items="group.items"
         data-reveal
         :style="`--reveal-delay: ${(i + 1) * 80}ms`"
-      >
-        <h3 class="col-title md-title-medium">{{ group.title }}</h3>
-
-        <ul class="video-track">
-          <li v-for="video in group.items" :key="video.id" class="video-slide">
-            <VideoCard :video="video" />
-          </li>
-          <li class="video-slide">
-            <MorePendingCard />
-          </li>
-        </ul>
-      </section>
+      />
     </div>
   </SectionShell>
 </template>
@@ -144,39 +133,5 @@ const videoGroups = computed(() => {
   border-radius: var(--md-sys-shape-corner-full);
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
-}
-
-/* 视频队列：横向滚动 + snap，隐藏滚动条（窄屏靠滑动/触控板） */
-.video-track {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 6px;
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.video-track::-webkit-scrollbar {
-  display: none;
-}
-
-.video-slide {
-  flex: 0 0 clamp(200px, 26vw, 260px);
-  scroll-snap-align: start;
-  display: flex;
-}
-
-.video-slide > * {
-  flex: 1;
-  min-width: 0;
-}
-
-@media (max-width: 980px) {
-  .video-slide {
-    flex-basis: min(62vw, 260px);
-  }
 }
 </style>

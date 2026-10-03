@@ -74,6 +74,8 @@
     "views": "{count} views",
     "officialBadge": "Official release",
     "morePending": "More works to come",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right",
     "demoLabel": "Demo song",
     "rawLabel": "Raw sample",
     "emptyTitle": "Samples are being prepared",

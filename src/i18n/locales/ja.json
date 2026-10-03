@@ -74,6 +74,8 @@
     "views": "{count} 回再生",
     "officialBadge": "公式配布",
     "morePending": "追加収録予定",
+    "scrollLeft": "左へスクロール",
+    "scrollRight": "右へスクロール",
     "demoLabel": "デモ曲",
     "rawLabel": "原音サンプル",
     "emptyTitle": "試聴音源を準備中",

@@ -74,6 +74,8 @@
     "views": "{count} 次播放",
     "officialBadge": "官方配布",
     "morePending": "更多稿件待收录",
+    "scrollLeft": "向左滚动",
+    "scrollRight": "向右滚动",
     "demoLabel": "演示曲",
     "rawLabel": "原音样本",
     "emptyTitle": "试听声库即将公开",
