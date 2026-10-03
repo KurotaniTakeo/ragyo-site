@@ -524,21 +524,22 @@ const specs = computed<SpecRow[]>(() => [
   color: var(--md-sys-color-primary);
 }
 
-/* 命中区外扩：单元格的可视盒不含行的纵向内边距，表头同理。
-   用透明伪元素把命中区补到整行 / 表头分隔线，指针落在行间分隔线上时
-   也能命中所在音色列，从而联动高亮。伪元素无背景，只影响命中测试。 */
+/* 命中区外扩：单元格的可视盒既不含行的纵向内边距，也不占列间 8px 空隙。
+   用透明伪元素补上——纵向补到整行 / 表头分隔线，横向各外扩 4px 吃掉
+   邻列间隙的一半，指针落在行间分隔线或列间空隙时也能命中所在音色列。
+   伪元素无背景，只影响命中测试。 */
 .subbank-td::after {
   content: '';
   position: absolute;
   inset-block: -9px;
-  inset-inline: 0;
+  inset-inline: -4px;
 }
 
 .subbank-th.is-tone::after {
   content: '';
   position: absolute;
   inset-block: 0 -7px;
-  inset-inline: 0;
+  inset-inline: -4px;
 }
 
 /* 音色列色带：整列一条连续色带，位置由 --tone-col 按表格栅格算出。
