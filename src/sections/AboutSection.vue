@@ -402,6 +402,7 @@ const specs = computed<SpecRow[]>(() => [
 /* 行：负外边距 + 等量内边距，让高亮块向卡片内边距方向外扩，
    内容栅格宽度不变，与表头列保持对齐 */
 .subbank-tr {
+  position: relative;
   margin-inline: -8px;
   padding: 9px 8px;
   border-radius: var(--md-sys-shape-corner-small);
@@ -413,8 +414,17 @@ const specs = computed<SpecRow[]>(() => [
   background-color: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
 }
 
-.subbank-tr + .subbank-tr {
-  box-shadow: inset 0 1px 0 var(--md-sys-color-outline-variant);
+/* 分行线用伪元素画：不能走 inset box-shadow，否则会跟着行的圆角一起弯。
+   左右各内收 8px，与表头分隔线等宽。 */
+.subbank-tr + .subbank-tr::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background-color: var(--md-sys-color-outline-variant);
+  pointer-events: none;
 }
 
 .subbank-pitch {
