@@ -17,7 +17,7 @@ import type { Localized } from './voicebank'
 
 export interface SocialLink {
   /** 平台名，作为专有名词不参与翻译 */
-  platform: 'X' | 'Bilibili' | 'GitHub'
+  platform: 'X' | 'Bilibili' | 'GitHub' | 'YouTube'
   handle: string
   /** 尚未取得确切地址时为 null，UI 只显示 handle 纯文本，不渲染为链接 */
   url: string | null
@@ -42,6 +42,11 @@ export const credits: Credit[] = [
     links: [
       { platform: 'X', handle: '@Luowei_Roui', url: 'https://x.com/Luowei_Roui' },
       { platform: 'Bilibili', handle: '@羅威', url: 'https://space.bilibili.com/2641540' },
+      {
+        platform: 'YouTube',
+        handle: '@Luowei_Roui',
+        url: 'https://www.youtube.com/@Luowei_Roui/search',
+      },
     ],
   },
   {

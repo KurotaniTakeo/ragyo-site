@@ -31,6 +31,7 @@ const platformIcons: Record<SocialLink['platform'], BrandIconName> = {
   X: 'x',
   Bilibili: 'bilibili',
   GitHub: 'github',
+  YouTube: 'youtube',
 }
 
 const platformIcon = (platform: SocialLink['platform']): BrandIconName => platformIcons[platform]
