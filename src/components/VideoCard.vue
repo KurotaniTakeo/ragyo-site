@@ -1,34 +1,36 @@
 <script setup lang="ts">
 /**
- * Bilibili 稿件卡片。
+ * 视频稿件卡片（Bilibili / YouTube 通用）。
  *
- * 整卡可点、新标签打开；封面自托管，播放数为数据层快照。
+ * 整卡可点、新标签打开；封面自托管，播放数为数据层快照（缺省则不显示）。
  * 官方配布稿用主色描边 + 徽标高亮。
  */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import M3Icon from './M3Icon.vue'
-import type { BilibiliVideo } from '@/data/samples'
+import type { VideoWork } from '@/data/samples'
 
-const props = defineProps<{ video: BilibiliVideo }>()
+const props = defineProps<{ video: VideoWork }>()
 
 const { t, locale } = useI18n()
 
-const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
+const viewCount = computed(() =>
+  props.video.views === undefined ? null : props.video.views.toLocaleString(locale.value),
+)
 </script>
 
 <template>
   <a
     v-ripple
-    class="bili-card md-state-layer"
+    class="video-card md-state-layer"
     :class="{ 'is-official': video.official }"
     :href="video.url"
     target="_blank"
     rel="noopener noreferrer"
   >
-    <span class="bili-thumb">
+    <span class="video-thumb">
       <img
-        class="bili-cover"
+        class="video-cover"
         :src="video.cover"
         alt=""
         loading="lazy"
@@ -36,18 +38,18 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
         width="1920"
         height="1080"
       />
-      <span class="bili-play" aria-hidden="true">
+      <span class="video-play" aria-hidden="true">
         <M3Icon name="play_arrow" :size="26" />
       </span>
-      <span v-if="video.official" class="bili-badge md-label-small">
+      <span v-if="video.official" class="video-badge md-label-small">
         <M3Icon name="verified" :size="14" />
         {{ t('samples.officialBadge') }}
       </span>
     </span>
 
-    <span class="bili-body">
-      <span class="bili-title md-title-small">{{ video.title }}</span>
-      <span class="bili-meta md-label-small">
+    <span class="video-body">
+      <span class="video-title md-title-small">{{ video.title }}</span>
+      <span v-if="viewCount !== null" class="video-meta md-label-small">
         {{ t('samples.views', { count: viewCount }) }}
       </span>
     </span>
@@ -55,9 +57,10 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
 </template>
 
 <style scoped>
-.bili-card {
+.video-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   border-radius: var(--md-sys-shape-corner-large);
   overflow: hidden;
   background-color: var(--md-sys-color-surface-container);
@@ -66,11 +69,11 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
   transition: border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
 }
 
-.bili-card.is-official {
+.video-card.is-official {
   border: 2px solid var(--md-sys-color-primary);
 }
 
-.bili-thumb {
+.video-thumb {
   position: relative;
   display: block;
   aspect-ratio: 16 / 9;
@@ -78,14 +81,14 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
   background-color: var(--md-sys-color-surface-container-highest);
 }
 
-.bili-cover {
+.video-cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* 播放图标：居中叠在封面上 */
-.bili-play {
+.video-play {
   position: absolute;
   inset: 0;
   margin: auto;
@@ -98,7 +101,7 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
   color: #fff;
 }
 
-.bili-badge {
+.video-badge {
   position: absolute;
   top: 8px;
   left: 8px;
@@ -111,14 +114,14 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
   color: var(--md-sys-color-on-primary);
 }
 
-.bili-body {
+.video-body {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 12px 14px 14px;
 }
 
-.bili-title {
+.video-title {
   color: var(--md-sys-color-on-surface);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -126,7 +129,7 @@ const viewCount = computed(() => props.video.views.toLocaleString(locale.value))
   overflow: hidden;
 }
 
-.bili-meta {
+.video-meta {
   color: var(--md-sys-color-on-surface-variant);
   font-variant-numeric: tabular-nums;
 }

@@ -2,24 +2,38 @@
 /**
  * 试听区。
  *
- * 分为两栏：
- *   - Bilibili 已发布稿件：视频卡片（封面 + 标题 + 播放数），官方配布稿高亮
- *   - 在线试听：站内音频试听。音频尚未提供，先渲染「准备中」空态，
- *     数据到位后往 src/data/samples.ts 里加数据即可自动渲染播放列表。
+ * 上下堆叠三个队列：
+ *   1. 在线试听：站内音频试听。音频尚未提供，先渲染「准备中」空态，
+ *      数据到位后往 src/data/samples.ts 里加数据即可自动渲染播放列表。
+ *   2. / 3. Bilibili 与 YouTube 稿件：视频卡片横向滚动，队列末尾附带
+ *      「更多稿件待收录」占位卡。
+ *
+ * 在线试听始终在最上；两个视频平台按语言排序：简中下 Bilibili 优先，
+ * 其余语言 YouTube 优先。
  */
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Card from '@/components/M3Card.vue'
 import M3Icon from '@/components/M3Icon.vue'
 import AudioSample from '@/components/AudioSample.vue'
-import BilibiliCard from '@/components/BilibiliCard.vue'
-import { bilibiliVideos, samples, samplesPending } from '@/data/samples'
+import VideoCard from '@/components/VideoCard.vue'
+import MorePendingCard from '@/components/MorePendingCard.vue'
+import { bilibiliVideos, samples, samplesPending, youtubeVideos } from '@/data/samples'
 import { sections } from '@/data/sections'
 
 defineProps<{ active: boolean }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+const videoGroups = computed(() => {
+  const groups = [
+    { id: 'youtube', title: t('samples.youtubeTitle'), items: youtubeVideos },
+    { id: 'bilibili', title: t('samples.bilibiliTitle'), items: bilibiliVideos },
+  ]
+  return locale.value === 'zh' ? [...groups].reverse() : groups
+})
 </script>
 
 <template>
@@ -31,25 +45,11 @@ const { t } = useI18n()
       :lead="t('samples.lead')"
     />
 
-    <div class="samples-grid">
-      <section class="samples-col">
-        <h3 class="col-title md-title-medium" data-reveal>
-          {{ t('samples.bilibiliTitle') }}
-        </h3>
+    <div class="samples-stack">
+      <section class="samples-queue" data-reveal>
+        <h3 class="col-title md-title-medium">{{ t('samples.onlineTitle') }}</h3>
 
-        <ul class="bili-list">
-          <li v-for="video in bilibiliVideos" :key="video.bvid">
-            <BilibiliCard :video="video" data-reveal />
-          </li>
-        </ul>
-      </section>
-
-      <section class="samples-col">
-        <h3 class="col-title md-title-medium" data-reveal>
-          {{ t('samples.onlineTitle') }}
-        </h3>
-
-        <div v-if="samplesPending" class="empty-wrap" data-reveal>
+        <div v-if="samplesPending" class="empty-wrap">
           <M3Card class="empty-card" padding="lg">
             <span class="empty-icon" aria-hidden="true">
               <M3Icon name="graphic_eq" :size="30" />
@@ -65,22 +65,40 @@ const { t } = useI18n()
           </li>
         </ul>
       </section>
+
+      <section
+        v-for="(group, i) in videoGroups"
+        :key="group.id"
+        class="samples-queue"
+        data-reveal
+        :style="`--reveal-delay: ${(i + 1) * 80}ms`"
+      >
+        <h3 class="col-title md-title-medium">{{ group.title }}</h3>
+
+        <ul class="video-track">
+          <li v-for="video in group.items" :key="video.id" class="video-slide">
+            <VideoCard :video="video" />
+          </li>
+          <li class="video-slide">
+            <MorePendingCard />
+          </li>
+        </ul>
+      </section>
     </div>
   </SectionShell>
 </template>
 
 <style scoped>
-.samples-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(16px, 2.4vw, 32px);
-  align-items: start;
-}
-
-.samples-col {
+.samples-stack {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: clamp(16px, 2.4vh, 26px);
+}
+
+.samples-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -89,17 +107,17 @@ const { t } = useI18n()
   color: var(--md-sys-color-on-surface);
 }
 
-.bili-list {
+/* 在线试听：音频卡片网格 */
+.sample-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 }
 
 .empty-wrap {
-  flex: 1;
   display: grid;
   place-items: center;
 }
@@ -128,18 +146,37 @@ const { t } = useI18n()
   color: var(--md-sys-color-on-primary-container);
 }
 
-.sample-list {
+/* 视频队列：横向滚动 + snap，隐藏滚动条（窄屏靠滑动/触控板） */
+.video-track {
   list-style: none;
   margin: 0;
-  padding: 0;
-  display: grid;
+  padding: 0 0 6px;
+  display: flex;
   gap: 12px;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.video-track::-webkit-scrollbar {
+  display: none;
+}
+
+.video-slide {
+  flex: 0 0 clamp(200px, 26vw, 260px);
+  scroll-snap-align: start;
+  display: flex;
+}
+
+.video-slide > * {
+  flex: 1;
+  min-width: 0;
 }
 
 @media (max-width: 980px) {
-  .samples-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .video-slide {
+    flex-basis: min(62vw, 260px);
   }
 }
 </style>
