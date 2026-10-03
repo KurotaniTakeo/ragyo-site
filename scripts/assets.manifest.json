@@ -46,6 +46,18 @@
       "note": "公式2・非插兜・闭嘴微笑。"
     },
     {
+      "key": "character.smile-costume-2-outline-opaque",
+      "source": "illustration/character/smile-costume-2-outline-opaque.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式2・非插兜・闭嘴・不透明描边版本。"
+    },
+    {
+      "key": "character.smile-costume-2-outline-translucent",
+      "source": "illustration/character/smile-costume-2-outline-translucent.png",
+      "widths": [640, 1024, 1600, 2400, 3200],
+      "note": "公式2・非插兜・闭嘴・半透明描边版本。"
+    },
+    {
       "key": "character.open-mouth-costume-1",
       "source": "illustration/character/open-mouth-costume-1.png",
       "widths": [640, 1024, 1600, 2400, 3200],
@@ -62,6 +74,12 @@
       "source": "illustration/character/front-back.png",
       "widths": [640, 1024, 1600, 1924],
       "note": "设定图・正面与背面双视图・含耳麦与尾巴。"
+    },
+    {
+      "key": "character.back-view",
+      "source": "illustration/character/back-view.png",
+      "widths": [640, 1024],
+      "note": "背面立绘・单视图（透明底）。"
     }
   ]
 }

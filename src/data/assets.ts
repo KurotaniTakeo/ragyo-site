@@ -24,6 +24,9 @@ export const COSTUME_2_IMAGE = 'character.pockets-smile-costume-2' satisfies Ima
 /** 设定图：正面 + 背面双视图 */
 export const SHEET_IMAGE = 'character.front-back' satisfies ImageKey
 
+/** 背面立绘：单视图（透明底） */
+export const BACK_VIEW_IMAGE = 'character.back-view' satisfies ImageKey
+
 /** 角色画廊 */
 export const GALLERY_IMAGES = [
   'character.pockets-smile-costume-1',
@@ -39,6 +42,12 @@ export const VARIANT_IMAGES = [
   'character.smile-costume-2',
   'character.open-mouth-costume-1',
   'character.open-mouth-costume-2',
+] satisfies ImageKey[]
+
+/** 描边变体：公式2 非插兜闭嘴的不透明 / 半透明描边版本 */
+export const OUTLINE_IMAGES = [
+  'character.smile-costume-2-outline-opaque',
+  'character.smile-costume-2-outline-translucent',
 ] satisfies ImageKey[]
 
 export const getImage = (key: ImageKey): GeneratedImage => images[key]
