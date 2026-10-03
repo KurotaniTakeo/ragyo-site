@@ -3,8 +3,11 @@
  * 首屏。
  *
  * 立绘是透明底 PNG，因此可以让它直接立在背景上，不需要卡片或遮罩。
- * 背景自暗色 surface 渐变到下方的 #baaebb，白色的半透明描边立绘
- * 叠在一层半透明的背面立绘之前；左侧文字、右侧人像，窄屏改为上下堆叠。
+ * 结构改为三段式栅格：顶栏（编号 + 品牌）/ 主区（文字 + 立绘）/ 底栏（滚动提示 + 版本）。
+ * 文字块贴主区下缘，与立绘下缘、底栏发丝线形成一条暗含的基准线，收住左上角的空白。
+ *
+ * 背景在原有暗→浅的线性渐变之上，再叠一层静态径向光晕与点阵（伪元素，只绘制一次）；
+ * 超大「羅」水印用描边字压在标题之后，作为纯装饰填缝。全部零新增资源。
  */
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
@@ -12,7 +15,7 @@ import M3Button from '@/components/M3Button.vue'
 import ResponsiveImage from '@/components/ResponsiveImage.vue'
 import M3Icon from '@/components/M3Icon.vue'
 import { HERO_BACKDROP_IMAGE, HERO_IMAGE } from '@/data/assets'
-import { voicebank } from '@/data/voicebank'
+import { pitchRanges, voicebank } from '@/data/voicebank'
 import type { Locale } from '@/i18n'
 
 defineProps<{ active: boolean }>()
@@ -25,6 +28,19 @@ const { t, locale } = useI18n()
 <template>
   <SectionShell id="hero" class="hero-shell" bleed :active="active">
     <div class="hero">
+      <span class="hero-watermark" aria-hidden="true">羅</span>
+
+      <div class="hero-meta" data-reveal>
+        <span class="hero-index md-label-large">
+          <span class="hero-index-num">01</span>
+          <span class="hero-index-sep" aria-hidden="true">/</span>
+          <span class="hero-index-name">{{ t('hero.indexLabel') }}</span>
+        </span>
+        <span class="hero-brand md-label-medium" aria-hidden="true">
+          {{ voicebank.slug.toUpperCase() }} {{ voicebank.type }}
+        </span>
+      </div>
+
       <div class="hero-text">
         <p class="hero-kicker md-label-large" data-reveal>
           <M3Icon name="graphic_eq" :size="16" />
@@ -44,9 +60,24 @@ const { t, locale } = useI18n()
           {{ t('hero.tagline') }}
         </p>
 
-        <p class="hero-facts md-body-medium" data-reveal style="--reveal-delay: 180ms">
-          {{ t('hero.facts') }}
-        </p>
+        <dl class="hero-spec" data-reveal style="--reveal-delay: 180ms">
+          <div class="hero-spec-row">
+            <dt>{{ t('hero.spec.labels.type') }}</dt>
+            <dd>{{ voicebank.type }}</dd>
+          </div>
+          <div class="hero-spec-row">
+            <dt>{{ t('hero.spec.labels.pitches') }}</dt>
+            <dd>{{ pitchRanges.length }}</dd>
+          </div>
+          <div class="hero-spec-row">
+            <dt>{{ t('hero.spec.labels.tones') }}</dt>
+            <dd>{{ voicebank.subbanks.length }}</dd>
+          </div>
+          <div class="hero-spec-row">
+            <dt>{{ t('hero.spec.labels.range') }}</dt>
+            <dd>{{ voicebank.toneRange }}</dd>
+          </div>
+        </dl>
 
         <div class="hero-actions" data-reveal style="--reveal-delay: 240ms">
           <M3Button icon="download" @click="emit('navigate', 'download')">
@@ -56,12 +87,6 @@ const { t, locale } = useI18n()
             {{ t('hero.ctaSecondary') }}
           </M3Button>
         </div>
-
-        <p class="hero-version md-label-medium" data-reveal style="--reveal-delay: 300ms">
-          {{ t('hero.version', { version: voicebank.version }) }}
-          <span class="hero-version-sep" aria-hidden="true">·</span>
-          {{ voicebank.libraryName }}
-        </p>
       </div>
 
       <div class="hero-figure" data-reveal style="--reveal-delay: 80ms">
@@ -84,19 +109,33 @@ const { t, locale } = useI18n()
         </div>
       </div>
 
-      <div class="hero-scroll" aria-hidden="true">
-        <M3Icon name="arrow_upward" :size="18" class="hero-scroll-icon" />
-        <span class="hero-scroll-label md-label-large">{{ t('common.scrollHint') }}</span>
+      <div class="hero-foot" data-reveal style="--reveal-delay: 300ms">
+        <div class="hero-scroll" aria-hidden="true">
+          <M3Icon name="arrow_upward" :size="18" class="hero-scroll-icon" />
+          <span class="hero-scroll-label md-label-large">{{ t('common.scrollHint') }}</span>
+        </div>
+
+        <p class="hero-version md-label-medium">
+          {{ t('hero.version', { version: voicebank.version }) }}
+          <span class="hero-version-sep" aria-hidden="true">·</span>
+          {{ voicebank.libraryName }}
+        </p>
       </div>
     </div>
   </SectionShell>
 </template>
 
 <style scoped>
-/* 背景渐变挂在分屏根节点上（而非 .hero）：
-   .hero 有 1920px 的宽度上限，超宽屏下两侧会露出纯色；挂到分屏则始终铺满。
-   顶部维持暗色 surface，向下过渡到委托人指定的 #baaebb。 */
+/* ------------------------------------------------------------------
+   分屏背景：挂在分屏根节点上（而非 .hero）——.hero 有 1920px 宽度上限，
+   超宽屏下两侧会露出纯色；挂到分屏则始终铺满。
+   顶部维持暗色 surface，向下过渡到委托人指定的 #baaebb。
+
+   contain: paint 让分屏成为独立绘制层：伪元素的负 z-index 因此压在
+   分屏自身背景之上、内容之下，且不会为动画元素逐帧重绘。 */
 .hero-shell {
+  --hero-hairline: color-mix(in srgb, var(--md-sys-color-on-surface) 16%, transparent);
+
   background: linear-gradient(
     180deg,
     var(--md-sys-color-surface) 0%,
@@ -105,8 +144,50 @@ const { t, locale } = useI18n()
     color-mix(in srgb, var(--md-sys-color-surface) 12%, #baaebb) 86%,
     #baaebb 100%
   );
+  isolation: isolate;
+  contain: paint;
 }
 
+/* 静态径向光晕：给纯色渐变加纵深。色调由 token 派生，随调色板重新生成而同步。 */
+.hero-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 80% at 88% 18%,
+      color-mix(in srgb, var(--md-sys-color-primary) 26%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 70% at 8% 92%,
+      color-mix(in srgb, var(--md-sys-color-tertiary) 22%, transparent),
+      transparent 65%
+    );
+}
+
+/* 点阵：一行 radial-gradient 平铺，再用遮罩收成有走向的光斑。 */
+.hero-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--md-sys-color-on-surface) 9%, transparent) 1.2px,
+    transparent 1.5px
+  );
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(75% 65% at 62% 42%, #000, transparent 78%);
+  mask-image: radial-gradient(75% 65% at 62% 42%, #000, transparent 78%);
+}
+
+/* ------------------------------------------------------------------
+   三段式栅格
+------------------------------------------------------------------ */
 .hero {
   position: relative;
   flex: 1;
@@ -122,42 +203,87 @@ const { t, locale } = useI18n()
     clamp(20px, 5vw, 96px)
     0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.55fr);
-  /* 单行占满高度：立绘列拿到确定高度，height:100% 才能真正生效、避免整屏被撑高 */
-  grid-template-rows: minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(12px, 2vw, 40px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'meta figure'
+    'text figure'
+    'foot foot';
+  align-items: end;
+  column-gap: clamp(12px, 2.5vw, 56px);
+  row-gap: clamp(8px, 1.6vh, 20px);
 }
 
-/* 大屏进一步把横向空间倾斜给立绘 */
-@media (min-width: 1400px) {
-  .hero {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.85fr);
-  }
+/* 超大「羅」水印：描边空心字，压在标题之后偏左，把标题与左侧空白缝起来。
+   纯装饰，不参与无障碍树。 */
+.hero-watermark {
+  position: absolute;
+  left: -0.04em;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 0;
+  font-weight: 800;
+  font-size: clamp(180px, 26vw, 420px);
+  line-height: 0.8;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
+  pointer-events: none;
+  user-select: none;
 }
 
-/* 超宽屏再放宽上限，让立绘有机会吃满整屏高度 */
-@media (min-width: 2200px) {
-  .hero {
-    max-width: 2200px;
-  }
+/* 其余内容抬到水印之上 */
+.hero-meta,
+.hero-text,
+.hero-foot,
+.hero-figure {
+  position: relative;
+  z-index: 1;
 }
 
-.hero-text {
+/* ---------------------------------------------------- 顶栏：编号 + 品牌 */
+.hero-meta {
+  grid-area: meta;
   display: flex;
-  flex-direction: column;
-  gap: 18px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
   min-width: 0;
 }
 
-/* 桌面端：文字块在左栏内居中后再整体右移、上移。
-   右移让它更靠近画面中部；上移让它落在整页（含顶栏）中心偏上的位置。
-   窄屏是单列（文字本就要占满宽度），所以只在 ≥861px 生效。 */
-@media (min-width: 861px) {
-  .hero-text {
-    justify-self: center;
-    translate: clamp(40px, 5vw, 96px) -5vh;
-  }
+.hero-index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  letter-spacing: 0.12em;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.hero-index-num {
+  color: var(--md-sys-color-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-index-sep {
+  opacity: 0.5;
+}
+
+.hero-index-name {
+  text-transform: uppercase;
+}
+
+.hero-brand {
+  letter-spacing: 0.2em;
+  color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------ 主区文字块 */
+.hero-text {
+  grid-area: text;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
 }
 
 .hero-kicker {
@@ -179,18 +305,18 @@ const { t, locale } = useI18n()
 }
 
 .hero-name-main {
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   color: var(--md-sys-color-on-surface);
-  /* 比 md-display-large 略大，填补首屏偏空的感觉 */
-  font-size: 3.875rem;
-  line-height: 4.35rem;
+  /* 字阶拉大本身就是最好的填充物，随视口流体缩放。 */
+  font-size: clamp(3rem, 6.5vw, 6.5rem);
+  line-height: 1.08;
 }
 
 .hero-name-reading {
   color: var(--md-sys-color-primary);
   /* 与左侧大字底部对齐：抵消两种字号行盒的内部行距差 */
-  padding-bottom: 2px;
+  padding-bottom: 0.28em;
   font-size: 1.5rem;
   line-height: 1.9rem;
 }
@@ -200,23 +326,61 @@ const { t, locale } = useI18n()
   color: var(--md-sys-color-on-surface);
   /* 首页文案使用衬线体，营造「书写」的质感；正文仍用无衬线体 */
   font-family: var(--app-font-serif);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 1.65rem;
   line-height: 2.2rem;
+  text-wrap: balance;
 }
 
-.hero-facts {
+/* 规格表：把一行 facts 拆成多行键值，每行一条发丝分割线。 */
+.hero-spec {
+  display: grid;
+  margin: 4px 0 0;
+  max-width: min(28rem, 100%);
+  border-top: 1px solid var(--hero-hairline);
+}
+
+.hero-spec-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--hero-hairline);
+}
+
+.hero-spec dt {
   color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.04em;
+  font-size: 0.82rem;
+  line-height: 1.1rem;
+}
+
+.hero-spec dd {
+  margin: 0;
+  text-align: right;
+  color: var(--md-sys-color-on-surface);
   font-variant-numeric: tabular-nums;
-  font-size: 0.95rem;
-  line-height: 1.4rem;
+  font-size: 0.9rem;
+  line-height: 1.1rem;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 6px;
+  margin-top: 4px;
+}
+
+/* ------------------------------------------------------------ 底栏 */
+.hero-foot {
+  grid-area: foot;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: clamp(10px, 1.6vh, 18px);
+  border-top: 1px solid var(--hero-hairline);
 }
 
 .hero-version {
@@ -224,6 +388,7 @@ const { t, locale } = useI18n()
   letter-spacing: 0.04em;
   font-size: 0.82rem;
   line-height: 1.1rem;
+  white-space: nowrap;
 }
 
 .hero-version-sep {
@@ -231,11 +396,45 @@ const { t, locale } = useI18n()
   opacity: 0.6;
 }
 
+/* 滚动提示：从绝对居中的胶囊改为底栏内联，避免与底栏重叠。
+   不再使用 backdrop-filter（全屏分屏上容易触发大范围重绘）。 */
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px 7px 12px;
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--md-sys-color-inverse-on-surface);
+  background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 88%, transparent);
+  letter-spacing: 0.12em;
+}
+
+.hero-scroll-icon {
+  rotate: 180deg;
+  animation: hero-scroll-bounce 1.8s var(--md-sys-motion-easing-standard) infinite;
+}
+
+@keyframes hero-scroll-bounce {
+  0%,
+  100% {
+    translate: 0 -1px;
+    opacity: 0.45;
+  }
+  50% {
+    translate: 0 3px;
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------ 立绘 */
 .hero-figure {
-  position: relative;
+  grid-area: figure;
+  grid-row: 1 / 3;
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  /* 立绘只用绝对定位的子元素绘制，没有流内内容撑高；
+     必须显式 stretch，否则整列塌成 0 高、图片高度随之归零。 */
   align-self: stretch;
   width: 100%;
   min-height: 0;
@@ -306,75 +505,62 @@ const { t, locale } = useI18n()
   background-position: top center;
 }
 
-.hero-scroll {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(16px, 3vh, 28px);
-  translate: -50% 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 18px 8px 14px;
-  border-radius: var(--md-sys-shape-corner-full);
-  /* 用浅色胶囊 + 深色文字（M3 的 inverse 配色）：
-     桌面端落在浅色渐变上、窄屏又常压在深色立绘上，这组配色在两种底色上都清晰 */
-  color: var(--md-sys-color-inverse-on-surface);
-  background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 84%, transparent);
-  backdrop-filter: blur(3px);
-  letter-spacing: 0.12em;
-  z-index: 2;
-}
-
-.hero-scroll-icon {
-  rotate: 180deg;
-  animation: hero-scroll-bounce 1.8s var(--md-sys-motion-easing-standard) infinite;
-}
-
-@keyframes hero-scroll-bounce {
-  0%,
-  100% {
-    translate: 0 -1px;
-    opacity: 0.45;
-  }
-  50% {
-    translate: 0 3px;
-    opacity: 1;
-  }
-}
-
+/* ------------------------------------------------------------------
+   响应式
+------------------------------------------------------------------ */
 @media (max-width: 860px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
+    /* 立绘行的下界写在行轨上（而非 .hero-figure 的 min-height）：
+       否则 1fr 行高不足时，被 min-height 撑大的立绘会溢出到下一行、压住底栏。 */
+    grid-template-rows: auto auto minmax(min(34dvh, 58vw), 1fr) auto;
+    grid-template-areas:
+      'meta'
+      'text'
+      'figure'
+      'foot';
     align-items: start;
-    padding-top: calc(
-      var(--app-bar-height) + var(--app-section-top-gap) + env(safe-area-inset-top, 0px)
-    );
-    gap: 8px;
+    row-gap: 10px;
+  }
+
+  .hero-text {
+    gap: 12px;
+  }
+
+  .hero-spec-row {
+    padding: 6px 0;
+  }
+
+  .hero-figure {
+    grid-row: auto;
+    align-items: flex-end;
+    min-height: 0;
+  }
+
+  .hero-foot {
+    align-self: end;
+  }
+
+  /* 窄屏让出横向空间：水印与品牌字样在单列里只会挤占内容 */
+  .hero-watermark,
+  .hero-brand {
+    display: none;
   }
 
   .hero-name-main {
     font-size: 2.75rem;
-    line-height: 3.25rem;
+    line-height: 3rem;
   }
 
   .hero-tagline {
     max-width: 100%;
-  }
-
-  .hero-figure {
-    justify-content: center;
-    align-items: flex-end;
-    /* 给立绘一个下限：文字行长时也不会把立绘行压到 0；
-       超出部分交给 SectionShell 的面板内滚，而不是裁掉立绘 */
-    min-height: min(40dvh, 64vw);
   }
 }
 
 /* 矮屏（横屏手机 / 小窗口）：压缩文字节奏，把更多高度让给立绘 */
 @media (max-width: 860px) and (max-height: 720px) {
   .hero {
-    gap: 6px;
+    row-gap: 6px;
   }
 
   .hero-text {
@@ -383,24 +569,53 @@ const { t, locale } = useI18n()
 
   .hero-name-main {
     font-size: 2.25rem;
-    line-height: 2.75rem;
+    line-height: 2.5rem;
   }
 
   .hero-actions {
     margin-top: 2px;
   }
+
+  /* 高度实在不够时收起规格表，保证按钮与版本号仍在一屏内 */
+  .hero-spec {
+    display: none;
+  }
 }
 
-/* 横屏手机：单列上下堆叠放不下文字 + 立绘，改为左右并排 */
+/* 横屏手机：单列上下堆叠放不下文字 + 立绘，改为左右并排。
+   高度极紧，这里进一步压缩字阶并收起顶栏编号行，保证文字块不溢出到顶栏之上。 */
 @media (max-width: 860px) and (orientation: landscape) {
   .hero {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    grid-template-rows: minmax(0, 1fr);
-    align-items: center;
-    gap: 16px;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'meta figure'
+      'text figure'
+      'foot foot';
+    align-items: end;
+    column-gap: 16px;
+  }
+
+  .hero-meta {
+    display: none;
+  }
+
+  .hero-text {
+    gap: 6px;
+  }
+
+  .hero-name-main {
+    font-size: 2rem;
+    line-height: 2.25rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.35rem;
+    line-height: 1.8rem;
   }
 
   .hero-figure {
+    grid-row: 1 / 3;
     min-height: 0;
   }
 }

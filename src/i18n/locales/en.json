@@ -31,8 +31,16 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU Voice Library",
+    "indexLabel": "Voicebank",
     "tagline": "Ink-blue, a vision's voice in one stroke.",
-    "facts": "VCV ／ 3 pitches + Soft&Power ／ C2–B4",
+    "spec": {
+      "labels": {
+        "type": "Voice type",
+        "pitches": "Pitches",
+        "tones": "Tones",
+        "range": "Tone range"
+      }
+    },
     "ctaPrimary": "Download",
     "ctaSecondary": "Listen",
     "version": "Version {version}"

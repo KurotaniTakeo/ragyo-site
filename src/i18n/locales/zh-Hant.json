@@ -31,8 +31,16 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 音源",
+    "indexLabel": "聲庫",
     "tagline": "墨色的藍，一筆寫下的憧憬之聲。",
-    "facts": "VCV 連續音 · 3 組音高 + Soft&Power · C2–B4",
+    "spec": {
+      "labels": {
+        "type": "音源類型",
+        "pitches": "錄製音高",
+        "tones": "音色數",
+        "range": "支援音域"
+      }
+    },
     "ctaPrimary": "下載",
     "ctaSecondary": "試聽",
     "version": "版本 {version}"

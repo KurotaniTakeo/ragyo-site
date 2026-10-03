@@ -31,8 +31,16 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU 音源",
+    "indexLabel": "音源",
     "tagline": "墨の青、一筆に綴る憧憬の声。",
-    "facts": "VCV 連続音 ／ 3 音階 + Soft&Power ／ C2–B4",
+    "spec": {
+      "labels": {
+        "type": "音源タイプ",
+        "pitches": "収録音階",
+        "tones": "音色数",
+        "range": "対応音域"
+      }
+    },
     "ctaPrimary": "ダウンロード",
     "ctaSecondary": "試聴する",
     "version": "バージョン {version}"
