@@ -31,7 +31,6 @@
   },
   "hero": {
     "kicker": "UTAU / OpenUTAU Voice Library",
-    "indexLabel": "Voicebank",
     "tagline": "Ink-blue, a vision's voice in one stroke.",
     "spec": {
       "labels": {

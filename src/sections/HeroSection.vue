@@ -3,11 +3,11 @@
  * 首屏。
  *
  * 立绘是透明底 PNG，因此可以让它直接立在背景上，不需要卡片或遮罩。
- * 结构改为三段式栅格：顶栏（编号 + 品牌）/ 主区（文字 + 立绘）/ 底栏（滚动提示 + 版本）。
- * 文字块贴主区下缘，与立绘下缘、底栏发丝线形成一条暗含的基准线，收住左上角的空白。
+ * 左侧文字与右侧立绘并排；立绘拉伸占满内容高度、贴到视口底部，
+ * 文字块贴底并略向画面中部靠拢，底部中央保留原来的滚动提示胶囊。
  *
- * 背景在原有暗→浅的线性渐变之上，再叠一层静态径向光晕与点阵（伪元素，只绘制一次）；
- * 超大「羅」水印用描边字压在标题之后，作为纯装饰填缝。全部零新增资源。
+ * 背景在原有暗→浅的线性渐变之上，再叠静态径向光晕、点阵与一层左下可读性遮罩
+ * （伪元素，只绘制一次）；超大「羅」水印用描边字压在标题之后。全部零新增资源。
  */
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
@@ -29,17 +29,6 @@ const { t, locale } = useI18n()
   <SectionShell id="hero" class="hero-shell" bleed :active="active">
     <div class="hero">
       <span class="hero-watermark" aria-hidden="true">羅</span>
-
-      <div class="hero-meta" data-reveal>
-        <span class="hero-index md-label-large">
-          <span class="hero-index-num">01</span>
-          <span class="hero-index-sep" aria-hidden="true">/</span>
-          <span class="hero-index-name">{{ t('hero.indexLabel') }}</span>
-        </span>
-        <span class="hero-brand md-label-medium" aria-hidden="true">
-          {{ voicebank.slug.toUpperCase() }} {{ voicebank.type }}
-        </span>
-      </div>
 
       <div class="hero-text">
         <p class="hero-kicker md-label-large" data-reveal>
@@ -87,6 +76,12 @@ const { t, locale } = useI18n()
             {{ t('hero.ctaSecondary') }}
           </M3Button>
         </div>
+
+        <p class="hero-version md-label-medium" data-reveal style="--reveal-delay: 300ms">
+          {{ t('hero.version', { version: voicebank.version }) }}
+          <span class="hero-version-sep" aria-hidden="true">·</span>
+          {{ voicebank.libraryName }}
+        </p>
       </div>
 
       <div class="hero-figure" data-reveal style="--reveal-delay: 80ms">
@@ -109,17 +104,9 @@ const { t, locale } = useI18n()
         </div>
       </div>
 
-      <div class="hero-foot" data-reveal style="--reveal-delay: 300ms">
-        <div class="hero-scroll" aria-hidden="true">
-          <M3Icon name="arrow_upward" :size="18" class="hero-scroll-icon" />
-          <span class="hero-scroll-label md-label-large">{{ t('common.scrollHint') }}</span>
-        </div>
-
-        <p class="hero-version md-label-medium">
-          {{ t('hero.version', { version: voicebank.version }) }}
-          <span class="hero-version-sep" aria-hidden="true">·</span>
-          {{ voicebank.libraryName }}
-        </p>
+      <div class="hero-scroll" aria-hidden="true">
+        <M3Icon name="arrow_upward" :size="18" class="hero-scroll-icon" />
+        <span class="hero-scroll-label md-label-large">{{ t('common.scrollHint') }}</span>
       </div>
     </div>
   </SectionShell>
@@ -148,7 +135,11 @@ const { t, locale } = useI18n()
   contain: paint;
 }
 
-/* 静态径向光晕：给纯色渐变加纵深。色调由 token 派生，随调色板重新生成而同步。 */
+/* 静态叠加层。顺序（自上而下）：
+   1. 左下可读性遮罩 —— 文字贴底后正落在渐变的浅色段（#baaebb），
+      用一层由 surface 派生的暗色径向把左下压回去，约 55% 宽度处渐隐，不影响立绘；
+   2. 右上 / 左下两团光晕 —— 给纯色渐变加纵深。
+   色调全部由 token 派生，随调色板重新生成而同步。 */
 .hero-shell::before {
   content: '';
   position: absolute;
@@ -156,6 +147,13 @@ const { t, locale } = useI18n()
   z-index: -2;
   pointer-events: none;
   background:
+    radial-gradient(
+      108% 112% at -16% 100%,
+      color-mix(in srgb, var(--md-sys-color-surface) 94%, transparent) 0%,
+      color-mix(in srgb, var(--md-sys-color-surface) 80%, transparent) 30%,
+      color-mix(in srgb, var(--md-sys-color-surface) 42%, transparent) 50%,
+      transparent 68%
+    ),
     radial-gradient(
       120% 80% at 88% 18%,
       color-mix(in srgb, var(--md-sys-color-primary) 26%, transparent),
@@ -186,7 +184,7 @@ const { t, locale } = useI18n()
 }
 
 /* ------------------------------------------------------------------
-   三段式栅格
+   两栏栅格
 ------------------------------------------------------------------ */
 .hero {
   position: relative;
@@ -204,14 +202,10 @@ const { t, locale } = useI18n()
     0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  grid-template-areas:
-    'meta figure'
-    'text figure'
-    'foot foot';
+  /* 单行占满高度：立绘列拿到确定高度，才能拉伸到视口底部 */
+  grid-template-rows: minmax(0, 1fr);
   align-items: end;
   column-gap: clamp(12px, 2.5vw, 56px);
-  row-gap: clamp(8px, 1.6vh, 20px);
 }
 
 /* 超大「羅」水印：描边空心字，压在标题之后偏左，把标题与左侧空白缝起来。
@@ -231,59 +225,29 @@ const { t, locale } = useI18n()
   user-select: none;
 }
 
-/* 其余内容抬到水印之上 */
-.hero-meta,
 .hero-text,
-.hero-foot,
 .hero-figure {
   position: relative;
   z-index: 1;
 }
 
-/* ---------------------------------------------------- 顶栏：编号 + 品牌 */
-.hero-meta {
-  grid-area: meta;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  min-width: 0;
-}
-
-.hero-index {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-  letter-spacing: 0.12em;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.hero-index-num {
-  color: var(--md-sys-color-tertiary);
-  font-variant-numeric: tabular-nums;
-}
-
-.hero-index-sep {
-  opacity: 0.5;
-}
-
-.hero-index-name {
-  text-transform: uppercase;
-}
-
-.hero-brand {
-  letter-spacing: 0.2em;
-  color: var(--md-sys-color-on-surface-variant);
-  white-space: nowrap;
-}
-
-/* ------------------------------------------------------------ 主区文字块 */
+/* ------------------------------------------------------------ 左侧文字块 */
 .hero-text {
-  grid-area: text;
   display: flex;
   flex-direction: column;
   gap: 16px;
   min-width: 0;
+}
+
+/* 桌面端：整块在中栏内居中后再略微右移，向画面中部靠拢；
+   垂直方向仍由父级 align-items: end 贴底。窄屏单列时取消。 */
+@media (min-width: 861px) {
+  .hero-text {
+    justify-self: center;
+    translate: clamp(8px, 1.2vw, 28px) 0;
+    /* 文字贴底，但给底部留出呼吸空间，避免版本号紧贴视口下缘 */
+    padding-bottom: clamp(36px, 6vh, 64px);
+  }
 }
 
 .hero-kicker {
@@ -350,7 +314,8 @@ const { t, locale } = useI18n()
 }
 
 .hero-spec dt {
-  color: var(--md-sys-color-on-surface-variant);
+  /* 贴底后落在渐变浅色段；用全不透明的 on-surface，实测对比度约 4.7–5.1:1 */
+  color: var(--md-sys-color-on-surface);
   letter-spacing: 0.04em;
   font-size: 0.82rem;
   line-height: 1.1rem;
@@ -372,19 +337,8 @@ const { t, locale } = useI18n()
   margin-top: 4px;
 }
 
-/* ------------------------------------------------------------ 底栏 */
-.hero-foot {
-  grid-area: foot;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: clamp(10px, 1.6vh, 18px);
-  border-top: 1px solid var(--hero-hairline);
-}
-
 .hero-version {
-  color: var(--md-sys-color-on-surface-variant);
+  color: var(--md-sys-color-on-surface);
   letter-spacing: 0.04em;
   font-size: 0.82rem;
   line-height: 1.1rem;
@@ -396,17 +350,24 @@ const { t, locale } = useI18n()
   opacity: 0.6;
 }
 
-/* 滚动提示：从绝对居中的胶囊改为底栏内联，避免与底栏重叠。
-   不再使用 backdrop-filter（全屏分屏上容易触发大范围重绘）。 */
+/* 滚动提示：绝对定位到底部中央（沿用改动前的位置与胶囊样式）。 */
 .hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(16px, 3vh, 28px);
+  translate: -50% 0;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 7px 16px 7px 12px;
+  padding: 8px 18px 8px 14px;
   border-radius: var(--md-sys-shape-corner-full);
+  /* 用浅色胶囊 + 深色文字（M3 的 inverse 配色）：
+     桌面端落在浅色渐变上、窄屏又常压在深色立绘上，这组配色在两种底色上都清晰 */
   color: var(--md-sys-color-inverse-on-surface);
-  background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 88%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 84%, transparent);
+  backdrop-filter: blur(3px);
   letter-spacing: 0.12em;
+  z-index: 2;
 }
 
 .hero-scroll-icon {
@@ -428,8 +389,6 @@ const { t, locale } = useI18n()
 
 /* ------------------------------------------------------------ 立绘 */
 .hero-figure {
-  grid-area: figure;
-  grid-row: 1 / 3;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -512,13 +471,8 @@ const { t, locale } = useI18n()
   .hero {
     grid-template-columns: minmax(0, 1fr);
     /* 立绘行的下界写在行轨上（而非 .hero-figure 的 min-height）：
-       否则 1fr 行高不足时，被 min-height 撑大的立绘会溢出到下一行、压住底栏。 */
-    grid-template-rows: auto auto minmax(min(34dvh, 58vw), 1fr) auto;
-    grid-template-areas:
-      'meta'
-      'text'
-      'figure'
-      'foot';
+       否则 1fr 行高不足时，被 min-height 撑大的立绘会溢出到下一行。 */
+    grid-template-rows: auto minmax(min(34dvh, 58vw), 1fr);
     align-items: start;
     row-gap: 10px;
   }
@@ -532,18 +486,11 @@ const { t, locale } = useI18n()
   }
 
   .hero-figure {
-    grid-row: auto;
     align-items: flex-end;
-    min-height: 0;
   }
 
-  .hero-foot {
-    align-self: end;
-  }
-
-  /* 窄屏让出横向空间：水印与品牌字样在单列里只会挤占内容 */
-  .hero-watermark,
-  .hero-brand {
+  /* 窄屏让出横向空间：水印在单列里只会挤占内容 */
+  .hero-watermark {
     display: none;
   }
 
@@ -583,21 +530,13 @@ const { t, locale } = useI18n()
 }
 
 /* 横屏手机：单列上下堆叠放不下文字 + 立绘，改为左右并排。
-   高度极紧，这里进一步压缩字阶并收起顶栏编号行，保证文字块不溢出到顶栏之上。 */
+   高度极紧，这里进一步压缩字阶，保证文字块放得下。 */
 @media (max-width: 860px) and (orientation: landscape) {
   .hero {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    grid-template-rows: auto minmax(0, 1fr) auto;
-    grid-template-areas:
-      'meta figure'
-      'text figure'
-      'foot foot';
-    align-items: end;
+    grid-template-rows: minmax(0, 1fr);
+    align-items: center;
     column-gap: 16px;
-  }
-
-  .hero-meta {
-    display: none;
   }
 
   .hero-text {
@@ -615,7 +554,6 @@ const { t, locale } = useI18n()
   }
 
   .hero-figure {
-    grid-row: 1 / 3;
     min-height: 0;
   }
 }
