@@ -17,7 +17,7 @@ import type { Localized } from './voicebank'
 
 export interface SocialLink {
   /** 平台名，作为专有名词不参与翻译 */
-  platform: 'X' | 'Bilibili' | 'GitHub' | 'YouTube'
+  platform: 'X' | 'Bilibili' | 'GitHub' | 'YouTube' | 'Facebook'
   handle: string
   /** 尚未取得确切地址时为 null，UI 只显示 handle 纯文本，不渲染为链接 */
   url: string | null
@@ -66,6 +66,11 @@ export const credits: Credit[] = [
     avatar: '/credits/dailing.webp',
     links: [
       { platform: 'Bilibili', handle: '@哒达哒达令', url: 'https://space.bilibili.com/3546701128272307' },
+      {
+        platform: 'Facebook',
+        handle: 'Dailing Inginging',
+        url: 'https://www.facebook.com/people/Dailing-Inginging/pfbid02wjP8puRTLpuRNiqH6fLhUgkX6Fzu4NswBUewUBXV9pzmV27ju1NU74oCKP5N7Dsyl/',
+      },
     ],
   },
   {
