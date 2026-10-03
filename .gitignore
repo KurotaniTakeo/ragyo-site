@@ -15,3 +15,6 @@ public/fonts
 
 # OpenChamber 工作目录（截图等临时产物）
 .openchamber
+
+# 本地备忘（暂不纳入版本控制；需要长期保留时删除本行）
+docs/
