@@ -98,7 +98,11 @@ withDefaults(
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  overscroll-behavior: contain;
+  /* 横向必须放行：移动端外层 .snap-scroller 才是横向整屏翻页容器，而面板本身
+     overflow-x: hidden，横滑在面板上属于 x 轴 overscroll。若这里用 contain，手势
+     不会链式传给外层，屏幕就永远翻不动。纵向保持 contain，余量仍在面板内消化。 */
+  overscroll-behavior-x: auto;
+  overscroll-behavior-y: contain;
   /* 固定预留滚动条槽位，避免不同分屏之间出现横向位移 */
   scrollbar-gutter: stable;
 }
