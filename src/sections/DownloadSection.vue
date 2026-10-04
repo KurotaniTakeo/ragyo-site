@@ -145,7 +145,9 @@ const steps = (key: string) => tm(key) as unknown as string[]
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: clamp(14px, 2vw, 24px);
-  align-items: start;
+  /* 内容比一屏矮时铺满剩余高度 */
+  align-items: stretch;
+  flex: 1 1 auto;
 }
 
 .download-main {
@@ -265,7 +267,7 @@ const steps = (key: string) => tm(key) as unknown as string[]
   translate: 0 2px;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
   .download-grid {
     grid-template-columns: minmax(0, 1fr);
   }

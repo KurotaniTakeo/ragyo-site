@@ -6,8 +6,12 @@ import { onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
  * 分层设计：
  *   1. 基础层为原生 CSS scroll-snap（见 main.css 的 .snap-scroller），
  *      触屏、脚本失效、prefers-reduced-motion 时都能正常工作。
+ *      桌面为纵向吸附；触屏（≤1024px 且 pointer:coarse）为横向吸附，
+ *      竖滑读内容、横滑翻页，两根轴分离，避免嵌套纵向滚动导致的手感问题。
  *   2. 增强层（本 composable）只在桌面鼠标环境接管滚轮：
  *      累积滚轮增量到阈值后翻整屏，并加锁避免一次手势连翻多屏。
+ *      触屏不接管，全部交给原生 scroll-snap；本 composable 只负责按当前轴向
+ *      派生活跃分屏、跳转与深链。
  *
  * 与「内容超过一屏」的 section 共存：
  *   若当前 section 内部的 [data-scrollable] 面板在滚动方向上还有余量，
@@ -34,6 +38,13 @@ const WHEEL_IDLE = 160
 /** 面板刚滚到边界后的冷却：这段时间内不翻页，用来吸收同一手势的惯性余量 */
 const PANEL_EDGE_COOLDOWN = 500
 
+/**
+ * 触屏横向整屏翻页的媒体查询。
+ * 必须与 main.css 里 `.snap-scroller` 横向吸附的媒体查询保持一致：
+ * 触屏且 ≤1024px（手机 + 竖屏/小尺寸平板）。
+ */
+const HORIZONTAL_QUERY = '(max-width: 1024px) and (pointer: coarse)'
+
 export interface FullPageScrollOptions {
   /** 滚动容器（.snap-scroller） */
   scroller: Ref<HTMLElement | null>
@@ -49,6 +60,12 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
 
   let sectionEls: HTMLElement[] = []
   let locked = false
+  /** 触屏横向翻页（main.css 的横向吸附）为 true；桌面纵向滚轮为 false */
+  let horizontal = false
+
+  const isHorizontalAxis = () =>
+    typeof window !== 'undefined' && window.matchMedia(HORIZONTAL_QUERY).matches
+
   let lockTimer = 0
   let wheelAccum = 0
   let wheelIdleTimer = 0
@@ -64,10 +81,15 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
   const querySections = () =>
     Array.from(scroller.value?.querySelectorAll<HTMLElement>('[data-section]') ?? [])
 
+  /** 分屏在滚动容器坐标系里的偏移量（横向翻页取 X，纵向取 Y） */
   const offsetOf = (el: HTMLElement) => {
     const container = scroller.value
-    if (!container) return el.offsetTop
-    return el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+    if (!container) return horizontal ? el.offsetLeft : el.offsetTop
+    const containerRect = container.getBoundingClientRect()
+    const elRect = el.getBoundingClientRect()
+    return horizontal
+      ? elRect.left - containerRect.left + container.scrollLeft
+      : elRect.top - containerRect.top + container.scrollTop
   }
 
   const clamp = (index: number) => Math.max(0, Math.min(sectionEls.length - 1, index))
@@ -79,10 +101,12 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     if (!el || !container) return
 
     const animated = smooth && !reduceMotion
-    container.scrollTo({
-      top: offsetOf(el),
-      behavior: animated ? 'smooth' : 'auto',
-    })
+    const behavior: ScrollBehavior = animated ? 'smooth' : 'auto'
+    if (horizontal) {
+      container.scrollTo({ left: offsetOf(el), top: 0, behavior })
+    } else {
+      container.scrollTo({ top: offsetOf(el), behavior })
+    }
     activeIndex.value = target
     // 平滑滚动期间禁止 syncActiveFromScroll 反推：否则滚动起点会先把 activeIndex
     // 拍回上一屏、再随滚动改回目标，URL 与分屏高亮/入场动画会来回抖动。动画
@@ -135,11 +159,13 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     if (animating) return
     const container = scroller.value
     if (!container || sectionEls.length === 0) return
-    const probe = container.scrollTop + container.clientHeight / 2
+    const probe = horizontal
+      ? container.scrollLeft + container.clientWidth / 2
+      : container.scrollTop + container.clientHeight / 2
     let index = 0
     for (let i = 0; i < sectionEls.length; i += 1) {
-      const top = offsetOf(sectionEls[i])
-      if (top <= probe) index = i
+      const pos = offsetOf(sectionEls[i])
+      if (pos <= probe) index = i
       else break
     }
     activeIndex.value = index
@@ -318,6 +344,7 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     sectionEls = querySections()
     sectionCount.value = sectionEls.length
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    horizontal = isHorizontalAxis()
 
     // 只有精确指针（鼠标）+ 足够宽的视口才接管滚轮。
     // 触屏与窄屏保留原生 scroll-snap，手感更自然。
@@ -348,8 +375,12 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
     window.clearTimeout(animTimer)
   }
 
-  /** 移动端断点变化时重新判定是否接管 */
+  /** 移动端断点变化时重新判定是否接管，以及翻页轴向 */
   function handleResize() {
+    const nextHorizontal = isHorizontalAxis()
+    const axisChanged = nextHorizontal !== horizontal
+    horizontal = nextHorizontal
+
     const coarse = window.matchMedia('(pointer: coarse)').matches
     const shouldHijack =
       !coarse &&
@@ -357,15 +388,20 @@ export function useFullPageScroll({ scroller, suspended }: FullPageScrollOptions
       window.innerWidth > 860 &&
       (scroller.value?.querySelectorAll('[data-section]').length ?? 0) > 1
 
-    if (shouldHijack === hijacking.value) return
-
     const container = scroller.value
     if (!container) return
 
-    if (shouldHijack) container.addEventListener('wheel', onWheel, { passive: false })
-    else container.removeEventListener('wheel', onWheel)
+    if (shouldHijack !== hijacking.value) {
+      if (shouldHijack) container.addEventListener('wheel', onWheel, { passive: false })
+      else container.removeEventListener('wheel', onWheel)
+      hijacking.value = shouldHijack
+    }
 
-    hijacking.value = shouldHijack
+    // 轴向切换（例如手机旋转到桌面宽度）：把当前屏重新对齐到新轴，
+    // 否则 scrollLeft / scrollTop 会停在旧轴上、当前屏错位。
+    if (axisChanged) {
+      goTo(activeIndex.value, false)
+    }
   }
 
   onMounted(() => {

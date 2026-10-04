@@ -84,7 +84,7 @@ const likes = () => tm('character.likes') as string[]
           <ResponsiveImage
             :image-key="SHEET_IMAGE"
             :alt="t('character.alt.sheet')"
-            sizes="(max-width: 860px) 90vw, 520px"
+            sizes="(max-width: 1024px) 90vw, 520px"
             class="sheet-image"
           />
         </div>
@@ -323,9 +323,9 @@ const likes = () => tm('character.likes') as string[]
   gap: 8px;
 }
 
-/* 断点与 AppBar / NavigationRail / SectionShell 对齐（860px），
-   避免 861–980px 区间出现「桌面导轨 + 单列内容」的错配 */
-@media (max-width: 860px) {
+/* 断点与 AppBar / NavigationRail / SectionShell 对齐（窄屏或触屏 ≤1024），
+   避免出现「桌面导轨 + 单列内容」的错配 */
+@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
   .character-grid {
     grid-template-columns: minmax(0, 1fr);
     /* 单列时不再强行撑满一屏：让网格按内容高度排布，
@@ -348,10 +348,14 @@ const likes = () => tm('character.likes') as string[]
 }
 
 /* 矮屏（横屏手机 / 小窗口）：满宽设定图会过高，收回高度上限保证可用 */
-@media (max-width: 860px) and (max-height: 720px) {
+@media (max-width: 860px) and (max-height: 720px),
+  (max-width: 1024px) and (pointer: coarse) and (max-height: 720px) {
   :deep(.sheet-image) {
     width: auto;
     max-height: 48dvh;
+    /* 图片此时不再是满宽，而 <img> 是块级元素、默认靠左；
+       用自动外边距把它在 .character-media 里水平居中。 */
+    margin-inline: auto;
   }
 }
 

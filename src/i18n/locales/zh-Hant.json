@@ -16,7 +16,8 @@
     "loading": "載入中",
     "openInNewTab": "在新分頁開啟",
     "sectionNav": "頁面導覽",
-    "scrollHint": "向下捲動"
+    "scrollHint": "向下捲動",
+    "swipeHint": "左右滑動切換"
   },
   "nav": {
     "hero": "首頁",
@@ -119,6 +120,7 @@
       "facingBack": "背面",
       "backNote": "背面立繪為單視圖，沒有造型、插袋與表情的分別。",
       "hint": "拖曳平移・滾輪縮放・雙擊還原",
+      "hintTouch": "拖曳平移・雙指縮放・下方按鈕還原",
       "zoomIn": "放大",
       "zoomOut": "縮小",
       "reset": "還原視圖",

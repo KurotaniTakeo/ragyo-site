@@ -229,10 +229,32 @@
     flex-direction: column;
   }
 
-  @media (max-width: 860px) {
+  /* 触屏（手机 / 平板）：整屏横向翻页。
+     外层容器沿 X 轴吸附，每个分屏占满一屏宽；纵向滚动完全交给分屏内部
+     的 .section-panel。两根轴各司其职后，竖滑只读内容、横滑只翻页，
+     不再出现「先把长分屏滚到底才能翻页」的别扭手感。
+     限定 pointer: coarse，避免窄桌面窗口（鼠标）失去滚轮纵向翻页；
+     宽度放到 1024 让竖屏平板也用这套移动手感。 */
+  @media (max-width: 1024px) and (pointer: coarse) {
     .snap-scroller {
-      /* 触屏上强制吸附会与惯性滚动冲突，交给浏览器自然处理 */
-      scroll-snap-type: y proximity;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+    }
+
+    /* HomePage 的 <main> 是各分屏的父节点，让它变成横向排列的轨道 */
+    .snap-scroller > main {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+    }
+
+    .snap-section {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100dvh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
   }
 

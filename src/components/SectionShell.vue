@@ -62,7 +62,8 @@ withDefaults(
   padding-bottom: 0;
 }
 
-@media (min-width: 861px) {
+/* 桌面布局（鼠标 + 宽屏）：为左侧导轨让出内边距 */
+@media (min-width: 861px) and (pointer: fine), (min-width: 1025px) {
   .section-body {
     padding-left: var(--app-rail-width);
   }
@@ -72,15 +73,17 @@ withDefaults(
   }
 }
 
-@media (max-width: 860px) {
+/* 移动布局：窄屏，或触屏且 ≤1024px（手机 / 竖屏平板） */
+@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
   .section-body {
-    padding-bottom: var(--app-bottom-nav);
+    padding-bottom: calc(var(--app-bottom-nav) + var(--app-section-bottom-gap));
   }
 
-  /* 通铺分屏（首屏）在窄屏同样要让出底栏高度，
-     否则立绘会被固定的底部导航条压住 */
+  /* 通铺分屏（首屏）：立绘要贴到真正的视口底部（由固定底栏盖住），
+     因此不额外留底部内边距，否则立绘与底栏之间会出现缝隙、显得悬空。
+     （基础规则已是 padding-bottom: 0，这里显式保留即可。） */
   .section-body.is-bleed {
-    padding-bottom: var(--app-bottom-nav);
+    padding-bottom: 0;
   }
 }
 

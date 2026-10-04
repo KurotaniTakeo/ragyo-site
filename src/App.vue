@@ -95,7 +95,10 @@ provideScrollContext({
 })
 
 function onScroll() {
-  scrolled.value = (scroller.value?.scrollTop ?? 0) > 8
+  const el = scroller.value
+  if (!el) return
+  // 桌面纵向翻页看 scrollTop；触屏横向翻页看 scrollLeft
+  scrolled.value = el.scrollTop + el.scrollLeft > 8
 }
 
 // 用 replaceState 而非 pushState：翻页不应污染浏览器历史，

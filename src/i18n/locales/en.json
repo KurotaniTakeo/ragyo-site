@@ -16,7 +16,8 @@
     "loading": "Loading",
     "openInNewTab": "Open in a new tab",
     "sectionNav": "Section navigation",
-    "scrollHint": "Scroll"
+    "scrollHint": "Scroll",
+    "swipeHint": "Swipe left / right"
   },
   "nav": {
     "hero": "Top",
@@ -119,6 +120,7 @@
       "facingBack": "Back",
       "backNote": "The back illustration is a single view and has no outfit, pose or expression variants.",
       "hint": "Drag to pan · scroll to zoom · double-click to reset",
+      "hintTouch": "Drag to pan · pinch to zoom · use the buttons below to reset",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "reset": "Reset view",

@@ -53,7 +53,7 @@ onMounted(() => {
       ref="imgEl"
       v-bind="$attrs"
       class="responsive-image"
-      :class="`fit-${fit}`"
+      :class="[`fit-${fit}`, { 'is-loading': !loaded }]"
       :src="image.src"
       :srcset="image.srcset"
       :sizes="sizes"
@@ -81,6 +81,12 @@ onMounted(() => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+/* LQIP 是 20px 宽的极低清占位图，直接拉伸会是一大块马赛克；
+   加载完成前用模糊把它柔化，加载后（.is-loading 移除）恢复清晰。 */
+.responsive-image.is-loading {
+  filter: blur(20px);
 }
 
 .fit-contain {

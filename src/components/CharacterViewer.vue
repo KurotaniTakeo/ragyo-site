@@ -9,7 +9,7 @@
  * 立绘支持滚轮缩放、拖拽平移与双指捏合（见 usePanZoom）。打开期间挂起
  * 全屏翻页，避免键盘翻页在弹窗背后换屏。
  */
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import M3Button from './M3Button.vue'
 import M3Dialog from './M3Dialog.vue'
@@ -87,6 +87,19 @@ const alt = computed(() =>
         expression: labelOf(expressionOptions.value, expression.value),
       }),
 )
+
+/* -------------------- 操作提示 -------------------- */
+
+// 触屏没有滚轮 / 双击，提示文案要跟着指针类型走。
+// SSG 阶段 matchMedia 不可用，先按桌面文案渲染，挂载后再校正。
+const isCoarsePointer = ref(false)
+const hint = computed(() =>
+  t(isCoarsePointer.value ? 'character.viewer.hintTouch' : 'character.viewer.hint'),
+)
+
+onMounted(() => {
+  isCoarsePointer.value = window.matchMedia('(pointer: coarse)').matches
+})
 
 /* -------------------- 平移 / 缩放 -------------------- */
 
@@ -194,7 +207,7 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="viewer-foot">
-        <span class="viewer-hint md-body-small">{{ t('character.viewer.hint') }}</span>
+        <span class="viewer-hint md-body-small">{{ hint }}</span>
 
         <div class="viewer-zoom">
           <button

@@ -3,25 +3,45 @@
  * 分屏导航。
  *
  * 桌面端是 Material You 的 Navigation rail（左侧竖排，图标 + 文字）；窄屏
- * 自动切换为底部的横向圆点条，避免 9 个图标挤在手机底栏里。
+ * （窄屏或触屏 ≤1024px）改为底部的紧凑栏：只显示「当前分屏 + 菜单」，点开后在弹窗里
+ * 列出全部 9 项。这样底栏不会被 9 个图标挤到溢出屏幕，也不会越出正文。
  *
  * 选中态用每个按钮自带的胶囊（.nav-item::before）表达，不做任何位移动画，
  * 避免切换时抖动。层级固定为：胶囊 0 < 涟漪/状态层 1 < 图标与文字 2。
  *
- * 首屏（activeIndex 0）隐藏整条导航轨，内容不再被导轨挤位；进入第二屏起
- * 导航轨从左侧滑入（桌面端）。
+ * 首屏（activeIndex 0）隐藏整条导轨，内容不再被导轨挤位；进入第二屏起
+ * 导航轨从左侧滑入（桌面端）。移动端紧凑栏常驻。
  */
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import M3Dialog from './M3Dialog.vue'
 import M3Icon from './M3Icon.vue'
+import { useScrollContext } from '@/composables/useScrollContext'
 import { sections } from '@/data/sections'
 
-defineProps<{
+const props = defineProps<{
   activeIndex: number
 }>()
 
 const emit = defineEmits<{ select: [index: number] }>()
 
 const { t } = useI18n()
+const { suspended } = useScrollContext()
+
+const menuOpen = ref(false)
+const currentSection = computed(() => sections[props.activeIndex] ?? sections[0])
+const currentLabel = computed(() => t(`nav.${currentSection.value.id}`))
+const triggerLabel = computed(() => `${t('common.sectionNav')}：${currentLabel.value}`)
+
+// 菜单打开期间挂起整屏翻页，避免键盘方向键在弹窗背后换屏
+watch(menuOpen, (open) => {
+  suspended.value = open
+})
+
+const choose = (index: number) => {
+  emit('select', index)
+  menuOpen.value = false
+}
 </script>
 
 <template>
@@ -54,6 +74,46 @@ const { t } = useI18n()
         :style="{ height: `${((activeIndex + 1) / sections.length) * 100}%` }"
       />
     </div>
+
+    <!-- 移动端（窄屏或触屏 ≤1024px）：当前分屏 + 菜单入口 -->
+    <button
+      v-ripple
+      class="nav-mobile-trigger md-state-layer"
+      type="button"
+      aria-haspopup="dialog"
+      :aria-expanded="menuOpen"
+      :aria-label="triggerLabel"
+      @click="menuOpen = true"
+    >
+      <M3Icon name="menu" :size="22" class="nav-mobile-menu-icon" />
+      <span class="nav-mobile-label md-label-large">{{ currentLabel }}</span>
+      <M3Icon name="expand_less" :size="20" class="nav-mobile-chevron" />
+    </button>
+
+    <M3Dialog :open="menuOpen" :label="t('common.sectionNav')" @close="menuOpen = false">
+      <h2 class="nav-sheet-title md-title-medium">{{ t('common.sectionNav') }}</h2>
+      <ul class="nav-sheet-list">
+        <li v-for="(section, index) in sections" :key="section.id">
+          <button
+            v-ripple
+            class="nav-sheet-item md-state-layer"
+            :class="{ 'is-active': index === activeIndex }"
+            type="button"
+            :aria-current="index === activeIndex ? 'true' : undefined"
+            @click="choose(index)"
+          >
+            <M3Icon :name="section.icon" :size="22" class="nav-sheet-icon" />
+            <span class="nav-sheet-label md-label-large">{{ t(`nav.${section.id}`) }}</span>
+            <M3Icon
+              v-if="index === activeIndex"
+              name="check"
+              :size="20"
+              class="nav-sheet-check"
+            />
+          </button>
+        </li>
+      </ul>
+    </M3Dialog>
   </nav>
 </template>
 
@@ -73,8 +133,8 @@ const { t } = useI18n()
     opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 }
 
-/* 首屏隐藏、第二屏起从左侧滑入（仅桌面端） */
-@media (min-width: 861px) {
+/* 首屏隐藏、第二屏起从左侧滑入（仅桌面端：鼠标 + 宽屏） */
+@media (min-width: 861px) and (pointer: fine), (min-width: 1025px) {
   .section-nav {
     transform: translateX(-110%);
     opacity: 0;
@@ -186,41 +246,106 @@ const { t } = useI18n()
   transition: height var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized);
 }
 
-@media (max-width: 860px) {
+/* 移动端紧凑栏入口：桌面端隐藏 */
+.nav-mobile-trigger {
+  display: none;
+}
+
+/* 分屏菜单（M3Dialog 内）：桌面端用不到，但样式无副作用 */
+.nav-sheet-title {
+  margin: 0 0 8px;
+  padding-right: 44px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.nav-sheet-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-sheet-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: var(--md-sys-shape-corner-full);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.nav-sheet-item.is-active {
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+.nav-sheet-icon,
+.nav-sheet-check {
+  flex: none;
+}
+
+.nav-sheet-check {
+  color: var(--md-sys-color-primary);
+}
+
+.nav-sheet-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
   .section-nav {
     inset: auto 0 0 0;
     width: 100%;
     height: auto;
-    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
     background-color: var(--md-sys-color-surface-container-low);
     box-shadow: inset 0 1px 0 var(--md-sys-color-outline-variant);
-    /* 底部圆点条常驻，不做隐藏/滑入 */
+    /* 紧凑栏常驻，不做隐藏/滑入 */
     transform: none;
     opacity: 1;
+    pointer-events: auto;
   }
 
-  .nav-list {
-    flex-direction: row;
-    justify-content: center;
-    gap: 4px;
-    width: 100%;
-    overflow: visible;
-  }
-
-  .nav-item {
-    width: auto;
-    padding: 8px;
-    border-radius: var(--md-sys-shape-corner-full);
-  }
-
-  .nav-icon-wrap {
-    width: 40px;
-    height: 40px;
-  }
-
-  .nav-label,
+  /* 桌面导轨整体让位给紧凑栏 */
+  .nav-list,
   .nav-progress {
     display: none;
+  }
+
+  .nav-mobile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: var(--md-sys-shape-corner-full);
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .nav-mobile-menu-icon,
+  .nav-mobile-chevron {
+    flex: none;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .nav-mobile-label {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

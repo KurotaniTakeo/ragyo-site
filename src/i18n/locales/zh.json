@@ -16,7 +16,8 @@
     "loading": "加载中",
     "openInNewTab": "在新标签页打开",
     "sectionNav": "页面导航",
-    "scrollHint": "向下滚动"
+    "scrollHint": "向下滚动",
+    "swipeHint": "左右滑动切换"
   },
   "nav": {
     "hero": "首页",
@@ -119,6 +120,7 @@
       "facingBack": "背面",
       "backNote": "背面立绘为单视图，没有造型、插兜与表情的区分。",
       "hint": "拖拽平移・滚轮缩放・双击还原",
+      "hintTouch": "拖动平移・双指缩放・下方按钮还原",
       "zoomIn": "放大",
       "zoomOut": "缩小",
       "reset": "还原视图",

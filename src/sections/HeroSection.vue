@@ -9,6 +9,7 @@
  * 背景在原有暗→浅的线性渐变之上，再叠静态径向光晕、点阵与一层左下可读性遮罩
  * （伪元素，只绘制一次）；超大「羅」水印用描边字压在标题之后。全部零新增资源。
  */
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import M3Button from '@/components/M3Button.vue'
@@ -24,14 +25,33 @@ defineProps<{ active: boolean }>()
 const emit = defineEmits<{ navigate: [sectionId: string] }>()
 
 const { t, locale } = useI18n()
+
+// 触屏且 ≤1024px 时是横向整屏翻页（与 main.css / useFullPageScroll 同一条件），
+// 提示才用「左右滑动」；更宽的触屏（如横屏 iPad）仍是纵向翻页。
+// SSG 阶段 matchMedia 不可用，先按桌面滚轮文案渲染，挂载后再校正；
+// 监听 change 以便旋转/改窗口时同步。
+const HORIZONTAL_PAGING_QUERY = '(max-width: 1024px) and (pointer: coarse)'
+const isHorizontalPaging = ref(false)
+let horizontalPagingMq: MediaQueryList | undefined
+const syncHorizontalPaging = () => {
+  if (horizontalPagingMq) isHorizontalPaging.value = horizontalPagingMq.matches
+}
+onMounted(() => {
+  horizontalPagingMq = window.matchMedia(HORIZONTAL_PAGING_QUERY)
+  syncHorizontalPaging()
+  horizontalPagingMq.addEventListener('change', syncHorizontalPaging)
+})
+onBeforeUnmount(() => horizontalPagingMq?.removeEventListener('change', syncHorizontalPaging))
+const scrollHint = computed(() =>
+  t(isHorizontalPaging.value ? 'common.swipeHint' : 'common.scrollHint'),
+)
 </script>
 
 <template>
   <SectionShell id="hero" class="hero-shell" bleed :active="active">
     <div class="hero">
       <div class="hero-text">
-        <span class="hero-watermark hero-watermark-luo" aria-hidden="true">羅</span>
-        <span class="hero-watermark hero-watermark-xing" aria-hidden="true">行</span>
+        <span class="hero-watermark" aria-hidden="true">羅</span>
 
         <p class="hero-kicker md-label-large" data-reveal>
           <M3Icon name="graphic_eq" :size="16" />
@@ -102,7 +122,7 @@ const { t, locale } = useI18n()
             :image-key="HERO_BACKDROP_IMAGE"
             alt=""
             aria-hidden="true"
-            sizes="(max-width: 860px) 70vw, 36vw"
+            sizes="(max-width: 1024px) 70vw, 36vw"
             class="hero-backdrop"
             draggable="false"
           />
@@ -113,7 +133,7 @@ const { t, locale } = useI18n()
             :image-key="HERO_IMAGE"
             :alt="t('character.alt.outfitB')"
             eager
-            sizes="(max-width: 860px) 120vw, (min-width: 2200px) 1800px, 78vw"
+            sizes="(max-width: 1024px) 120vw, (min-width: 2200px) 1800px, 78vw"
             class="hero-image"
             draggable="false"
           />
@@ -121,8 +141,14 @@ const { t, locale } = useI18n()
       </div>
 
       <div class="hero-scroll" aria-hidden="true">
-        <M3Icon name="arrow_upward" :size="18" class="hero-scroll-icon" />
-        <span class="hero-scroll-label md-label-large">{{ t('common.scrollHint') }}</span>
+        <M3Icon
+          v-if="isHorizontalPaging"
+          name="swap_horiz"
+          :size="18"
+          class="hero-scroll-icon-h"
+        />
+        <M3Icon v-else name="arrow_upward" :size="18" class="hero-scroll-icon" />
+        <span class="hero-scroll-label md-label-large">{{ scrollHint }}</span>
       </div>
     </div>
   </SectionShell>
@@ -234,37 +260,21 @@ const { t, locale } = useI18n()
   column-gap: clamp(12px, 2.5vw, 56px);
 }
 
-/* 超大「羅」「行」水印：描边空心字，位于文字块内、压在文字之下，
-   随文字块一起移动。纯装饰，不进无障碍树。 */
+/* 超大「羅」水印：描边空心字，位于文字块内、压在文字之下。
+   贴在文字块的左上方，只有右下角略微压到标题；随文字块一起移动。纯装饰，不进无障碍树。 */
 .hero-watermark {
   position: absolute;
+  left: -0.16em;
+  top: 0;
+  translate: 0 -62%;
   z-index: -1;
   font-weight: 800;
   font-size: clamp(180px, 26vw, 420px);
   line-height: 0.8;
   color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
   pointer-events: none;
   user-select: none;
-}
-
-/* 「羅」贴在文字块左上方，只有右下角略微压到标题 */
-.hero-watermark-luo {
-  left: -0.16em;
-  top: 0;
-  translate: 0 -62%;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-on-surface) 14%, transparent);
-}
-
-/* 「行」放在文字块右下的空档里：比「羅」小一号并下沉到规格列表之下，
-   整字留在画面内、不与列表行线重叠、也不进入立绘区域。
-   尺寸随视口高度收缩，避免矮屏时被底边截断。
-   描边取自品牌主色 token，随调色板重新生成而同步。 */
-.hero-watermark-xing {
-  right: -0.04em;
-  bottom: 0;
-  translate: 0 60%;
-  font-size: clamp(120px, 16vh, 240px);
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
 }
 
 .hero-text,
@@ -286,7 +296,7 @@ const { t, locale } = useI18n()
 
 /* 桌面端：整块在中栏内居中后再略微右移，向画面中部靠拢；
    垂直方向仍由父级 align-items: end 贴底。窄屏单列时取消。 */
-@media (min-width: 861px) {
+@media (min-width: 861px) and (pointer: fine), (min-width: 1025px) {
   .hero-text {
     justify-self: center;
     translate: clamp(20px, 2.6vw, 56px) 0;
@@ -444,6 +454,23 @@ const { t, locale } = useI18n()
   }
 }
 
+/* 触屏横向翻页：换用左右箭头并做水平往返动画 */
+.hero-scroll-icon-h {
+  animation: hero-scroll-swipe 1.8s var(--md-sys-motion-easing-standard) infinite;
+}
+
+@keyframes hero-scroll-swipe {
+  0%,
+  100% {
+    translate: -3px 0;
+    opacity: 0.45;
+  }
+  50% {
+    translate: 3px 0;
+    opacity: 1;
+  }
+}
+
 /* ------------------------------------------------------------ 立绘 */
 .hero-figure {
   display: flex;
@@ -557,9 +584,9 @@ const { t, locale } = useI18n()
    响应式
 ------------------------------------------------------------------ */
 
-/* 够宽时有空间把「羅」再往左推一点；窄桌面保持较浅的左移，避免贴着视口左缘 */
+/* 够宽时有空间把水印再往左推一点；窄桌面保持较浅的左移，避免贴着视口左缘 */
 @media (min-width: 1101px) {
-  .hero-watermark-luo {
+  .hero-watermark {
     left: -0.26em;
   }
 }
@@ -573,17 +600,17 @@ const { t, locale } = useI18n()
   }
 }
 
-@media (max-width: 860px) {
+/* 移动布局：窄屏，或触屏且 ≤1024px（手机 / 竖屏平板） */
+@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+  /* 立绘不再独占底部一行：改为贴底的绝对图层，从 CTA/版本号一带一直
+     延伸到视口底，人物更大、不再空在文字下方。文字压在它上层。 */
   .hero {
-    grid-template-columns: minmax(0, 1fr);
-    /* 立绘行的下界写在行轨上（而非 .hero-figure 的 min-height）：
-       否则 1fr 行高不足时，被 min-height 撑大的立绘会溢出到下一行。 */
-    grid-template-rows: auto minmax(min(34dvh, 58vw), 1fr);
-    align-items: start;
-    row-gap: 10px;
+    display: block;
   }
 
   .hero-text {
+    position: relative;
+    z-index: 2;
     gap: 12px;
   }
 
@@ -592,7 +619,17 @@ const { t, locale } = useI18n()
   }
 
   .hero-figure {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 52%;
     align-items: flex-end;
+    z-index: 1;
+  }
+
+  /* 首屏在窄屏铺到真正的视口底部，底部胶囊要让开固定底栏，
+     否则会被底栏盖住。 */
+  .hero-scroll {
+    bottom: calc(var(--app-bottom-nav) + 12px);
   }
 
   /* 窄屏让出横向空间：水印在单列里只会挤占内容 */
@@ -611,7 +648,8 @@ const { t, locale } = useI18n()
 }
 
 /* 矮屏（横屏手机 / 小窗口）：压缩文字节奏，把更多高度让给立绘 */
-@media (max-width: 860px) and (max-height: 720px) {
+@media (max-width: 860px) and (max-height: 720px),
+  (max-width: 1024px) and (pointer: coarse) and (max-height: 720px) {
   .hero {
     row-gap: 6px;
   }
@@ -639,6 +677,7 @@ const { t, locale } = useI18n()
    高度极紧，这里进一步压缩字阶，保证文字块放得下。 */
 @media (max-width: 860px) and (orientation: landscape) {
   .hero {
+    display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     grid-template-rows: minmax(0, 1fr);
     align-items: center;
@@ -660,12 +699,16 @@ const { t, locale } = useI18n()
   }
 
   .hero-figure {
+    position: relative;
+    inset: auto;
+    height: auto;
     min-height: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-scroll-icon {
+  .hero-scroll-icon,
+  .hero-scroll-icon-h {
     animation: none;
   }
 }

@@ -116,10 +116,6 @@ watch(
     />
 
     <div class="surprise-stage">
-      <span class="surprise-icon" aria-hidden="true" data-reveal>
-        <M3Icon name="auto_awesome" :size="22" />
-      </span>
-
       <M3Card class="clip-card" padding="none" data-reveal style="--reveal-delay: 60ms">
         <div class="clip-frame">
           <img
@@ -247,16 +243,9 @@ watch(
   flex-direction: column;
   align-items: center;
   gap: 12px;
-}
-
-.surprise-icon {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--md-sys-shape-corner-full);
-  background-color: var(--md-sys-color-primary-container);
-  color: var(--md-sys-color-on-primary-container);
+  /* 内容比一屏矮时铺满剩余高度，避免底部露出背景 */
+  flex: 1 1 auto;
+  justify-content: space-between;
 }
 
 .clip-card {
