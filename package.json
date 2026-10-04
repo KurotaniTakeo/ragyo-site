@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/gen-fonts.mjs",
     "build": "vite-ssg build",
+    "postbuild": "node scripts/check-fonts.mjs",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
+    "check:fonts": "node scripts/check-fonts.mjs",
     "gen:palette": "node scripts/gen-palette.mjs",
     "gen:fonts": "node scripts/gen-fonts.mjs",
     "gen:images": "node scripts/gen-images.mjs",

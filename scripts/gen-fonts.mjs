@@ -11,64 +11,49 @@
  * 校验），缓存于 node_modules/.cache/ragyo-fonts/，缺失或损坏时才联网。子集化用
  * subset-font（HarfBuzz 的 WASM 封装），纯 Node，无需 Python。
  *
- * 码位集合按语言取：正文来自 i18n JSON，跨语言共享的标题 / 人名等来自 src 下的
- * 字符串字面量（经 TypeScript AST 提取，**不含代码注释**），再补 ASCII 与安全标点。
- * en 单独出子集（此前复用 ja，但 en 页字符远少于 ja，独立子集更小）。
+ * 码位集合按语言取（见 scripts/fonts.lib.mjs）：正文来自 i18n JSON，跨语言共享的
+ * 标题 / 人名等来自 src 下的字符串字面量（经 TypeScript AST 提取，**不含代码注释**），
+ * 再补 ASCII 与安全标点。en 单独出子集。
+ *
+ * 产物使用内容哈希文件名（woff2 与 CSS 皆是），并写出 src/data/fonts.generated.ts
+ * 供 App.vue 引用；任何文本或字族变化都会换 URL，长缓存不会命中旧子集。
+ *
+ * 增量：把「码位集合 + 源字体 revision/sha256 + 生成器版本」的指纹写入
+ * public/fonts/.gen-stamp；指纹未变且产物齐全时直接跳过（--refresh 强制重建）。
  *
  * 用法：
- *   pnpm gen:fonts            使用缓存，缺失时下载
- *   pnpm gen:fonts --refresh  强制重新下载完整字体
+ *   pnpm gen:fonts            增量（缓存 + 指纹跳过）
+ *   pnpm gen:fonts --refresh  强制重建并重新下载完整字体
  *   pnpm gen:fonts --offline  只用缓存，缺失即失败（离线/CI 可选）
- * 输出：public/fonts/<locale>.css、public/fonts/files/*.woff2
+ * 输出：public/fonts/files/*.woff2、public/fonts/*.css、src/data/fonts.generated.ts
  */
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, extname, join, resolve } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as fontkit from 'fontkit'
 import subsetFont from 'subset-font'
-import ts from 'typescript'
+import { LOCALES, codePointsByLocale } from './fonts.lib.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const OUT_DIR = join(ROOT, 'public/fonts')
 const FILES_DIR = join(OUT_DIR, 'files')
 const CACHE_DIR = join(ROOT, 'node_modules/.cache/ragyo-fonts')
+const MANIFEST_TS = join(ROOT, 'src/data/fonts.generated.ts')
+// 指纹放缓存目录而非 public/，避免被 Vite 复制进 dist。
+const STAMP = join(CACHE_DIR, 'fonts.gen-stamp')
 const SOURCES = JSON.parse(readFileSync(join(ROOT, 'scripts/fonts.sources.json'), 'utf8'))
+
+/** 改动生成逻辑（会影响输出字节）时递增，使指纹失效 */
+const GENERATOR_VERSION = 1
 
 const args = process.argv.slice(2)
 const refresh = args.includes('--refresh')
 const offline = args.includes('--offline')
 
-/**
- * 每个语言页 → 字族名（与 src/styles/main.css 的 --app-font-* 一致）、源字体文件名、
- * i18n 源文件。en 与 ja 同用日文字族，但码位集合不同，故各出各的子集。
- */
-const LOCALES = {
-  ja: {
-    json: 'ja.json',
-    files: { sans: 'noto-sans-jp.ttf', serif: 'noto-serif-jp.ttf' },
-    families: { sans: 'Noto Sans JP Variable', serif: 'Noto Serif JP Variable' },
-  },
-  zh: {
-    json: 'zh.json',
-    files: { sans: 'noto-sans-sc.ttf', serif: 'noto-serif-sc.ttf' },
-    families: { sans: 'Noto Sans SC Variable', serif: 'Noto Serif SC Variable' },
-  },
-  'zh-Hant': {
-    json: 'zh-Hant.json',
-    files: { sans: 'noto-sans-tc.ttf', serif: 'noto-serif-tc.ttf' },
-    families: { sans: 'Noto Sans TC Variable', serif: 'Noto Serif TC Variable' },
-  },
-  en: {
-    json: 'en.json',
-    files: { sans: 'noto-sans-jp.ttf', serif: 'noto-serif-jp.ttf' },
-    families: { sans: 'Noto Sans JP Variable', serif: 'Noto Serif JP Variable' },
-  },
-}
+const sha256 = (buf) => createHash('sha256').update(buf).digest('hex')
 
 /* ------------------------------------------------------- 完整字体：下载与缓存 */
-
-const sha256 = (buf) => createHash('sha256').update(buf).digest('hex')
 
 /** 取一份完整字体：命中缓存且校验通过就直接用，否则（非离线）下载并校验。 */
 async function resolveSource(entry) {
@@ -98,85 +83,37 @@ async function resolveSource(entry) {
   return buf
 }
 
-/* --------------------------------------------------------- 站点用到的码位集合 */
-
-function walk(dir, out = []) {
-  for (const name of readdirSync(dir)) {
-    const p = join(dir, name)
-    if (statSync(p).isDirectory()) walk(p, out)
-    else out.push(p)
-  }
-  return out
-}
-
-/** 用 TS 解析器抽出字符串字面量 / 模板字面量（自动排除注释与代码结构）。 */
-function stringsFromTs(src) {
-  const sf = ts.createSourceFile('x.ts', src, ts.ScriptTarget.Latest, true)
-  const out = []
-  const visit = (node) => {
-    if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) out.push(node.text)
-    ts.forEachChild(node, visit)
-  }
-  visit(sf)
-  return out
-}
-
-/** JSON 的全部字符串值 */
-function stringsFromJson(src) {
-  const out = []
-  const visit = (v) => {
-    if (typeof v === 'string') out.push(v)
-    else if (Array.isArray(v)) v.forEach(visit)
-    else if (v && typeof v === 'object') Object.values(v).forEach(visit)
-  }
-  visit(JSON.parse(src))
-  return out
-}
-
-/** 运行期拼装/格式化会用到、但正文未必出现的字符（千分位、全角标点等） */
-const SAFETY = [
-  0x00a0, 0x00b7, 0x2014, 0x2018, 0x2019, 0x201c, 0x201d, 0x2026, 0x3000, 0x3001, 0x3002, 0x300a,
-  0x300b, 0x3010, 0x3011, 0x30fb, 0xff01, 0xff08, 0xff09, 0xff0c, 0xff1a, 0xff1b, 0xff1f,
-]
-
-const addText = (set, text) => {
-  for (const ch of text) {
-    const cp = ch.codePointAt(0)
-    if (cp >= 0x20 && cp !== 0x7f) set.add(cp) // 跳过控制字符
-  }
-}
-
-/** 跨语言共享的字符串（data / 组件脚本 / 模板 / index.html；不含 i18n JSON 与注释） */
-function collectInvariant() {
-  const set = new Set()
-  for (const f of walk(join(ROOT, 'src'))) {
-    const ext = extname(f).toLowerCase()
-    const src = readFileSync(f, 'utf8')
-    if (ext === '.ts') stringsFromTs(src).forEach((s) => addText(set, s))
-    else if (ext === '.vue') {
-      const script = src.match(/<script[^>]*>([\s\S]*?)<\/script>/)
-      if (script) stringsFromTs(script[1]).forEach((s) => addText(set, s))
-      const template = src.match(/<template[\s\S]*<\/template>/)
-      if (template) addText(set, template[0])
-    }
-  }
-  addText(set, readFileSync(join(ROOT, 'index.html'), 'utf8'))
-  for (let c = 0x20; c <= 0x7e; c += 1) set.add(c)
-  SAFETY.forEach((c) => set.add(c))
-  return set
-}
-
-const invariant = collectInvariant()
-/** 语言 → 该页需要渲染的全部码位（共享字面量 ∪ 该语言 i18n 正文） */
-const codePointsByLocale = {}
-for (const [locale, cfg] of Object.entries(LOCALES)) {
-  const set = new Set(invariant)
-  const jsonPath = join(ROOT, 'src/i18n/locales', cfg.json)
-  stringsFromJson(readFileSync(jsonPath, 'utf8')).forEach((s) => addText(set, s))
-  codePointsByLocale[locale] = [...set].sort((a, b) => a - b)
-}
-
 /* ------------------------------------------------------------------- 子集化 */
+
+const codePointsByLocaleMap = codePointsByLocale(ROOT)
+const fingerprint = sha256(
+  Buffer.from(
+    JSON.stringify({
+      v: GENERATOR_VERSION,
+      revision: SOURCES.revision,
+      sources: SOURCES.sources.map((s) => s.sha256),
+      codePoints: codePointsByLocaleMap,
+    }),
+  ),
+)
+
+/** 指纹未变且产物齐全时跳过，避免每次 build 重算子集 */
+function upToDate() {
+  if (refresh || !existsSync(STAMP)) return false
+  let stamp
+  try {
+    stamp = JSON.parse(readFileSync(STAMP, 'utf8'))
+  } catch {
+    return false
+  }
+  if (stamp.fingerprint !== fingerprint) return false
+  return Array.isArray(stamp.files) && stamp.files.every((rel) => existsSync(join(ROOT, rel)))
+}
+
+if (upToDate()) {
+  console.log('✔ 字体子集未变化，跳过（--refresh 可强制重建）')
+  process.exit(0)
+}
 
 // 预取各源字体并做覆盖校验，避免子集化后静默缺字（跨语言字形差异允许回退系统字体）。
 const sourceBuf = new Map()
@@ -201,9 +138,10 @@ mkdirSync(FILES_DIR, { recursive: true })
 
 let totalBytes = 0
 const written = []
+const manifest = {}
 
 for (const [locale, cfg] of Object.entries(LOCALES)) {
-  const codePoints = codePointsByLocale[locale]
+  const codePoints = codePointsByLocaleMap[locale]
   const text = String.fromCodePoint(...codePoints)
   const faces = []
   for (const family of ['sans', 'serif']) {
@@ -222,7 +160,8 @@ for (const [locale, cfg] of Object.entries(LOCALES)) {
       targetFormat: 'woff2',
       noHinting: true,
     })
-    const outName = `${locale}-${family}.woff2`
+    const hash = sha256(subset).slice(0, 8)
+    const outName = `${locale}-${family}-${hash}.woff2`
     writeFileSync(join(FILES_DIR, outName), subset)
     totalBytes += subset.length
     written.push([outName, subset.length])
@@ -235,12 +174,31 @@ for (const [locale, cfg] of Object.entries(LOCALES)) {
     '/* 自动生成，请勿手动编辑。由 scripts/gen-fonts.mjs 从完整 Noto CJK 可变字体子集化生成。 */\n' +
     faces.join('\n') +
     '\n'
-  writeFileSync(join(OUT_DIR, `${locale}.css`), css, 'utf8')
+  const cssName = `${locale}-${sha256(Buffer.from(css)).slice(0, 8)}.css`
+  writeFileSync(join(OUT_DIR, cssName), css, 'utf8')
+  manifest[locale] = `/fonts/${cssName}`
   console.log(`✔ ${locale}: ${codePoints.length} 码位（CJK ${codePoints.filter((c) => c >= 0x2e80).length}）`)
 }
 
+// 供 App.vue 引用的哈希化路径清单（与 assets.generated.ts 同为提交入库的派生物）。
+const ts = `/* 此文件由 scripts/gen-fonts.mjs 自动生成，请勿手动编辑。 */
+
+/** 语言 → 该语言页要挂载的字族样式表（路径含内容哈希，可长缓存） */
+export const FONT_STYLESHEET = ${JSON.stringify(manifest, null, 2)} as const
+`
+writeFileSync(MANIFEST_TS, ts, 'utf8')
+
+// 记录本次产物与指纹，供下次增量跳过。
+mkdirSync(CACHE_DIR, { recursive: true })
+const stampFiles = [
+  ...written.map(([name]) => join('public/fonts/files', name)),
+  ...Object.values(manifest).map((p) => join('public', p)),
+  'src/data/fonts.generated.ts',
+]
+writeFileSync(STAMP, JSON.stringify({ fingerprint, files: stampFiles }, null, 2) + '\n', 'utf8')
+
 console.log('')
 for (const [name, size] of written) {
-  console.log(`✔ fonts/files/${name.padEnd(20)} ${(size / 1024).toFixed(0)} KB`)
+  console.log(`✔ fonts/files/${name.padEnd(28)} ${(size / 1024).toFixed(0)} KB`)
 }
-console.log(`\n✔ 已写入 public/fonts：${written.length} 个 woff2，合计 ${(totalBytes / 1048576).toFixed(2)} MB；${Object.keys(LOCALES).length} 份 CSS`)
+console.log(`\n✔ 已写入 public/fonts：${written.length} 个 woff2，合计 ${(totalBytes / 1048576).toFixed(2)} MB；${Object.keys(LOCALES).length} 份 CSS + src/data/fonts.generated.ts`)

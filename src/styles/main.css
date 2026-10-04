@@ -1,10 +1,10 @@
 @import 'tailwindcss';
 
-/* 字体：自托管 + 按 unicode-range 分片，浏览器只下载页面实际用到的码位分片。
-   不使用 Google Fonts CDN —— 站点主要面向中文与日文用户，跨境 CDN 会拖慢首屏。
-   具体字族不在这里一次性引入：6 套 CJK 字体全量声明会让主 CSS 膨胀到 600KB+，
-   而每个语言页只用其中一套。改由 scripts/gen-fonts.mjs 按语言派生出
-   public/fonts/<locale>.css（只含该语言的 sans + serif @font-face），再由
+/* 字体：自托管完整 Noto CJK 可变字体的「按码位子集」，每个语言页只下载自己那份
+   sans + serif（约 0.3–0.6MB），不走 Google Fonts CDN —— 站点主要面向中文与日文
+   用户，跨境 CDN 会拖慢首屏。具体字族不在这里一次性引入：改由 scripts/gen-fonts.mjs
+   按语言子集化生成 public/fonts/<locale>-<hash>.css 与 files/*.woff2（文件名带内容
+   哈希，便于长缓存），路径清单写进 src/data/fonts.generated.ts，再由
    src/styles/fonts.ts + App.vue 的 useHead 只给当前语言页挂它那一份。 */
 
 @import './m3-tokens.css' layer(base);
