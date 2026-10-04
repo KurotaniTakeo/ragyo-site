@@ -120,7 +120,7 @@
       "facingFront": "正面",
       "facingBack": "背面",
       "backNote": "背面立繪為單視圖，沒有造型、插袋與表情的分別。",
-      "hint": "拖曳平移・滾輪縮放・雙擊還原",
+      "hint": "拖曳 / 雙指捲動平移・滾輪 / 捏合縮放・雙擊還原",
       "hintTouch": "拖曳平移・雙指縮放・下方按鈕還原",
       "zoomIn": "放大",
       "zoomOut": "縮小",
@@ -299,7 +299,7 @@
       "takeo": "最終排查修正 · 網頁製作"
     },
     "notes": {
-      "takeo": "倉庫中前端程式碼由 DeepSeek V4.1 Flash 協助製作。"
+      "takeo": "前端程式碼由 DeepSeek V4.1 Flash 輔助編寫。"
     },
     "copyrightNote": "各項著作權歸各自權利人所有。",
     "linkHubsTitle": "官方連結彙整",

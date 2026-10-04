@@ -19,8 +19,10 @@ const props = withDefaults(
     label: string
     /** 尺寸：default 为窄卡片；full 为近全屏容器（立绘展示器等） */
     size?: 'default' | 'full'
+    /** 手机窄屏下渲染为底部抽屉；更宽（平板）时自动回落为居中弹窗 */
+    sheet?: boolean
   }>(),
-  { size: 'default' },
+  { size: 'default', sheet: false },
 )
 
 const emit = defineEmits<{ close: [] }>()
@@ -49,7 +51,7 @@ watch(
 <template>
   <Teleport to="body">
     <Transition name="dialog">
-      <div v-if="open" class="dialog-layer">
+      <div v-if="open" class="dialog-layer" :class="{ 'is-sheet': props.sheet }">
         <div class="scrim" @click="emit('close')" />
         <div
           ref="panel"
@@ -128,6 +130,25 @@ watch(
 
   .dialog-surface.size-full {
     max-height: calc(100dvh - 16px);
+  }
+
+  /* 手机端的抽屉形态：贴底、全宽、仅上圆角。平板（>600px）仍走居中弹窗。 */
+  .dialog-layer.is-sheet {
+    place-items: end center;
+    padding: 0;
+  }
+
+  .dialog-layer.is-sheet .dialog-surface {
+    width: 100%;
+    max-height: min(85dvh, 100%);
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    border-radius: var(--md-sys-shape-corner-extra-large)
+      var(--md-sys-shape-corner-extra-large) 0 0;
+  }
+
+  .dialog-layer.is-sheet.dialog-enter-from .dialog-surface,
+  .dialog-layer.is-sheet.dialog-leave-to .dialog-surface {
+    transform: translateY(100%);
   }
 }
 

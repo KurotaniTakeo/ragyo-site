@@ -115,3 +115,32 @@ export const officialLinkHubs: LinkHub[] = [
   { region: 'mainland', platform: 'vlink', url: 'https://vlink.cc/ragyo' },
   { region: 'overseas', platform: 'Linktree', url: 'https://linktr.ee/Ragyo' },
 ]
+
+/** 主要面向中国大陆的平台 */
+const mainlandPlatforms: ReadonlySet<SocialLink['platform']> = new Set(['Bilibili'])
+
+/**
+ * 按语言重排成员社交链接：简中把大陆平台（Bilibili）排在前面，
+ * 其余语言把非大陆平台排在前面。稳定排序，同类平台保持原有声明顺序。
+ */
+export function orderSocialLinks(links: SocialLink[], locale: string): SocialLink[] {
+  const mainlandFirst = locale === 'zh'
+  return [...links].sort((a, b) => {
+    const rank = (link: SocialLink) => (mainlandPlatforms.has(link.platform) ? 0 : 1)
+    const diff = rank(a) - rank(b)
+    return mainlandFirst ? diff : -diff
+  })
+}
+
+/**
+ * 按语言重排官方链接合集：简中把大陆渠道（vlink）排在前面，
+ * 其余语言把海外渠道（Linktree）排在前面；与下载渠道的排序逻辑一致。
+ */
+export function orderLinkHubs(hubs: LinkHub[], locale: string): LinkHub[] {
+  const mainlandFirst = locale === 'zh'
+  return [...hubs].sort((a, b) => {
+    const rank = (hub: LinkHub) => (hub.region === 'mainland' ? 0 : 1)
+    const diff = rank(a) - rank(b)
+    return mainlandFirst ? diff : -diff
+  })
+}

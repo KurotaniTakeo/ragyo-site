@@ -68,6 +68,13 @@
   }
 }
 
+/* 移动端竖屏：底栏退化为居中小胶囊，预留高度随之收紧（与 NavigationRail 的胶囊尺寸对应） */
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
+  :root {
+    --app-bottom-nav: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* ------------------------------------------------------------------
    状态层：在元素上叠一层当前前景色，实现 hover / focus / pressed
    用法：<button class="md-state-layer">

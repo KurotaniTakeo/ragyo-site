@@ -192,6 +192,13 @@ const onLocaleChange = (event: Event) => {
   .lang-select {
     display: inline-flex;
   }
+
+  /* 移动端竖屏：顶栏与内容之间的 --app-section-top-gap 会露出页面底色 surface，
+     在深色顶栏（surface-container-high）下方形成一条横条。滚动后让顶栏改用与页面
+     相同的 surface，使顶栏、留白、页面连成同一色面；底部 1px 分隔线继续标示顶栏。 */
+  .app-bar.is-scrolled {
+    background-color: var(--md-sys-color-surface);
+  }
 }
 
 @media (max-width: 600px) {

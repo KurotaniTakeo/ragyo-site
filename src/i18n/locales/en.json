@@ -120,7 +120,7 @@
       "facingFront": "Front",
       "facingBack": "Back",
       "backNote": "The back illustration is a single view and has no outfit, pose or expression variants.",
-      "hint": "Drag to pan · scroll to zoom · double-click to reset",
+      "hint": "Drag / two-finger scroll to pan · wheel / pinch to zoom · double-click to reset",
       "hintTouch": "Drag to pan · pinch to zoom · use the buttons below to reset",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
@@ -299,7 +299,7 @@
       "takeo": "Final QA & web development"
     },
     "notes": {
-      "takeo": "The front-end code in the repository was produced with assistance from DeepSeek V4.1 Flash."
+      "takeo": "Front-end code developed with assistance from DeepSeek V4.1 Flash."
     },
     "copyrightNote": "Copyright for each work belongs to its respective holder.",
     "linkHubsTitle": "Official link hub",

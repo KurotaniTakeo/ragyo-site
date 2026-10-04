@@ -94,10 +94,10 @@ export function orderMirrors(list: Mirror[], locale: string): Mirror[] {
 
 export const downloadMeta = {
   version: '1.0.1',
-  /** 打包日期，待提供 */
-  packagedAt: null as string | null,
-  /** 压缩包体积，待提供 */
-  size: null as string | null,
+  /** 打包日期（与更新日志中 1.0.1 的日期保持一致） */
+  packagedAt: '2026.10.01' as string | null,
+  /** 压缩包体积 */
+  size: '459.47 MB' as string | null,
   /** 链接失效反馈入口（X / 邮箱），待提供 */
   feedbackUrl: null as string | null,
 } as const

@@ -90,7 +90,12 @@ const choose = (index: number) => {
       <M3Icon name="expand_less" :size="20" class="nav-mobile-chevron" />
     </button>
 
-    <M3Dialog :open="menuOpen" :label="t('common.sectionNav')" @close="menuOpen = false">
+    <M3Dialog
+      :open="menuOpen"
+      :label="t('common.sectionNav')"
+      sheet
+      @close="menuOpen = false"
+    >
       <h2 class="nav-sheet-title md-title-medium">{{ t('common.sectionNav') }}</h2>
       <ul class="nav-sheet-list">
         <li v-for="(section, index) in sections" :key="section.id">
@@ -304,20 +309,21 @@ const choose = (index: number) => {
 }
 
 @media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
+  /* 底栏退化为一个居中的小胶囊：去掉整条底栏的底色与分隔线 */
   .section-nav {
     inset: auto 0 0 0;
     width: 100%;
     height: auto;
-    padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px));
-    background-color: var(--md-sys-color-surface-container-low);
-    box-shadow: inset 0 1px 0 var(--md-sys-color-outline-variant);
-    /* 紧凑栏常驻，不做隐藏/滑入 */
+    padding: 6px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    background-color: transparent;
+    box-shadow: none;
+    /* 胶囊常驻，不做隐藏/滑入 */
     transform: none;
     opacity: 1;
     pointer-events: auto;
   }
 
-  /* 桌面导轨整体让位给紧凑栏 */
+  /* 桌面导轨整体让位给胶囊 */
   .nav-list,
   .nav-progress {
     display: none;
@@ -326,13 +332,18 @@ const choose = (index: number) => {
   .nav-mobile-trigger {
     display: flex;
     align-items: center;
-    gap: 10px;
-    width: 100%;
-    min-height: 48px;
-    padding: 0 16px;
+    justify-content: center;
+    gap: 8px;
+    /* 不再铺满整条底栏，只按内容宽度居中成胶囊 */
+    width: auto;
+    max-width: min(100%, 320px);
+    min-height: 40px;
+    margin-inline: auto;
+    padding: 0 14px 0 12px;
     border-radius: var(--md-sys-shape-corner-full);
     background-color: var(--md-sys-color-surface-container-high);
     color: var(--md-sys-color-on-surface);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.28);
   }
 
   .nav-mobile-menu-icon,
@@ -342,7 +353,8 @@ const choose = (index: number) => {
   }
 
   .nav-mobile-label {
-    flex: 1;
+    /* 内容宽度自适应的胶囊：标签按文字宽度收缩，超长再省略 */
+    flex: 0 1 auto;
     min-width: 0;
     text-align: left;
     overflow: hidden;

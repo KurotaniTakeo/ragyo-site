@@ -6,7 +6,14 @@
  * 因此没有校验值、断点续传等信息，改为版本号 + 打包日期。
  * 链接未提供前，DownloadCard 会渲染为「准备中」而不是死链。
  */
-import { computed } from 'vue'
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  ref,
+  watch,
+  type ComponentPublicInstance,
+} from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -27,7 +34,44 @@ import { useScrollContext } from '@/composables/useScrollContext'
 defineProps<{ active: boolean }>()
 
 const { t, tm, locale } = useI18n()
-const { goToId, requestHighlight } = useScrollContext()
+const { goToId, requestHighlight, highlightRequest } = useScrollContext()
+
+/* ------------------------------------------------------------ 高亮 */
+
+/** 从角色页「下载立绘」跳来时，短暂强调立绘下载卡片；时长与 CSS 动画总时长一致 */
+const HIGHLIGHT_DURATION = 1800
+
+const illustrationHighlighted = ref(false)
+const illustrationCard = ref<ComponentPublicInstance | null>(null)
+let highlightTimer = 0
+
+watch(
+  () => highlightRequest.value,
+  (request) => {
+    if (!request || request.section !== 'download' || request.target !== 'illustration') return
+    illustrationHighlighted.value = true
+    window.clearTimeout(highlightTimer)
+    highlightTimer = window.setTimeout(() => {
+      illustrationHighlighted.value = false
+    }, HIGHLIGHT_DURATION)
+
+    // 立绘卡片常位于分屏下方：只滚动分屏内部面板把它带进视野，
+    // 不去动外层 .snap-scroller 的整屏吸附，避免两套滚动打架。
+    nextTick(() => {
+      const el = illustrationCard.value?.$el as HTMLElement | undefined
+      const panel = el?.closest<HTMLElement>('[data-scrollable]')
+      if (!el || !panel) return
+      const panelRect = panel.getBoundingClientRect()
+      const elRect = el.getBoundingClientRect()
+      panel.scrollTo({
+        top: panel.scrollTop + (elRect.top - panelRect.top) - 16,
+        behavior: 'smooth',
+      })
+    })
+  },
+)
+
+onBeforeUnmount(() => window.clearTimeout(highlightTimer))
 
 /** 按当前语言重排渠道：中文下 Google Drive 沉底 */
 const orderedMirrors = computed(() => orderMirrors(mirrors, locale.value))
@@ -109,6 +153,9 @@ const steps = (key: string) => tm(key) as unknown as string[]
         </h3>
 
         <DownloadCard
+          ref="illustrationCard"
+          class="illustration-card"
+          :class="{ 'is-highlighted': illustrationHighlighted }"
           :mirrors="orderedIllustrationMirrors"
           :is-chinese="locale === 'zh'"
           data-reveal
@@ -193,6 +240,29 @@ const steps = (key: string) => tm(key) as unknown as string[]
 .pending-note {
   margin: 0;
   color: var(--md-sys-color-outline);
+}
+
+/* 「下载立绘」跳转后的强调：主题色加粗边框脉冲两下（与制作名单的高亮一致） */
+.illustration-card.is-highlighted {
+  animation: illustration-highlight 900ms var(--md-sys-motion-easing-emphasized) 2;
+}
+
+@keyframes illustration-highlight {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    box-shadow: 0 0 0 3px var(--md-sys-color-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .illustration-card.is-highlighted {
+    animation: none;
+    box-shadow: 0 0 0 3px var(--md-sys-color-primary);
+  }
 }
 
 /* 「联系作者」：跳转到制作名单的正文内链接 */

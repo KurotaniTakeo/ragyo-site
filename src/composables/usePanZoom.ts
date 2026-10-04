@@ -158,9 +158,47 @@ export function usePanZoom(target: Ref<HTMLElement | null>, options: PanZoomOpti
     syncGesture()
   }
 
+  /** 一次滚动手势的类型；空闲后重置，避免同一手势忽而平移忽而缩放 */
+  let wheelGesture: 'mouse' | 'trackpad' | null = null
+  let wheelGestureTimer = 0
+
+  /**
+   * 判断 wheel 更可能来自鼠标滚轮还是触控板。
+   * 鼠标滚轮是离散整步进（Chromium 约 100px；行模式则 deltaMode=1），且一般无横向分量；
+   * 触控板双指滚动常带横向分量，或步进细小、非整数。判定不完美，只在手势开始时决策一次。
+   */
+  function classifyWheel(event: WheelEvent): 'mouse' | 'trackpad' {
+    if (event.deltaMode !== 0) return 'mouse'
+    if (event.deltaX !== 0) return 'trackpad'
+    if (Number.isInteger(event.deltaY) && Math.abs(event.deltaY) >= 40) return 'mouse'
+    return 'trackpad'
+  }
+
   function onWheel(event: WheelEvent) {
     event.preventDefault()
-    // 指数映射：不同设备的 deltaY 量级差异很大，用指数更跟手
+
+    // 触控板捏合会被浏览器合成为 ctrl+wheel；Ctrl/⌘+滚轮同样强制缩放
+    if (event.ctrlKey || event.metaKey) {
+      // 指数映射：不同设备的 deltaY 量级差异很大，用指数更跟手
+      zoomAt(scale.value * Math.exp(-event.deltaY * 0.0015), event.clientX, event.clientY)
+      return
+    }
+
+    if (wheelGesture === null) wheelGesture = classifyWheel(event)
+    window.clearTimeout(wheelGestureTimer)
+    wheelGestureTimer = window.setTimeout(() => {
+      wheelGesture = null
+    }, 160)
+
+    // 触控板双指：平移（与内容自然滚动同向），并约束回放大余量内
+    if (wheelGesture === 'trackpad') {
+      x.value -= event.deltaX
+      y.value -= event.deltaY
+      constrain()
+      return
+    }
+
+    // 鼠标滚轮：缩放
     zoomAt(scale.value * Math.exp(-event.deltaY * 0.0015), event.clientX, event.clientY)
   }
 
@@ -175,6 +213,8 @@ export function usePanZoom(target: Ref<HTMLElement | null>, options: PanZoomOpti
 
   function detach() {
     if (!attached) return
+    window.clearTimeout(wheelGestureTimer)
+    wheelGesture = null
     attached.removeEventListener('wheel', onWheel)
     attached.removeEventListener('pointerdown', onPointerDown)
     attached.removeEventListener('pointermove', onPointerMove)

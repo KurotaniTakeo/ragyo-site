@@ -6,7 +6,7 @@
  * 只有「担当什么」的描述走 i18n。
  * 没有确切网址的账号只显示 handle 纯文本，不渲染成假链接。
  */
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
@@ -15,7 +15,14 @@ import M3Icon from '@/components/M3Icon.vue'
 import M3Button from '@/components/M3Button.vue'
 import BrandIcon from '@/components/BrandIcon.vue'
 import type { BrandIconName } from '@/components/brandIcons'
-import { credits, officialLinkHubs, authorCreditKey, type SocialLink } from '@/data/credits'
+import {
+  credits,
+  officialLinkHubs,
+  orderLinkHubs,
+  orderSocialLinks,
+  authorCreditKey,
+  type SocialLink,
+} from '@/data/credits'
 import { voicebank } from '@/data/voicebank'
 import { sections } from '@/data/sections'
 import { useScrollContext } from '@/composables/useScrollContext'
@@ -25,6 +32,12 @@ defineProps<{ active: boolean }>()
 
 const { t, te, locale } = useI18n()
 const { highlightRequest } = useScrollContext()
+
+/** 社交链接与官方合集按当前语言重排（简中大陆优先，其余语言海外优先） */
+const orderedCredits = computed(() =>
+  credits.map((credit) => ({ ...credit, links: orderSocialLinks(credit.links, locale.value) })),
+)
+const orderedLinkHubs = computed(() => orderLinkHubs(officialLinkHubs, locale.value))
 
 /** 平台 → 品牌图标 */
 const platformIcons: Record<SocialLink['platform'], BrandIconName> = {
@@ -71,7 +84,7 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
 
     <ul class="credit-list">
       <li
-        v-for="(credit, index) in credits"
+        v-for="(credit, index) in orderedCredits"
         :key="credit.key"
         :class="{ 'is-highlighted': highlightedKey === credit.key }"
       >
@@ -145,7 +158,7 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
           {{ t('credits.linkHubsTitle') }}
         </p>
         <ul class="credits-links" aria-labelledby="credits-links-title">
-          <li v-for="hub in officialLinkHubs" :key="hub.region" class="credits-link-item">
+          <li v-for="hub in orderedLinkHubs" :key="hub.region" class="credits-link-item">
             <M3Button
               variant="outlined"
               icon="open_in_new"

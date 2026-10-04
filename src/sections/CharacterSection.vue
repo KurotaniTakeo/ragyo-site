@@ -20,10 +20,16 @@ import { sections } from '@/data/sections'
 defineProps<{ active: boolean }>()
 
 const { t, tm } = useI18n()
-const { goToId } = useScrollContext()
+const { goToId, requestHighlight } = useScrollContext()
 
 const designNotes = () => tm('character.designNotes') as string[]
 const likes = () => tm('character.likes') as string[]
+
+/** 跳到下载区并高亮「立绘」那一组下载卡片 */
+const goToIllustrationDownload = () => {
+  goToId('download')
+  requestHighlight('download', 'illustration')
+}
 </script>
 
 <template>
@@ -91,7 +97,7 @@ const likes = () => tm('character.likes') as string[]
         <figcaption class="md-label-small">{{ t('character.galleryTitle') }}</figcaption>
         <div class="character-actions">
           <CharacterViewer />
-          <M3Button variant="tonal" icon="download" @click="goToId('download')">
+          <M3Button variant="tonal" icon="download" @click="goToIllustrationDownload">
             {{ t('character.downloadIllust') }}
           </M3Button>
         </div>

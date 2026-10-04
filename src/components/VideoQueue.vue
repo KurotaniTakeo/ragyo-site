@@ -119,7 +119,10 @@ onBeforeUnmount(() => observer?.disconnect())
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  overscroll-behavior-x: contain;
+  /* 横向放行：移动端竖屏的整屏翻页也走 x 轴。用 contain 会把手势截在队列里，
+     队列滑到末尾后再横滑也无法翻页；改为 auto 让手势链式传给外层 .section-panel
+     与 .snap-scroller（与 SectionShell 的 overscroll-behavior-x: auto 配套）。 */
+  overscroll-behavior-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
 }
