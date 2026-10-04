@@ -3,16 +3,20 @@
  * 分屏导航。
  *
  * 桌面端是 Material You 的 Navigation rail（左侧竖排，图标 + 文字）；窄屏
- * （窄屏或触屏竖屏）改为底部的紧凑栏：只显示「当前分屏 + 菜单」，点开后在弹窗里
+ * （窄屏或触屏竖屏）改为底部的胶囊：只显示「当前分屏 + 菜单」，点开后在面板里
  * 列出全部 9 项。这样底栏不会被 9 个图标挤到溢出屏幕，也不会越出正文。
  *
- * 选中态用每个按钮自带的胶囊（.nav-item::before）表达，不做任何位移动画，
- * 避免切换时抖动。层级固定为：胶囊 0 < 涟漪/状态层 1 < 图标与文字 2。
+ * 首屏（activeIndex 0）隐藏导航：桌面导轨从左缘滑入/收折，移动端胶囊向底边
+ * （手机）或所在角（平板）收折。胶囊宽度随当前分屏名变化并做过渡。
  *
- * 首屏（activeIndex 0）隐藏整条导轨，内容不再被导轨挤位；进入第二屏起
- * 导航轨从左侧滑入（桌面端）。移动端紧凑栏常驻。
+ * 呈现方式按视口选择（见 placement）：
+ *   - 手机竖屏（≤600px）：底部抽屉，可下拉收回；
+ *   - 平板竖屏（coarse + portrait，>600px）：胶囊收在右下角，目录从该角向上展开；
+ *   - 其余（含窄桌面窗口）：居中弹窗。
+ *
+ * 选中态用每个按钮自带的胶囊（.nav-item::before）表达，不做位移动画，避免切换抖动。
  */
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import M3Dialog from './M3Dialog.vue'
 import M3Icon from './M3Icon.vue'
@@ -42,12 +46,90 @@ const choose = (index: number) => {
   emit('select', index)
   menuOpen.value = false
 }
+
+/* ------------------------------------------------------------ 视口判定 */
+
+const NARROW_QUERY = '(max-width: 600px)'
+const COARSE_QUERY = '(pointer: coarse)'
+
+const isNarrow = ref(false)
+const isCoarse = ref(false)
+
+let narrowMq: MediaQueryList | undefined
+let coarseMq: MediaQueryList | undefined
+
+const syncViewport = () => {
+  isNarrow.value = narrowMq?.matches ?? false
+  isCoarse.value = coarseMq?.matches ?? false
+}
+
+onMounted(() => {
+  narrowMq = window.matchMedia(NARROW_QUERY)
+  coarseMq = window.matchMedia(COARSE_QUERY)
+  syncViewport()
+  narrowMq.addEventListener('change', syncViewport)
+  coarseMq.addEventListener('change', syncViewport)
+})
+
+onBeforeUnmount(() => {
+  narrowMq?.removeEventListener('change', syncViewport)
+  coarseMq?.removeEventListener('change', syncViewport)
+})
+
+/** 手机抽屉 / 平板角落菜单 / 居中弹窗 */
+const placement = computed<'center' | 'sheet' | 'corner'>(() => {
+  if (isNarrow.value) return 'sheet'
+  if (isCoarse.value) return 'corner'
+  return 'center'
+})
+
+/** 首屏不显示导航 */
+const showPill = computed(() => props.activeIndex > 0)
+
+/** 平板角落菜单打开时，把胶囊抬到遮罩之上，让背景模糊不覆盖它 */
+const cornerMenuOpen = computed(() => menuOpen.value && placement.value === 'corner')
+
+/* -------------------------------------------------------- 胶囊宽度过渡 */
+
+const triggerEl = ref<HTMLElement | null>(null)
+const reduceMotion = ref(false)
+let widthTimer = 0
+
+onMounted(() => {
+  reduceMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+})
+
+// 宽度不能用 CSS 在 auto↔auto 间过渡：量好新文本的自然宽度后，
+// 显式从旧宽过渡到新宽，结束后再交还给 auto（以便换语言 / 字体加载后自适应）。
+watch(currentLabel, async () => {
+  const el = triggerEl.value
+  if (!el || reduceMotion.value) return
+  const from = el.getBoundingClientRect().width
+  if (!from) return
+  el.style.width = `${from}px`
+  await nextTick()
+  el.style.width = 'auto'
+  const to = el.getBoundingClientRect().width
+  if (Math.abs(to - from) < 1) {
+    el.style.width = ''
+    return
+  }
+  el.style.width = `${from}px`
+  void el.offsetWidth
+  el.style.width = `${to}px`
+  window.clearTimeout(widthTimer)
+  widthTimer = window.setTimeout(() => {
+    el.style.width = ''
+  }, 320)
+})
+
+onBeforeUnmount(() => window.clearTimeout(widthTimer))
 </script>
 
 <template>
   <nav
     class="section-nav"
-    :class="{ 'is-visible': activeIndex > 0 }"
+    :class="{ 'is-visible': showPill, 'is-menu-open': cornerMenuOpen }"
     :aria-label="t('common.sectionNav')"
   >
     <ul class="nav-list">
@@ -77,13 +159,14 @@ const choose = (index: number) => {
 
     <!-- 移动端（窄屏或触屏竖屏）：当前分屏 + 菜单入口 -->
     <button
+      ref="triggerEl"
       v-ripple
       class="nav-mobile-trigger md-state-layer"
       type="button"
       aria-haspopup="dialog"
       :aria-expanded="menuOpen"
       :aria-label="triggerLabel"
-      @click="menuOpen = true"
+      @click="menuOpen = !menuOpen"
     >
       <M3Icon name="menu" :size="22" class="nav-mobile-menu-icon" />
       <span class="nav-mobile-label md-label-large">{{ currentLabel }}</span>
@@ -93,7 +176,7 @@ const choose = (index: number) => {
     <M3Dialog
       :open="menuOpen"
       :label="t('common.sectionNav')"
-      sheet
+      :placement="placement"
       @close="menuOpen = false"
     >
       <h2 class="nav-sheet-title md-title-medium">{{ t('common.sectionNav') }}</h2>
@@ -314,13 +397,20 @@ const choose = (index: number) => {
     inset: auto 0 0 0;
     width: 100%;
     height: auto;
-    padding: 6px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    padding: 6px 12px calc(var(--app-float-y) + env(safe-area-inset-bottom, 0px));
     background-color: transparent;
     box-shadow: none;
-    /* 胶囊常驻，不做隐藏/滑入 */
     transform: none;
     opacity: 1;
     pointer-events: auto;
+    transform-origin: bottom center;
+  }
+
+  /* 首屏（未进入第二屏）向底边收折隐藏；进入第二屏起展开 */
+  .section-nav:not(.is-visible) {
+    transform: translateY(140%) scale(0.85);
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* 桌面导轨整体让位给胶囊 */
@@ -344,6 +434,8 @@ const choose = (index: number) => {
     background-color: var(--md-sys-color-surface-container-high);
     color: var(--md-sys-color-on-surface);
     box-shadow: 0 2px 10px rgb(0 0 0 / 0.28);
+    /* 宽度随当前分屏名变化做过渡（显式设宽由脚本负责） */
+    transition: width var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
   }
 
   .nav-mobile-menu-icon,
@@ -353,20 +445,44 @@ const choose = (index: number) => {
   }
 
   .nav-mobile-label {
-    /* 内容宽度自适应的胶囊：标签按文字宽度收缩，超长再省略 */
+    /* 内容宽度自适应的胶囊：不出现省略号；宽度伸展时文字自然裁切，不做淡入淡出或遮罩 */
     flex: 0 1 auto;
     min-width: 0;
-    text-align: left;
+    text-align: center;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+  }
+}
+
+/* 平板竖屏：胶囊收在右下角，目录也从该角向上展开 */
+@media (pointer: coarse) and (orientation: portrait) and (min-width: 601px) {
+  .section-nav {
+    justify-content: flex-end;
+    padding-right: max(var(--app-float-x), env(safe-area-inset-right, 0px));
+    padding-left: 16px;
+    transform-origin: bottom right;
+  }
+
+  .section-nav:not(.is-visible) {
+    transform: translate(55%, 130%) scale(0.85);
+  }
+
+  .nav-mobile-trigger {
+    margin-inline: 0;
+    margin-left: auto;
+  }
+
+  /* 目录打开时抬到遮罩（z-index 1100）之上，使背景模糊不覆盖胶囊 */
+  .section-nav.is-menu-open {
+    z-index: 1200;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .section-nav,
   .nav-item::before,
-  .nav-progress-bar {
+  .nav-progress-bar,
+  .nav-mobile-trigger {
     transition: none;
   }
 }

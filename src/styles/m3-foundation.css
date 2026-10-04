@@ -59,6 +59,10 @@
   --app-section-top-gap: clamp(16px, 2.5vh, 28px);
   /* 窄屏内容与底部固定导航之间的呼吸空间：只让出 --app-bottom-nav 会贴边 */
   --app-section-bottom-gap: 16px;
+  /* 浮动元素（首屏滑动提示、移动端导航胶囊）与页面边缘的统一间距；两者共用，
+     保证位置同步。--app-float-x 仅用于贴右的元素。 */
+  --app-float-x: clamp(16px, 5vw, 24px);
+  --app-float-y: clamp(16px, 3vh, 28px);
 }
 
 /* 矮屏（如 1366×768 / 1440×900 的窗口）压缩垂直节奏，尽量让整屏内容无需滚动 */
@@ -68,10 +72,11 @@
   }
 }
 
-/* 移动端竖屏：底栏退化为居中小胶囊，预留高度随之收紧（与 NavigationRail 的胶囊尺寸对应） */
+/* 移动端竖屏：底栏退化为居中小胶囊。预留高度 = 胶囊底部间距（与首屏提示同步）
+   + 胶囊高度 40px + 安全区，避免内容滚到底被胶囊遮挡。 */
 @media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
   :root {
-    --app-bottom-nav: calc(56px + env(safe-area-inset-bottom, 0px));
+    --app-bottom-nav: calc(var(--app-float-y) + 40px + env(safe-area-inset-bottom, 0px));
   }
 }
 

@@ -422,7 +422,7 @@ const scrollHint = computed(() =>
 .hero-scroll {
   position: absolute;
   left: 50%;
-  bottom: clamp(16px, 3vh, 28px);
+  bottom: var(--app-float-y);
   translate: -50% 0;
   display: inline-flex;
   align-items: center;
@@ -645,10 +645,13 @@ const scrollHint = computed(() =>
     mask-image: none;
   }
 
-  /* 首屏在窄屏铺到真正的视口底部，底部胶囊要让开固定底栏，
-     否则会被底栏盖住。 */
+  /* 滑动提示移到右下角（首屏不显示导航胶囊，不会与其冲突）；
+     右下间距与导航胶囊共用 --app-float-x / --app-float-y，保证对齐 */
   .hero-scroll {
-    bottom: calc(var(--app-bottom-nav) + 12px);
+    left: auto;
+    right: var(--app-float-x);
+    bottom: calc(var(--app-float-y) + env(safe-area-inset-bottom, 0px));
+    translate: none;
   }
 
   /* 窄屏让出横向空间：水印在单列里只会挤占内容 */
@@ -687,6 +690,16 @@ const scrollHint = computed(() =>
 @media (pointer: coarse) and (orientation: portrait) and (min-height: 1000px) {
   .hero-figure {
     height: 68%;
+  }
+}
+
+/* 较矮的竖屏（如 iPhone 16 的 852px）：完整规格表会把「下载/试听」按钮压到
+   立绘上。此高度起收起规格表，保证按钮与版本号不遮挡人物（规格见 About 区）。
+   只动规格表，不连带 720px 那块的紧凑字阶。 */
+@media (max-width: 860px) and (max-height: 900px),
+  (pointer: coarse) and (orientation: portrait) and (max-height: 900px) {
+  .hero-spec {
+    display: none;
   }
 }
 
