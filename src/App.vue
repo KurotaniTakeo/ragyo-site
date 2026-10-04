@@ -16,6 +16,7 @@ import AppBar from '@/components/AppBar.vue'
 import NavigationRail from '@/components/NavigationRail.vue'
 import SnackbarHost from '@/components/SnackbarHost.vue'
 import { useFullPageScroll } from '@/composables/useFullPageScroll'
+import { useIcpVisibility } from '@/composables/useIcpVisibility'
 import {
   provideScrollContext,
   type HighlightRequest,
@@ -75,7 +76,13 @@ const goToId = (id: string) => {
 
 /* --------------------------------------------------------- ICP 备案信息 */
 
-// 显示规则：移动端 / 平板竖屏只在首屏展示；电脑端横屏所有页面常驻左下角。
+// 显示规则：
+//   - 首页（第一屏）无条件显示；
+//   - 移动端 / 平板竖屏的非首页一律隐藏；
+//   - 其余（电脑端横屏）按实际几何遮挡动态决定（见 useIcpVisibility）。
+const icpRef = ref<HTMLElement | null>(null)
+const { covered: icpCovered } = useIcpVisibility({ activeIndex, icpRef, locale })
+
 const isPortraitMobile = ref(false)
 let portraitMq: MediaQueryList | undefined
 
@@ -83,7 +90,11 @@ const syncIcpViewport = () => {
   isPortraitMobile.value = portraitMq?.matches ?? false
 }
 
-const showIcp = computed(() => !isPortraitMobile.value || activeIndex.value === 0)
+const showIcp = computed(() => {
+  if (activeIndex.value === 0) return true
+  if (isPortraitMobile.value) return false
+  return !icpCovered.value
+})
 
 // 占位状态下在备案号后括号注明；换用正式备案号时把 ICP_IS_PLACEHOLDER 改为 false
 const icpLabel = computed(() => {
@@ -203,10 +214,11 @@ useHead(() => {
     <RouterView />
   </div>
 
-  <!-- ICP 备案信息：显示范围由脚本中的 showIcp 决定（见其上方注释） -->
+  <!-- ICP 备案信息：元素常驻（隐藏用 visibility，便于测量遮挡），显示逻辑见 showIcp -->
   <a
-    v-if="showIcp"
+    ref="icpRef"
     class="layout-icp md-label-small"
+    :class="{ 'is-icp-hidden': !showIcp }"
     :href="ICP_LICENSE ? ICP_URL : undefined"
     :target="ICP_LICENSE ? '_blank' : undefined"
     :rel="ICP_LICENSE ? 'noopener noreferrer' : undefined"
@@ -245,17 +257,37 @@ useHead(() => {
   text-decoration: none;
   letter-spacing: 0.02em;
   opacity: 0.72;
-  transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  /* 显隐用淡入淡出：visibility 延后到淡出结束再切换（见 .is-icp-hidden），
+     使元素占位、矩形可测，同时避免隐藏后仍可聚焦 */
+  transition:
+    opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    visibility 0s linear 0s;
 }
 
 .layout-icp[href] {
   text-underline-offset: 2px;
 }
 
+/* 被遮挡：淡出后再置为 hidden（visibility 延迟一个淡出时长） */
+.layout-icp.is-icp-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    visibility 0s linear var(--md-sys-motion-duration-medium2);
+}
+
 @media (hover: hover) {
   .layout-icp[href]:hover {
     opacity: 1;
     text-decoration: underline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout-icp,
+  .layout-icp.is-icp-hidden {
+    transition: none;
   }
 }
 </style>
