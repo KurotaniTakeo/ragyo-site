@@ -620,7 +620,8 @@ const scrollHint = computed(() =>
   }
 
   /* 竖屏：立绘贴底、整宽裁剪（不再用窄框，避免人造的左缘裁切），
-     再把人物整体右移，保持「靠右下角」的观感。 */
+     人物整体右移保持「靠右下角」；left 只微调到 58% —— 再往左头部会压到
+     「版本号」一行，而右下角的锚点仍由保持不动的背影立绘撑住。 */
   .hero-figure {
     position: absolute;
     inset: auto 0 0 0;
@@ -630,7 +631,7 @@ const scrollHint = computed(() =>
   }
 
   :deep(.hero-image) {
-    left: 64%;
+    left: 58%;
   }
 
   :deep(.hero-backdrop) {
