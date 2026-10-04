@@ -205,7 +205,7 @@ onBeforeUnmount(() => observer?.disconnect())
 
 @media (max-width: 980px) {
   .video-slide {
-    flex-basis: min(62vw, 260px);
+    flex-basis: min(46vw, 200px);
   }
 
   .video-fade {

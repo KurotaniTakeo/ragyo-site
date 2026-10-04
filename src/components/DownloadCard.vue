@@ -81,10 +81,10 @@ const { t } = useI18n()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px 16px;
   flex-wrap: wrap;
-  padding: 16px 24px;
-  min-height: 72px;
+  padding: 12px 20px;
+  min-height: 64px;
 }
 
 .mirror-row + .mirror-row {
@@ -152,11 +152,9 @@ const { t } = useI18n()
 
 @media (max-width: 600px) {
   .mirror-row {
-    align-items: flex-start;
-  }
-
-  .mirror-actions {
-    width: 100%;
+    /* 不再把操作区强制撑满换行，名称与「打开」尽量同一行；
+       放不下时 flex-wrap 会把操作区换行并靠右。 */
+    align-items: center;
   }
 }
 </style>

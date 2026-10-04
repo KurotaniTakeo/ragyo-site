@@ -347,6 +347,24 @@ const likes = () => tm('character.likes') as string[]
   }
 }
 
+/* 平板竖屏：宽度足够，恢复两栏（信息 + 立绘），避免首屏只剩一张大设定图 */
+@media (pointer: coarse) and (orientation: portrait) and (min-width: 700px) {
+  .character-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+
+  .character-figure {
+    order: 0;
+  }
+
+  :deep(.sheet-image) {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-position: top center;
+  }
+}
+
 /* 矮屏（横屏手机 / 小窗口）：满宽设定图会过高，收回高度上限保证可用 */
 @media (max-width: 860px) and (max-height: 720px),
   (pointer: coarse) and (orientation: portrait) and (max-height: 720px) {

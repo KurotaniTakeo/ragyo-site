@@ -151,7 +151,7 @@ const steps = (key: string) => tm(key) as unknown as string[]
 .download-main {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
 }
 

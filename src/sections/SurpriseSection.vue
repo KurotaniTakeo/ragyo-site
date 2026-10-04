@@ -413,4 +413,19 @@ watch(
   height: 100%;
   object-fit: cover;
 }
+
+/* 平板竖屏：宽度足够，放大播放卡与表情网格，避免内容过小、两侧留白 */
+@media (pointer: coarse) and (orientation: portrait) and (min-width: 700px) {
+  .clip-card {
+    width: min(100%, 440px);
+  }
+
+  .sticker-panel {
+    max-width: 820px;
+  }
+
+  .sticker-grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  }
+}
 </style>

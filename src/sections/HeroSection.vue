@@ -144,7 +144,7 @@ const scrollHint = computed(() =>
       <div class="hero-scroll" aria-hidden="true">
         <M3Icon
           v-if="isHorizontalPaging"
-          name="swap_horiz"
+          name="arrow_back"
           :size="18"
           class="hero-scroll-icon-h"
         />
@@ -455,7 +455,7 @@ const scrollHint = computed(() =>
   }
 }
 
-/* 触屏横向翻页：换用左右箭头并做水平往返动画 */
+/* 触屏横向翻页：左箭头 + 向左轻推动画（下一屏在右侧，手指向左滑） */
 .hero-scroll-icon-h {
   animation: hero-scroll-swipe 1.8s var(--md-sys-motion-easing-standard) infinite;
 }
@@ -463,11 +463,11 @@ const scrollHint = computed(() =>
 @keyframes hero-scroll-swipe {
   0%,
   100% {
-    translate: -3px 0;
+    translate: 2px 0;
     opacity: 0.45;
   }
   50% {
-    translate: 3px 0;
+    translate: -3px 0;
     opacity: 1;
   }
 }
@@ -623,9 +623,9 @@ const scrollHint = computed(() =>
      让角色更贴右边。 */
   .hero-figure {
     position: absolute;
-    inset: auto -6% 0 auto;
-    width: 74%;
-    height: 54%;
+    inset: auto -7% 0 auto;
+    width: 82%;
+    height: 58%;
     align-items: flex-end;
     z-index: 1;
   }
@@ -660,7 +660,7 @@ const scrollHint = computed(() =>
 /* 更高的竖屏（平板）：文字更靠上，立绘可以更大、把下半屏填满 */
 @media (pointer: coarse) and (orientation: portrait) and (min-height: 1000px) {
   .hero-figure {
-    height: 66%;
+    height: 68%;
   }
 }
 

@@ -54,6 +54,8 @@ export const iconPaths = {
   expand_less: 'M480-554 283-357l-43-43 240-240 240 240-43 43-197-197Z',
   swap_horiz:
     'M280-160 80-360l200-200 56 57-103 103h647v80H233l103 103-56 57Zm400-240-56-57 103-103H80v-80h647L624-743l56-57 200 200-200 200Z',
+  arrow_forward: 'M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z',
+  arrow_back: 'M313-440h487v-80H313l224-224-57-56-320 320 320 320 57-56-224-224Z',
 } as const
 
 export type IconName = keyof typeof iconPaths
