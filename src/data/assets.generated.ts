@@ -24,15 +24,6 @@ export const images = {
     "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQBACdASoUAB4APu1mq02ppaQiMAgBMB2JZQC/7CHfiQY+6P1lFpgcAAD+bdWfaIVUgS88s0xgFNvC+3V2qToPux7fo7fytuEYtlq8ubl6l3qZduII2AAA",
     "note": "公式1（红领带）・手插兜・闭嘴微笑。"
   },
-  "character.pockets-smile-costume-1-bust": {
-    "src": "/img/generated/character-pockets-smile-costume-1-bust-2400.webp",
-    "srcset": "/img/generated/character-pockets-smile-costume-1-bust-640.webp 640w, /img/generated/character-pockets-smile-costume-1-bust-1024.webp 1024w, /img/generated/character-pockets-smile-costume-1-bust-1600.webp 1600w, /img/generated/character-pockets-smile-costume-1-bust-2400.webp 2400w",
-    "avifSrcset": "/img/generated/character-pockets-smile-costume-1-bust-640.avif 640w, /img/generated/character-pockets-smile-costume-1-bust-1024.avif 1024w, /img/generated/character-pockets-smile-costume-1-bust-1600.avif 1600w, /img/generated/character-pockets-smile-costume-1-bust-2400.avif 2400w",
-    "width": 2400,
-    "height": 2562,
-    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQBACdASoUABUAPu1oq08ppiOiMBgIATAdiWcAv+wQ7+/F5cpxLyNywAD+bdXIt6Hsn/QUQzQc+n4Ivcer9ME3YbASotsj6L0mO7906igoAplNFoNeAA==",
-    "note": "公式1・半身像（头部至半腿）。保留整幅宽度以容纳完整的麦克风线回环，仅纵向裁剪。"
-  },
   "character.pockets-smile-costume-2": {
     "src": "/img/generated/character-pockets-smile-costume-2-3200.webp",
     "srcset": "/img/generated/character-pockets-smile-costume-2-640.webp 640w, /img/generated/character-pockets-smile-costume-2-1024.webp 1024w, /img/generated/character-pockets-smile-costume-2-1600.webp 1600w, /img/generated/character-pockets-smile-costume-2-2400.webp 2400w, /img/generated/character-pockets-smile-costume-2-3200.webp 3200w",
@@ -104,24 +95,6 @@ export const images = {
     "height": 2480,
     "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwAwCdASoUABoAPu1ur1IppiQiqAgBMB2JYwC06BEcM5FO5UAA/m6UdfAYWRjNKmVr/OiJFRNacWQ3eTgcEnu6QYeFQEz7Ib2roL/Q5sYFEABfGSX8G9OmM36oZLJxq4Ach2l/byoNFeVepXji23AA",
     "note": "设定图・正面与背面双视图・含耳麦与尾巴。"
-  },
-  "character.smile-costume-2-outline-opaque": {
-    "src": "/img/generated/character-smile-costume-2-outline-opaque-3200.webp",
-    "srcset": "/img/generated/character-smile-costume-2-outline-opaque-640.webp 640w, /img/generated/character-smile-costume-2-outline-opaque-1024.webp 1024w, /img/generated/character-smile-costume-2-outline-opaque-1600.webp 1600w, /img/generated/character-smile-costume-2-outline-opaque-2400.webp 2400w, /img/generated/character-smile-costume-2-outline-opaque-3200.webp 3200w",
-    "avifSrcset": "/img/generated/character-smile-costume-2-outline-opaque-640.avif 640w, /img/generated/character-smile-costume-2-outline-opaque-1024.avif 1024w, /img/generated/character-smile-costume-2-outline-opaque-1600.avif 1600w, /img/generated/character-smile-costume-2-outline-opaque-2400.avif 2400w, /img/generated/character-smile-costume-2-outline-opaque-3200.avif 3200w",
-    "width": 3200,
-    "height": 4745,
-    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACQBACdASoUAB4APu1iqE2ppaOiMAgBMB2JZQC/7CIOmK5mwx+VdQ0ZZ57wz5AA/m905076j2rnOii/x1Q1ikbPvps0KgWGzVGIdsWKFUbvrtrl1FFG3qdcknnuDktKhcEuH2rBk9NkY7VgDCJka+jTn7ghc4OEt9RDgZuC2cFyRIJEQAA=",
-    "note": "公式2・非插兜・闭嘴・不透明描边版本。"
-  },
-  "character.smile-costume-2-outline-translucent": {
-    "src": "/img/generated/character-smile-costume-2-outline-translucent-3200.webp",
-    "srcset": "/img/generated/character-smile-costume-2-outline-translucent-640.webp 640w, /img/generated/character-smile-costume-2-outline-translucent-1024.webp 1024w, /img/generated/character-smile-costume-2-outline-translucent-1600.webp 1600w, /img/generated/character-smile-costume-2-outline-translucent-2400.webp 2400w, /img/generated/character-smile-costume-2-outline-translucent-3200.webp 3200w",
-    "avifSrcset": "/img/generated/character-smile-costume-2-outline-translucent-640.avif 640w, /img/generated/character-smile-costume-2-outline-translucent-1024.avif 1024w, /img/generated/character-smile-costume-2-outline-translucent-1600.avif 1600w, /img/generated/character-smile-costume-2-outline-translucent-2400.avif 2400w, /img/generated/character-smile-costume-2-outline-translucent-3200.avif 3200w",
-    "width": 3200,
-    "height": 4745,
-    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABQBACdASoUAB4APu1kqE2ppaOiMAgBMB2JZQC/7CG8qXOqi5hZF6hvOdwoAP5vMuWlWyKaGz1nrsFazcdeQZr5H+A5u44Wmckyv87Ht+/naG0TiXe0vwNltWDJ6H9IO6SBxMizuiJvWwmYMs/ScN15eUGdguAAAAA=",
-    "note": "公式2・非插兜・闭嘴・半透明描边版本。"
   },
   "character.back-view": {
     "src": "/img/generated/character-back-view-1024.webp",

@@ -21,12 +21,12 @@ NOTICE — 素材著作权与授权范围
   assets/illustration/surprise/*.gif      彩蛋源图（基于官方立绘）© LAN
   assets/illustration/readme-*.txt        立绘与角色设定说明     © LAN / 羅威
   assets/voicebank/*                      声库设定、使用规约原文  © Dailing / 羅威 / LAN
-  public/samples/*.jpg                    视频封面图，来源与署名待补
+  assets/samples/*.jpg                    视频封面原图，来源与署名待补
 
 说明：
   - 立绘可在**非营利**二创中自由使用；营利性使用需事先告知权利人。
   - 本仓库不托管音源本体（下载经网盘分发），故不涉及音源的再分发。
-  - `public/samples/` 的封面图版权来源尚未确认，署名待补（见 README「已知待办」）。
+  - `assets/samples/` 的封面图版权来源尚未确认，署名待补（见 README「已知待办」）。
 
 第三方依赖与字体（非本仓库版权，按各自许可分发）
 ------------------------------------------------------------------

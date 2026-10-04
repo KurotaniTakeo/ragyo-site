@@ -93,7 +93,7 @@ assets/
 本仓库**代码与素材的授权状态不同**，请勿一概而论：
 
 - **源码**（`src/`、`scripts/`、配置等）以 **MIT** 授权，见 [`LICENSE`](./LICENSE)。
-- **素材**（`assets/`、`public/samples/` 下的立绘、彩蛋 GIF、声库设定与规约、视频封面等）**不在 MIT 范围内**，著作权归原权利人所有（All Rights Reserved）。详见 [`NOTICE`](./NOTICE)。
+- **素材**（`assets/`、`assets/samples/` 下的立绘、彩蛋 GIF、声库设定与规约、视频封面等）**不在 MIT 范围内**，著作权归原权利人所有（All Rights Reserved）。详见 [`NOTICE`](./NOTICE)。
 
 换句话说：欢迎借鉴站点代码搭建你自己的声库宣传页，但立绘与音源素材不可据 MIT 使用；素材的使用一律以 `assets/voicebank/readme-{jp,cn,en}.txt` 的**使用规约**为准。
 
@@ -101,4 +101,4 @@ assets/
 
 - `src/config.ts` 的 `SITE_URL` 为 `null`，canonical / hreflang / OGP 目前退化为相对路径；确定域名后填写即可自动切换为绝对地址。
 - `config.ts` 指向 `/og/<locale>.png` 与 `scripts/gen-og.mjs`，但该脚本与 `public/og/` 尚未创建，OGP 图片当前 404。
-- `public/samples/*.jpg` 三张视频封面的版权来源与署名待确认（见 `NOTICE`）。
+- `assets/samples/*.jpg` 四张视频封面的版权来源与署名待确认（见 `NOTICE`）。
