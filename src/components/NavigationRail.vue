@@ -121,7 +121,8 @@ const choose = (index: number) => {
 .section-nav {
   position: fixed;
   z-index: 900;
-  inset: 0 auto 0 0;
+  /* 居中范围排除固定顶栏：从顶栏下缘起算，否则整条导轨会偏高半个顶栏高度 */
+  inset: calc(var(--app-bar-height) + env(safe-area-inset-top, 0px)) auto 0 0;
   width: var(--app-rail-width);
   display: flex;
   align-items: center;
@@ -229,7 +230,8 @@ const choose = (index: number) => {
 .nav-progress {
   position: fixed;
   left: 6px;
-  top: 50%;
+  /* 与 .nav-list 共用同一中心：视口中心再下移半个顶栏高度 */
+  top: calc(50% + (var(--app-bar-height) + env(safe-area-inset-top, 0px)) / 2);
   translate: 0 -50%;
   width: 2px;
   height: 96px;
