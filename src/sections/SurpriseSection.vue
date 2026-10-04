@@ -107,7 +107,7 @@ watch(
 </script>
 
 <template>
-  <SectionShell id="surprise" :active="active">
+  <SectionShell id="surprise" :active="active" wide>
     <SectionHeader
       :index="9"
       :total="sections.length"
@@ -412,6 +412,61 @@ watch(
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* 横屏：预览与表情列表左右分栏，标题仍在顶部通栏。
+   预览按可用高度取尺，尽量大且恒为正方形。 */
+@media (orientation: landscape) {
+  .surprise-stage {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(16px, 3vw, 48px);
+    width: 100%;
+    /* 撑满标题以下的高度，使 cqh 可用（container-type: size 需要确定高度） */
+    flex: 1 1 auto;
+    min-height: 0;
+    /* 让下方预览用容器查询单位按「本屏真实剩余高度」取尺 */
+    container-type: size;
+  }
+
+  .clip-card {
+    /* 正方形边长 = min(列宽上限, 可用高度 − 控制条, 硬上限)，恒为正 */
+    width: min(46cqw, calc(100cqh - 3.5rem), 480px);
+  }
+
+  .sticker-panel {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+/* 桌面 / 平板横屏：与使用条款页一致打破 1180px 页宽（SectionShell 的 wide），
+   预览上限放宽、表情网格放大；≤860px 的移动端不受影响。 */
+@media (orientation: landscape) and (min-width: 861px) {
+  .clip-card {
+    /* 抬高硬上限，让预览继续按可用高度生长 */
+    width: min(46cqw, calc(100cqh - 3.5rem), 560px);
+  }
+
+  .sticker-grid {
+    /* 从基线的 52px 放大，随视口宽度在 72~96px 浮动，
+       避免 1024×768 这类矮横屏行数过多把面板撑出滚动 */
+    grid-template-columns: repeat(auto-fill, minmax(clamp(72px, 5vw, 96px), 1fr));
+  }
+}
+
+/* 矮横屏（横屏手机 / 小窗口）：标题区让位给预览，收起引导语并收紧间距 */
+@media (orientation: landscape) and (max-height: 560px) {
+  :deep(.section-header) {
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  :deep(.section-lead) {
+    display: none;
+  }
 }
 
 /* 平板竖屏：宽度足够，放大播放卡与表情网格，避免内容过小、两侧留白 */
