@@ -7,6 +7,7 @@
  */
 import { useI18n } from 'vue-i18n'
 import SegmentedButton from './SegmentedButton.vue'
+import M3Icon from './M3Icon.vue'
 import { LOCALE_LABELS, SUPPORTED_LOCALES, type Locale } from '@/i18n'
 import { voicebank } from '@/data/voicebank'
 
@@ -26,6 +27,10 @@ const localeOptions = SUPPORTED_LOCALES.map((value) => ({
   value,
   label: LOCALE_LABELS[value],
 }))
+
+const onLocaleChange = (event: Event) => {
+  emit('update:locale', (event.target as HTMLSelectElement).value)
+}
 </script>
 
 <template>
@@ -39,12 +44,31 @@ const localeOptions = SUPPORTED_LOCALES.map((value) => ({
     </a>
 
     <div class="app-bar-actions">
-      <SegmentedButton
-        :options="localeOptions"
-        :model-value="locale"
-        :aria-label="t('common.langSwitch')"
-        @update:model-value="emit('update:locale', $event)"
-      />
+      <div class="lang-segmented">
+        <SegmentedButton
+          :options="localeOptions"
+          :model-value="locale"
+          :aria-label="t('common.langSwitch')"
+          @update:model-value="emit('update:locale', $event)"
+        />
+      </div>
+
+      <label class="lang-select">
+        <span class="lang-select-label">{{ t('common.languageLabel') }}</span>
+        <span class="lang-select-control">
+          <select
+            class="lang-select-input"
+            :value="locale"
+            :aria-label="t('common.langSwitch')"
+            @change="onLocaleChange"
+          >
+            <option v-for="option in localeOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+          <M3Icon name="expand_less" :size="18" class="lang-select-chevron" />
+        </span>
+      </label>
     </div>
   </header>
 </template>
@@ -113,6 +137,61 @@ const localeOptions = SUPPORTED_LOCALES.map((value) => ({
 .brand-sub {
   color: var(--md-sys-color-on-surface-variant);
   letter-spacing: 0.06em;
+}
+
+.app-bar-actions {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* 竖屏用下拉菜单；桌面/横屏仍用分段按钮 */
+.lang-select {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-select-label {
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.02em;
+}
+
+.lang-select-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.lang-select-input {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 36px;
+  padding: 6px 34px 6px 14px;
+  border-radius: var(--md-sys-shape-corner-full);
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: inherit;
+  cursor: pointer;
+}
+
+.lang-select-chevron {
+  position: absolute;
+  right: 10px;
+  rotate: 180deg;
+  pointer-events: none;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
+  .lang-segmented {
+    display: none;
+  }
+
+  .lang-select {
+    display: inline-flex;
+  }
 }
 
 @media (max-width: 600px) {

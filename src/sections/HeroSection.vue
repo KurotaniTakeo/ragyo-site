@@ -619,18 +619,26 @@ const scrollHint = computed(() =>
     padding: 6px 0;
   }
 
-  /* 竖屏：立绘靠右下角，避免压在整宽的规格表上；窄框 + 右锚 + 略微右溢
-     让角色更贴右边。 */
+  /* 竖屏：立绘贴底、整宽裁剪（不再用窄框，避免人造的左缘裁切），
+     再把人物整体右移，保持「靠右下角」的观感。 */
   .hero-figure {
     position: absolute;
-    inset: auto -7% 0 auto;
-    width: 82%;
+    inset: auto 0 0 0;
     height: 58%;
     align-items: flex-end;
     z-index: 1;
   }
 
-  /* 右锚的裁剪框不再需要左右渐隐，否则会裁到角色左缘 */
+  :deep(.hero-image) {
+    left: 64%;
+  }
+
+  :deep(.hero-backdrop) {
+    /* 左移一点贴近主立绘，但不越过主立绘 */
+    translate: -22% 0;
+  }
+
+  /* 整宽后不需要左右渐隐 */
   .hero-clip {
     -webkit-mask-image: none;
     mask-image: none;
@@ -654,6 +662,23 @@ const scrollHint = computed(() =>
 
   .hero-tagline {
     max-width: 100%;
+  }
+}
+
+/* 平板竖屏：宽度足够，恢复「窄框右锚」立绘与默认背影偏移
+   （整宽只是手机端为了消除左裁切）。 */
+@media (pointer: coarse) and (orientation: portrait) and (min-width: 700px) {
+  .hero-figure {
+    inset: auto -7% 0 auto;
+    width: 82%;
+  }
+
+  :deep(.hero-image) {
+    left: 50%;
+  }
+
+  :deep(.hero-backdrop) {
+    translate: -20% 0;
   }
 }
 

@@ -6,6 +6,7 @@
   "common": {
     "langName": "English",
     "langSwitch": "Switch language",
+    "languageLabel": "Language",
     "skipToContent": "Skip to content",
     "pending": "Pending",
     "pendingTitle": "Coming soon",

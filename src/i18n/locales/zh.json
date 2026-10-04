@@ -6,6 +6,7 @@
   "common": {
     "langName": "简体中文",
     "langSwitch": "切换语言",
+    "languageLabel": "Language",
     "skipToContent": "跳到正文",
     "pending": "准备中",
     "pendingTitle": "即将公开",

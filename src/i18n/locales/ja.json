@@ -6,6 +6,7 @@
   "common": {
     "langName": "日本語",
     "langSwitch": "言語を切り替える",
+    "languageLabel": "Language",
     "skipToContent": "本文へスキップ",
     "pending": "準備中",
     "pendingTitle": "公開準備中",
