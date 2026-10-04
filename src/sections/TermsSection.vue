@@ -9,7 +9,7 @@
  *      这样阅读顺序始终是"一栏读到底再右移"，不会出现两栏等高一滚就错位的问题；
  *   3. 「著作权」固定在底部条，联系方式省略，改为跳转到「制作名单」并高亮作者。
  *
- * 窄屏（或触屏 ≤1024px）回退为单栏纵向滚动，滚动方向与阅读顺序一致。
+ * 窄屏（或触屏竖屏）回退为单栏纵向滚动，滚动方向与阅读顺序一致。
  * 横向滚动区以 [data-scrollable-x] 标记，滚动接管逻辑见 useFullPageScroll。
  */
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
@@ -58,7 +58,7 @@ function applyColumns() {
   const el = colsRef.value
   if (!el) return
   if (
-    window.matchMedia('(max-width: 860px), (max-width: 1024px) and (pointer: coarse)').matches
+    window.matchMedia('(max-width: 860px), (pointer: coarse) and (orientation: portrait)').matches
   ) {
     el.style.removeProperty('column-count')
     el.style.removeProperty('width')
@@ -481,7 +481,7 @@ html[lang='en'] .terms-body {
 
 /* ------------------------------------------------ 窄屏：单栏纵向 */
 
-@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
   /* 单栏阅读：不再用随视口宽度收缩的 clamp（窄屏会压到 10.5px），
      固定为舒适字号；日文/英文按原有差异微调。 */
   .terms-body,

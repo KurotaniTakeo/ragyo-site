@@ -247,9 +247,7 @@ const specs = computed<SpecRow[]>(() => [
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(14px, 2vw, 24px);
-  /* 内容比一屏矮时铺满剩余高度：行拉伸、卡片随之变高，不露背景 */
-  align-items: stretch;
-  flex: 1 1 auto;
+  align-items: start;
 }
 
 .spec-list {
@@ -584,7 +582,7 @@ const specs = computed<SpecRow[]>(() => [
   color: var(--md-sys-color-outline);
 }
 
-@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
   .about-grid {
     grid-template-columns: minmax(0, 1fr);
   }

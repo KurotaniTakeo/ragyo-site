@@ -3,7 +3,7 @@
  * 分屏导航。
  *
  * 桌面端是 Material You 的 Navigation rail（左侧竖排，图标 + 文字）；窄屏
- * （窄屏或触屏 ≤1024px）改为底部的紧凑栏：只显示「当前分屏 + 菜单」，点开后在弹窗里
+ * （窄屏或触屏竖屏）改为底部的紧凑栏：只显示「当前分屏 + 菜单」，点开后在弹窗里
  * 列出全部 9 项。这样底栏不会被 9 个图标挤到溢出屏幕，也不会越出正文。
  *
  * 选中态用每个按钮自带的胶囊（.nav-item::before）表达，不做任何位移动画，
@@ -75,7 +75,7 @@ const choose = (index: number) => {
       />
     </div>
 
-    <!-- 移动端（窄屏或触屏 ≤1024px）：当前分屏 + 菜单入口 -->
+    <!-- 移动端（窄屏或触屏竖屏）：当前分屏 + 菜单入口 -->
     <button
       v-ripple
       class="nav-mobile-trigger md-state-layer"
@@ -133,8 +133,8 @@ const choose = (index: number) => {
     opacity var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 }
 
-/* 首屏隐藏、第二屏起从左侧滑入（仅桌面端：鼠标 + 宽屏） */
-@media (min-width: 861px) and (pointer: fine), (min-width: 1025px) {
+/* 首屏隐藏、第二屏起从左侧滑入（仅桌面端：鼠标宽屏 / 横屏平板） */
+@media (min-width: 861px) and (pointer: fine), (min-width: 861px) and (orientation: landscape) {
   .section-nav {
     transform: translateX(-110%);
     opacity: 0;
@@ -301,7 +301,7 @@ const choose = (index: number) => {
   white-space: nowrap;
 }
 
-@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
   .section-nav {
     inset: auto 0 0 0;
     width: 100%;

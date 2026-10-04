@@ -62,8 +62,8 @@ withDefaults(
   padding-bottom: 0;
 }
 
-/* 桌面布局（鼠标 + 宽屏）：为左侧导轨让出内边距 */
-@media (min-width: 861px) and (pointer: fine), (min-width: 1025px) {
+/* 桌面布局：鼠标宽屏，或横屏触屏（横屏平板）。为左侧导轨让出内边距 */
+@media (min-width: 861px) and (pointer: fine), (min-width: 861px) and (orientation: landscape) {
   .section-body {
     padding-left: var(--app-rail-width);
   }
@@ -73,15 +73,17 @@ withDefaults(
   }
 }
 
-/* 移动布局：窄屏，或触屏且 ≤1024px（手机 / 竖屏平板） */
-@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+/* 移动布局：窄屏，或触屏竖屏（手机 / 竖屏平板） */
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
+  /* 分屏铺到真正的视口底部（底部被固定导航盖住）；底部间隔改由
+     .section-inner 的尾部内边距提供（规则见下方 .section-inner 之后），
+     于是「间隔」只在滚到最底时露出，滚动中途内容一直铺到导航栏，
+     不再有一条常驻的空白带。 */
   .section-body {
-    padding-bottom: calc(var(--app-bottom-nav) + var(--app-section-bottom-gap));
+    padding-bottom: 0;
   }
 
-  /* 通铺分屏（首屏）：立绘要贴到真正的视口底部（由固定底栏盖住），
-     因此不额外留底部内边距，否则立绘与底栏之间会出现缝隙、显得悬空。
-     （基础规则已是 padding-bottom: 0，这里显式保留即可。） */
+  /* 通铺分屏（首屏）：立绘贴到底栏，由固定底栏盖住即可。 */
   .section-body.is-bleed {
     padding-bottom: 0;
   }
@@ -123,6 +125,20 @@ withDefaults(
      内容更高时 safe 会回落为顶对齐，避免顶部被裁 */
   justify-content: center;
   justify-content: safe center;
+}
+
+/* 移动端底部间隔：放在 .section-inner 基础规则之后，避免被其 padding/flex 覆盖。
+   flex-basis auto + 不收缩：内容矮时 grow 撑满面板；内容高时盒子随内容增长，
+   尾部内边距因此落在滚动末端，只有滚到底才露出间隔。 */
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
+  .section-inner {
+    flex: 1 0 auto;
+    padding-bottom: calc(var(--app-bottom-nav) + var(--app-section-bottom-gap));
+  }
+
+  .section-body.is-bleed .section-inner {
+    padding-bottom: 0;
+  }
 }
 
 /* 放宽最大宽度：长文分屏在大屏上排多栏，不被 1180px 的栅格钉成窄条 */

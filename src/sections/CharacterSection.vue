@@ -323,9 +323,9 @@ const likes = () => tm('character.likes') as string[]
   gap: 8px;
 }
 
-/* 断点与 AppBar / NavigationRail / SectionShell 对齐（窄屏或触屏 ≤1024），
+/* 断点与 AppBar / NavigationRail / SectionShell 对齐（窄屏或触屏竖屏），
    避免出现「桌面导轨 + 单列内容」的错配 */
-@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
   .character-grid {
     grid-template-columns: minmax(0, 1fr);
     /* 单列时不再强行撑满一屏：让网格按内容高度排布，
@@ -349,7 +349,7 @@ const likes = () => tm('character.likes') as string[]
 
 /* 矮屏（横屏手机 / 小窗口）：满宽设定图会过高，收回高度上限保证可用 */
 @media (max-width: 860px) and (max-height: 720px),
-  (max-width: 1024px) and (pointer: coarse) and (max-height: 720px) {
+  (pointer: coarse) and (orientation: portrait) and (max-height: 720px) {
   :deep(.sheet-image) {
     width: auto;
     max-height: 48dvh;

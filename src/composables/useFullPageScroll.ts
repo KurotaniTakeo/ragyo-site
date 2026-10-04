@@ -6,7 +6,7 @@ import { onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
  * 分层设计：
  *   1. 基础层为原生 CSS scroll-snap（见 main.css 的 .snap-scroller），
  *      触屏、脚本失效、prefers-reduced-motion 时都能正常工作。
- *      桌面为纵向吸附；触屏（≤1024px 且 pointer:coarse）为横向吸附，
+ *      桌面为纵向吸附；触屏竖屏（pointer:coarse 且 orientation:portrait）为横向吸附，
  *      竖滑读内容、横滑翻页，两根轴分离，避免嵌套纵向滚动导致的手感问题。
  *   2. 增强层（本 composable）只在桌面鼠标环境接管滚轮：
  *      累积滚轮增量到阈值后翻整屏，并加锁避免一次手势连翻多屏。
@@ -41,9 +41,10 @@ const PANEL_EDGE_COOLDOWN = 500
 /**
  * 触屏横向整屏翻页的媒体查询。
  * 必须与 main.css 里 `.snap-scroller` 横向吸附的媒体查询保持一致：
- * 触屏且 ≤1024px（手机 + 竖屏/小尺寸平板）。
+ * 触屏竖屏（手机 / 平板），或窄屏触屏。
  */
-const HORIZONTAL_QUERY = '(max-width: 1024px) and (pointer: coarse)'
+const HORIZONTAL_QUERY =
+  '(pointer: coarse) and (orientation: portrait), (max-width: 860px) and (pointer: coarse)'
 
 export interface FullPageScrollOptions {
   /** 滚动容器（.snap-scroller） */

@@ -123,6 +123,8 @@ const { t } = useI18n()
   flex-wrap: wrap;
   /* 始终靠右，即使换行也不会跑到左侧 */
   margin-left: auto;
+  /* 窄屏换行成整行后，内容也贴右，「打开」固定在最右侧 */
+  justify-content: flex-end;
 }
 
 .mirror-open {

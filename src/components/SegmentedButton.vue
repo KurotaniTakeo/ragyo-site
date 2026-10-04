@@ -1,9 +1,11 @@
 <script setup lang="ts">
 /**
  * Material You 分段按钮（segmented button）。
- * 用于语言切换：三语并列可见，比下拉菜单少一次点击，也不需要猜测。
+ * 用于语言切换：三语并列可见，比下拉菜单少一次点击，也不需要猜测；
+ * 立绘展示器用它切换视角/造型/姿势/表情。
  */
 import { useI18n } from 'vue-i18n'
+import M3Icon from './M3Icon.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -15,8 +17,10 @@ const props = withDefaults(
     ariaLabel?: string
     /** 整体禁用（例如立绘展示器切到背面时，造型/表情等变体无意义） */
     disabled?: boolean
+    /** 选中项前置一个 ✓（M3 规范）；窄栏如顶栏语言切换器建议关闭 */
+    check?: boolean
   }>(),
-  { disabled: false },
+  { disabled: false, check: false },
 )
 
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
@@ -72,6 +76,12 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
         class="segment-indicator"
         aria-hidden="true"
       />
+      <M3Icon
+        v-if="check && option.value === modelValue"
+        name="check"
+        :size="16"
+        class="segment-check"
+      />
       <span class="segment-label">{{ option.label }}</span>
     </button>
   </div>
@@ -95,7 +105,7 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
   min-height: 32px;
   padding: 0 14px;
   border-radius: var(--md-sys-shape-corner-full);
-  color: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-on-surface-variant);
   transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
   white-space: nowrap;
 }
@@ -104,8 +114,9 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
   margin-left: 2px;
 }
 
+/* 选中态：secondary-container 填充 + 对应前景色，和未选中拉开差距 */
 .is-selected {
-  color: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-on-secondary-container);
 }
 
 /* 禁用态：整组变暗，且不响应状态层 */
@@ -125,8 +136,15 @@ const onKeydown = (event: KeyboardEvent, index: number) => {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-color: var(--md-sys-color-surface-container);
+  background-color: var(--md-sys-color-secondary-container);
   z-index: 0;
+}
+
+.segment-check {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  margin-right: 4px;
 }
 
 .segment-label {

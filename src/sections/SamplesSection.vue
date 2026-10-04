@@ -82,9 +82,6 @@ const videoGroups = computed(() => {
   display: flex;
   flex-direction: column;
   gap: clamp(16px, 2.4vh, 26px);
-  /* 内容比一屏矮时铺满剩余高度，队列之间拉开 */
-  flex: 1 1 auto;
-  justify-content: space-between;
 }
 
 .samples-queue {

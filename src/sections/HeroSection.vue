@@ -26,11 +26,12 @@ const emit = defineEmits<{ navigate: [sectionId: string] }>()
 
 const { t, locale } = useI18n()
 
-// 触屏且 ≤1024px 时是横向整屏翻页（与 main.css / useFullPageScroll 同一条件），
-// 提示才用「左右滑动」；更宽的触屏（如横屏 iPad）仍是纵向翻页。
+// 触屏竖屏时是横向整屏翻页（与 main.css / useFullPageScroll 同一条件），
+// 提示才用「左右滑动」；横屏平板/鼠标桌面仍是纵向翻页。
 // SSG 阶段 matchMedia 不可用，先按桌面滚轮文案渲染，挂载后再校正；
 // 监听 change 以便旋转/改窗口时同步。
-const HORIZONTAL_PAGING_QUERY = '(max-width: 1024px) and (pointer: coarse)'
+const HORIZONTAL_PAGING_QUERY =
+  '(pointer: coarse) and (orientation: portrait), (max-width: 860px) and (pointer: coarse)'
 const isHorizontalPaging = ref(false)
 let horizontalPagingMq: MediaQueryList | undefined
 const syncHorizontalPaging = () => {
@@ -296,7 +297,7 @@ const scrollHint = computed(() =>
 
 /* 桌面端：整块在中栏内居中后再略微右移，向画面中部靠拢；
    垂直方向仍由父级 align-items: end 贴底。窄屏单列时取消。 */
-@media (min-width: 861px) and (pointer: fine), (min-width: 1025px) {
+@media (min-width: 861px) and (pointer: fine), (min-width: 861px) and (orientation: landscape) {
   .hero-text {
     justify-self: center;
     translate: clamp(20px, 2.6vw, 56px) 0;
@@ -600,8 +601,8 @@ const scrollHint = computed(() =>
   }
 }
 
-/* 移动布局：窄屏，或触屏且 ≤1024px（手机 / 竖屏平板） */
-@media (max-width: 860px), (max-width: 1024px) and (pointer: coarse) {
+/* 移动布局：窄屏，或触屏竖屏（手机 / 竖屏平板） */
+@media (max-width: 860px), (pointer: coarse) and (orientation: portrait) {
   /* 立绘不再独占底部一行：改为贴底的绝对图层，从 CTA/版本号一带一直
      延伸到视口底，人物更大、不再空在文字下方。文字压在它上层。 */
   .hero {
@@ -618,12 +619,21 @@ const scrollHint = computed(() =>
     padding: 6px 0;
   }
 
+  /* 竖屏：立绘靠右下角，避免压在整宽的规格表上；窄框 + 右锚 + 略微右溢
+     让角色更贴右边。 */
   .hero-figure {
     position: absolute;
-    inset: auto 0 0 0;
-    height: 52%;
+    inset: auto -6% 0 auto;
+    width: 74%;
+    height: 54%;
     align-items: flex-end;
     z-index: 1;
+  }
+
+  /* 右锚的裁剪框不再需要左右渐隐，否则会裁到角色左缘 */
+  .hero-clip {
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   /* 首屏在窄屏铺到真正的视口底部，底部胶囊要让开固定底栏，
@@ -647,9 +657,16 @@ const scrollHint = computed(() =>
   }
 }
 
+/* 更高的竖屏（平板）：文字更靠上，立绘可以更大、把下半屏填满 */
+@media (pointer: coarse) and (orientation: portrait) and (min-height: 1000px) {
+  .hero-figure {
+    height: 66%;
+  }
+}
+
 /* 矮屏（横屏手机 / 小窗口）：压缩文字节奏，把更多高度让给立绘 */
 @media (max-width: 860px) and (max-height: 720px),
-  (max-width: 1024px) and (pointer: coarse) and (max-height: 720px) {
+  (pointer: coarse) and (orientation: portrait) and (max-height: 720px) {
   .hero {
     row-gap: 6px;
   }

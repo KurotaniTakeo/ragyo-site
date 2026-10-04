@@ -243,9 +243,6 @@ watch(
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  /* 内容比一屏矮时铺满剩余高度，避免底部露出背景 */
-  flex: 1 1 auto;
-  justify-content: space-between;
 }
 
 .clip-card {

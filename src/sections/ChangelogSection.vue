@@ -88,8 +88,6 @@ const linksFor = (version: string) => changelogLinks[version] ?? []
   flex-direction: column;
   gap: 20px;
   position: relative;
-  /* 内容比一屏矮时铺满剩余高度（条目内部再拉伸卡片） */
-  flex: 1 1 auto;
 }
 
 /* 时间线竖轴 */
@@ -105,10 +103,6 @@ const linksFor = (version: string) => changelogLinks[version] ?? []
 
 .timeline-item {
   position: relative;
-  /* 内容比一屏矮时，条目各自拉伸，卡片背景铺满，不留空白 */
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
 }
 
 .timeline-marker {
@@ -126,8 +120,6 @@ const linksFor = (version: string) => changelogLinks[version] ?? []
   padding: 16px 20px;
   border-radius: var(--md-sys-shape-corner-medium);
   background-color: var(--md-sys-color-surface-container);
-  /* 跟着拉伸的条目一起铺满 */
-  flex: 1 1 auto;
 }
 
 .timeline-head {

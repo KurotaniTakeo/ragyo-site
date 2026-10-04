@@ -142,6 +142,7 @@ onBeforeUnmount(() => {
           <SegmentedButton
             :options="facingOptions"
             :model-value="facing"
+            check
             :aria-label="t('character.viewer.facingLabel')"
             @update:model-value="setFacing"
           />
@@ -152,6 +153,7 @@ onBeforeUnmount(() => {
           <SegmentedButton
             :options="costumeOptions"
             :model-value="costume"
+            check
             :disabled="isBack"
             :aria-label="t('character.viewer.costumeLabel')"
             @update:model-value="setCostume"
@@ -163,6 +165,7 @@ onBeforeUnmount(() => {
           <SegmentedButton
             :options="poseOptions"
             :model-value="pose"
+            check
             :disabled="isBack"
             :aria-label="t('character.viewer.poseLabel')"
             @update:model-value="setPose"
@@ -176,6 +179,7 @@ onBeforeUnmount(() => {
           <SegmentedButton
             :options="expressionOptions"
             :model-value="expression"
+            check
             :disabled="isBack"
             :aria-label="t('character.viewer.expressionLabel')"
             @update:model-value="setExpression"

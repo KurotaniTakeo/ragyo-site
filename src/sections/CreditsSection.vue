@@ -177,9 +177,6 @@ onBeforeUnmount(() => window.clearTimeout(highlightTimer))
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
-  /* 内容比一屏矮时铺满剩余高度，卡片随之变高 */
-  flex: 1 1 auto;
-  align-content: stretch;
 }
 
 .credit-card {
