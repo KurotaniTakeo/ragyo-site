@@ -547,7 +547,9 @@ const specs = computed<SpecRow[]>(() => [
    故单列宽 =(100% - 24px) / 4.6，第 i 列左缘 = 1.6u + 8px + i×(u + 8px)。 */
 .tone-col-highlight {
   position: absolute;
-  top: 0;
+  /* 顶边上抬：色带顶端略高于表头「Soft / Normal / Power」文字，
+     让圆角矩形与文字上方留出一点呼吸感（原先 top: 0 紧贴文字顶缘） */
+  top: -5px;
   bottom: 0;
   left: calc(
     (100% - 24px) / 4.6 * 1.6 + 8px + var(--tone-col, 0) * ((100% - 24px) / 4.6 + 8px)
