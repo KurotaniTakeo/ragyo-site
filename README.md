@@ -102,3 +102,4 @@ assets/
 - `src/config.ts` 的 `SITE_URL` 为 `null`，canonical / hreflang / OGP 目前退化为相对路径；确定域名后填写即可自动切换为绝对地址。
 - `config.ts` 指向 `/og/<locale>.png` 与 `scripts/gen-og.mjs`，但该脚本与 `public/og/` 尚未创建，OGP 图片当前 404。
 - `assets/samples/*.jpg` 四张视频封面的版权来源与署名待确认（见 `NOTICE`）。
+- 桌面端左下角的 ICP 备案号当前是占位数据（`config.ts` 的 `ICP_LICENSE`，页面会括号注明「占位」，由 `ICP_IS_PLACEHOLDER` 控制）；取得正式备案号后替换字符串并把 `ICP_IS_PLACEHOLDER` 改为 `false` 即可。显示范围：移动端 / 平板竖屏仅首屏，电脑端横屏所有页面常驻。

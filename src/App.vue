@@ -32,7 +32,7 @@ import {
   isLocale,
   type Locale,
 } from '@/i18n'
-import { OG_IMAGE_DIR, SITE_URL } from '@/config'
+import { ICP_IS_PLACEHOLDER, ICP_LICENSE, ICP_URL, OG_IMAGE_DIR, SITE_URL } from '@/config'
 import { FONT_STYLESHEET } from '@/styles/fonts'
 
 const route = useRoute()
@@ -72,6 +72,24 @@ const goToId = (id: string) => {
   const index = sections.findIndex((section) => section.id === id)
   if (index >= 0) goTo(index)
 }
+
+/* --------------------------------------------------------- ICP 备案信息 */
+
+// 显示规则：移动端 / 平板竖屏只在首屏展示；电脑端横屏所有页面常驻左下角。
+const isPortraitMobile = ref(false)
+let portraitMq: MediaQueryList | undefined
+
+const syncIcpViewport = () => {
+  isPortraitMobile.value = portraitMq?.matches ?? false
+}
+
+const showIcp = computed(() => !isPortraitMobile.value || activeIndex.value === 0)
+
+// 占位状态下在备案号后括号注明；换用正式备案号时把 ICP_IS_PLACEHOLDER 改为 false
+const icpLabel = computed(() => {
+  if (!ICP_LICENSE) return t('common.icpPending')
+  return ICP_IS_PLACEHOLDER ? `${ICP_LICENSE}${t('common.icpPlaceholder')}` : ICP_LICENSE
+})
 
 /* ------------------------------------------------------------ 跳转高亮 */
 
@@ -116,10 +134,15 @@ watch(activeIndex, (index) => {
 onMounted(() => {
   scroller.value?.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
+
+  portraitMq = window.matchMedia('(pointer: coarse) and (orientation: portrait)')
+  syncIcpViewport()
+  portraitMq.addEventListener('change', syncIcpViewport)
 })
 
 onBeforeUnmount(() => {
   scroller.value?.removeEventListener('scroll', onScroll)
+  portraitMq?.removeEventListener('change', syncIcpViewport)
 })
 
 /* ------------------------------------------------------- head / SEO */
@@ -180,6 +203,17 @@ useHead(() => {
     <RouterView />
   </div>
 
+  <!-- ICP 备案信息：显示范围由脚本中的 showIcp 决定（见其上方注释） -->
+  <a
+    v-if="showIcp"
+    class="layout-icp md-label-small"
+    :href="ICP_LICENSE ? ICP_URL : undefined"
+    :target="ICP_LICENSE ? '_blank' : undefined"
+    :rel="ICP_LICENSE ? 'noopener noreferrer' : undefined"
+  >
+    {{ icpLabel }}
+  </a>
+
   <SnackbarHost />
 </template>
 
@@ -199,5 +233,29 @@ useHead(() => {
 
 .skip-link:focus-visible {
   translate: -50% 0;
+}
+
+/* ICP 备案位：固定定位；具体显示范围见 script 中的 showIcp */
+.layout-icp {
+  position: fixed;
+  left: var(--app-float-x);
+  bottom: calc(var(--app-float-y) + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  color: var(--md-sys-color-on-surface);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  opacity: 0.72;
+  transition: opacity var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
+.layout-icp[href] {
+  text-underline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .layout-icp[href]:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
 }
 </style>

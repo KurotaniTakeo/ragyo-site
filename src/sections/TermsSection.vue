@@ -17,6 +17,7 @@ import { useI18n } from 'vue-i18n'
 import SectionShell from '@/components/SectionShell.vue'
 import SectionHeader from '@/components/SectionHeader.vue'
 import M3Icon from '@/components/M3Icon.vue'
+import M3Dialog from '@/components/M3Dialog.vue'
 import { sections } from '@/data/sections'
 import { authorCreditKey } from '@/data/credits'
 import { useScrollContext } from '@/composables/useScrollContext'
@@ -30,10 +31,19 @@ interface TermsBlock {
 }
 
 const { t, tm, locale } = useI18n()
-const { goToId, requestHighlight } = useScrollContext()
+const { goToId, requestHighlight, suspended } = useScrollContext()
 
 const blocks = () => tm('terms.blocks') as unknown as TermsBlock[]
 const copyright = () => tm('terms.copyright') as string[]
+const licenseText = () => tm('terms.licenseText') as string[]
+
+/** 源码许可（MIT）弹窗 */
+const licenseOpen = ref(false)
+
+// 弹窗打开期间挂起整屏翻页，避免方向键 / 滚轮在弹窗背后换屏（与分屏目录一致）
+watch(licenseOpen, (open) => {
+  suspended.value = open
+})
 
 /* ---------------------------------------------------- 横向多栏滚动 */
 
@@ -203,17 +213,41 @@ watch(locale, async () => {
           </ul>
         </div>
 
-        <button
-          v-ripple
-          type="button"
-          class="terms-credits md-label-large md-state-layer"
-          @click="goToCredits"
-        >
-          <span>{{ t('terms.creditsLink') }}</span>
-          <M3Icon name="chevron_right" :size="18" />
-        </button>
+        <div class="terms-bar-actions">
+          <button
+            v-ripple
+            type="button"
+            class="terms-license md-label-large md-state-layer"
+            @click="licenseOpen = true"
+          >
+            <M3Icon name="info" :size="18" />
+            <span>{{ t('terms.licenseLink') }}</span>
+          </button>
+
+          <button
+            v-ripple
+            type="button"
+            class="terms-credits md-label-large md-state-layer"
+            @click="goToCredits"
+          >
+            <span>{{ t('terms.creditsLink') }}</span>
+            <M3Icon name="chevron_right" :size="18" />
+          </button>
+        </div>
       </footer>
     </div>
+
+    <M3Dialog
+      :open="licenseOpen"
+      :label="t('terms.licenseTitle')"
+      @close="licenseOpen = false"
+    >
+      <h2 class="license-title md-title-medium">{{ t('terms.licenseTitle') }}</h2>
+      <p class="license-scope md-body-small">{{ t('terms.licenseScope') }}</p>
+      <div class="license-text md-body-small">
+        <p v-for="(paragraph, i) in licenseText()" :key="i">{{ paragraph }}</p>
+      </div>
+    </M3Dialog>
   </SectionShell>
 </template>
 
@@ -434,6 +468,26 @@ html[lang='en'] .terms-body {
   gap: 2px 18px;
 }
 
+.terms-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.terms-license {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 6px 14px 6px 10px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+  transition: background-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+
 .terms-credits {
   display: inline-flex;
   align-items: center;
@@ -447,9 +501,38 @@ html[lang='en'] .terms-body {
 }
 
 @media (hover: hover) {
-  .terms-credits:hover {
+  .terms-credits:hover,
+  .terms-license:hover {
     background-color: var(--md-sys-color-surface-container-high);
   }
+}
+
+/* --------------------------------------------------- 源码许可弹窗（M3Dialog 内） */
+
+.license-title {
+  margin: 0 0 8px;
+  padding-right: 44px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.license-scope {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: var(--md-sys-shape-corner-medium);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.license-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.license-text p {
+  margin: 0;
+  line-height: 1.6;
 }
 
 /* 矮屏收一档间距：大屏享受舒展的行距，短屏则优先保证不用横向滑动 */
@@ -532,7 +615,13 @@ html[lang='en'] .terms-body {
     gap: 2px;
   }
 
-  .terms-credits {
+  .terms-bar-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .terms-credits,
+  .terms-license {
     justify-content: center;
     width: 100%;
     padding: 10px 16px;
@@ -543,7 +632,8 @@ html[lang='en'] .terms-body {
   .terms-track::before,
   .terms-track::after,
   .terms-arrow,
-  .terms-credits {
+  .terms-credits,
+  .terms-license {
     transition: none;
   }
 }
