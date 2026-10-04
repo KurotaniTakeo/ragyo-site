@@ -1,0 +1,37 @@
+{
+  "$comment": "字体源清单。scripts/gen-fonts.mjs 按此下载「完整」Noto CJK 可变字体（TTF，wght 轴），再按站点实际用到的码位子集化为 woff2。google/fonts 仓库会变，故用 revision 固定到具体提交；sha256 用于校验缓存/下载完整性。缓存位于 node_modules/.cache/ragyo-fonts/（已被忽略），缺失或校验失败时才联网。",
+  "baseUrl": "https://raw.githubusercontent.com/google/fonts",
+  "revision": "9710da1eacb3be272583c3224dcb70f9da6eadbb",
+  "sources": [
+    {
+      "file": "noto-sans-jp.ttf",
+      "path": "ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f"
+    },
+    {
+      "file": "noto-serif-jp.ttf",
+      "path": "ofl/notoserifjp/NotoSerifJP%5Bwght%5D.ttf",
+      "sha256": "2fd527ba12b6a44ec30d796d633360da0aeba6c5d4af1304ce12bb4dc15a7dfc"
+    },
+    {
+      "file": "noto-sans-sc.ttf",
+      "path": "ofl/notosanssc/NotoSansSC%5Bwght%5D.ttf",
+      "sha256": "a3041811a78c361b1de50f953c805e0244951c21c5bd412f7232ef0d899af0da"
+    },
+    {
+      "file": "noto-serif-sc.ttf",
+      "path": "ofl/notoserifsc/NotoSerifSC%5Bwght%5D.ttf",
+      "sha256": "050080d9255a86808f2945bffac582b31ef32bc36411ce29563b4961670c66f9"
+    },
+    {
+      "file": "noto-sans-tc.ttf",
+      "path": "ofl/notosanstc/NotoSansTC%5Bwght%5D.ttf",
+      "sha256": "864727d210d54f2537bbe23b3a839436c3992af72de9322af5270897246bd44f"
+    },
+    {
+      "file": "noto-serif-tc.ttf",
+      "path": "ofl/notoseriftc/NotoSerifTC%5Bwght%5D.ttf",
+      "sha256": "0077e18f57c6908f4a000969880940bdb0dad057c0e8d98b49dc364c3d1b09c6"
+    }
+  ]
+}

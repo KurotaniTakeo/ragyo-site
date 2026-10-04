@@ -30,8 +30,10 @@ NOTICE — 素材著作权与授权范围
 
 第三方依赖与字体（非本仓库版权，按各自许可分发）
 ------------------------------------------------------------------
-  @fontsource/noto-sans-jp, @fontsource/noto-sans-sc   SIL OFL 1.1
+  Noto Sans / Serif {JP,SC,TC}（完整可变字体取自 google/fonts，
+    由 gen:fonts 按站点码位子集化为 woff2 后自托管）      SIL OFL 1.1
   @material/material-color-utilities                    Apache License 2.0
   Vue 3 / vue-router / vue-i18n / Vite / vite-ssg / Tailwind CSS / sharp
-                                                        MIT（sharp 为 Apache-2.0）
+    / subset-font / fontkit                             MIT（sharp 为 Apache-2.0，
+                                                        subset-font 为 BSD-3-Clause）
   完整版本见 package.json 与 pnpm-lock.yaml。
