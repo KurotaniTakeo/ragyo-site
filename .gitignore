@@ -18,3 +18,7 @@ public/fonts
 
 # 本地备忘（暂不纳入版本控制；需要长期保留时删除本行）
 docs/
+
+# 部署相关（仅本地使用，不入库）
+deploy/
+.dockerignore
